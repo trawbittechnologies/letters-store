@@ -67,7 +67,7 @@ export default function LoadingScreen({ onComplete }) {
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-          className="w-28 h-28 md:w-32 md:h-32 rounded-3xl overflow-hidden border-2 border-[var(--border)] shadow-2xl p-3 bg-[var(--bg-subtle)] flex items-center justify-center z-10"
+          className="w-28 h-28 md:w-32 md:h-32 flex items-center justify-center z-10 drop-shadow-xl"
         >
           <img
             src="/logo.png"
@@ -84,10 +84,10 @@ export default function LoadingScreen({ onComplete }) {
         transition={{ duration: 1, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
         className="flex flex-col items-center text-center z-10"
       >
-        <h2 className="font-heading text-4xl md:text-5xl font-bold text-[var(--text)] tracking-wider mb-2">
-          {settings.brandName || 'LETTERS'}
+        <h2 className="font-brand-calligraphy text-5xl md:text-6xl font-normal text-[var(--text)] tracking-wide mb-1">
+          {settings.brandName && settings.brandName.toUpperCase() === 'LETTERS' ? 'Letters' : (settings.brandName || 'Letters')}
         </h2>
-        <p className="text-[10px] tracking-[0.5em] text-[var(--accent-secondary)] uppercase font-bold">
+        <p className="text-[10px] tracking-[0.45em] text-[var(--accent-secondary)] uppercase font-bold">
           Bespoke Gifting Atelier • Est. {settings.establishedYear || '2020'}
         </p>
       </motion.div>

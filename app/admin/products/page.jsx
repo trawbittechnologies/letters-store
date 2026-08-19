@@ -374,45 +374,86 @@ export default function AdminProductsPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div>
-                  <label className="block font-bold text-[var(--text)] uppercase mb-1">
-                    Price (₹) *
+              {/* Pricing & Discount Presets */}
+              <div className="p-4 rounded-xl bg-[var(--bg)] border border-[var(--border)] space-y-3">
+                <div className="flex items-center justify-between">
+                  <label className="text-[11px] font-bold uppercase tracking-wider text-[var(--text)]">
+                    Quick Discount Presets
                   </label>
-                  <input
-                    type="number"
-                    required
-                    placeholder="1499"
-                    value={formData.price}
-                    onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl bg-[var(--bg)] border border-[var(--border)] text-xs text-[var(--text)] focus:outline-none focus:border-[var(--accent)]"
-                  />
+                  <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold">
+                    <input
+                      type="checkbox"
+                      checked={formData.showPrice !== false}
+                      onChange={(e) => setFormData({ ...formData, showPrice: e.target.checked })}
+                      className="w-4 h-4 rounded text-[var(--accent)] cursor-pointer"
+                    />
+                    <span className={formData.showPrice !== false ? 'text-emerald-700 dark:text-emerald-400 font-bold' : 'text-amber-700 dark:text-amber-400'}>
+                      {formData.showPrice !== false ? 'Price Visible on Site' : 'Price Hidden (On Request)'}
+                    </span>
+                  </label>
                 </div>
 
-                <div>
-                  <label className="block font-bold text-[var(--text)] uppercase mb-1">
-                    Original Price (₹)
-                  </label>
-                  <input
-                    type="number"
-                    placeholder="1799"
-                    value={formData.originalPrice}
-                    onChange={(e) => setFormData({ ...formData, originalPrice: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl bg-[var(--bg)] border border-[var(--border)] text-xs text-[var(--text)] focus:outline-none focus:border-[var(--accent)]"
-                  />
+                <div className="flex flex-wrap gap-1.5">
+                  {[10, 15, 20, 25, 30, 35, 40, 50].map((pct) => (
+                    <button
+                      key={pct}
+                      type="button"
+                      onClick={() => {
+                        const orig = Number(formData.originalPrice) || Number(formData.price) || 2000;
+                        const newPrice = Math.round(orig * (1 - pct / 100));
+                        setFormData({
+                          ...formData,
+                          originalPrice: orig,
+                          price: newPrice,
+                        });
+                      }}
+                      className="text-[10.5px] font-bold px-2.5 py-1 rounded-full bg-[var(--card)] border border-[var(--border)] hover:border-[var(--maroon)] hover:text-[var(--maroon)] transition-all cursor-pointer"
+                    >
+                      {pct}% OFF
+                    </button>
+                  ))}
                 </div>
 
-                <div>
-                  <label className="block font-bold text-[var(--text)] uppercase mb-1">
-                    Available Stock *
-                  </label>
-                  <input
-                    type="number"
-                    required
-                    value={formData.stock}
-                    onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl bg-[var(--bg)] border border-[var(--border)] text-xs text-[var(--text)] focus:outline-none focus:border-[var(--accent)]"
-                  />
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-1">
+                  <div>
+                    <label className="block font-bold text-[var(--text)] text-[11px] uppercase mb-1">
+                      Offer Price (₹) *
+                    </label>
+                    <input
+                      type="number"
+                      required
+                      placeholder="1499"
+                      value={formData.price}
+                      onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                      className="w-full px-4 py-2 rounded-xl bg-[var(--card)] border border-[var(--border)] text-xs text-[var(--text)] focus:outline-none focus:border-[var(--accent)]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-bold text-[var(--text)] text-[11px] uppercase mb-1">
+                      Original Price (₹)
+                    </label>
+                    <input
+                      type="number"
+                      placeholder="1799"
+                      value={formData.originalPrice}
+                      onChange={(e) => setFormData({ ...formData, originalPrice: e.target.value })}
+                      className="w-full px-4 py-2 rounded-xl bg-[var(--card)] border border-[var(--border)] text-xs text-[var(--text)] focus:outline-none focus:border-[var(--accent)]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-bold text-[var(--text)] text-[11px] uppercase mb-1">
+                      Available Stock *
+                    </label>
+                    <input
+                      type="number"
+                      required
+                      value={formData.stock}
+                      onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
+                      className="w-full px-4 py-2 rounded-xl bg-[var(--card)] border border-[var(--border)] text-xs text-[var(--text)] focus:outline-none focus:border-[var(--accent)]"
+                    />
+                  </div>
                 </div>
               </div>
 
@@ -449,11 +490,21 @@ export default function AdminProductsPage() {
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="checkbox"
+                    checked={formData.showPrice !== false}
+                    onChange={(e) => setFormData({ ...formData, showPrice: e.target.checked })}
+                    className="w-4 h-4 rounded text-[var(--accent)]"
+                  />
+                  <span className="text-xs font-semibold text-[var(--text)]">Show Price</span>
+                </label>
+
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
                     checked={formData.featured}
                     onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
-                    className="accent-[var(--accent)]"
+                    className="w-4 h-4 rounded text-[var(--accent)]"
                   />
-                  <span className="font-semibold text-[var(--text)]">Featured Product</span>
+                  <span className="text-xs font-semibold text-[var(--text)]">Featured Item</span>
                 </label>
 
                 <label className="flex items-center gap-2 cursor-pointer">
@@ -461,9 +512,9 @@ export default function AdminProductsPage() {
                     type="checkbox"
                     checked={formData.customizable}
                     onChange={(e) => setFormData({ ...formData, customizable: e.target.checked })}
-                    className="accent-[var(--accent)]"
+                    className="w-4 h-4 rounded text-[var(--accent)]"
                   />
-                  <span className="font-semibold text-[var(--text)]">Customizable</span>
+                  <span className="text-xs font-semibold text-[var(--text)]">Customizable</span>
                 </label>
 
                 <label className="flex items-center gap-2 cursor-pointer">
@@ -471,9 +522,9 @@ export default function AdminProductsPage() {
                     type="checkbox"
                     checked={formData.active}
                     onChange={(e) => setFormData({ ...formData, active: e.target.checked })}
-                    className="accent-[var(--accent)]"
+                    className="w-4 h-4 rounded text-[var(--accent)]"
                   />
-                  <span className="font-semibold text-[var(--text)]">Active / Published</span>
+                  <span className="text-xs font-semibold text-[var(--text)]">Active / Published</span>
                 </label>
               </div>
 

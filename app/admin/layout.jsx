@@ -17,6 +17,8 @@ import {
   faGift,
   faSun,
   faMoon,
+  faPercent,
+  faBolt,
 } from '@fortawesome/free-solid-svg-icons';
 import { useAuthStore } from '@/src/store/authStore';
 import { useSettingsStore } from '@/src/store/settingsStore';
@@ -28,6 +30,8 @@ const adminNavLinks = [
   { label: 'Orders', href: '/admin/orders', icon: faBagShopping, badge: true },
   { label: 'Products', href: '/admin/products', icon: faBox },
   { label: 'Categories', href: '/admin/categories', icon: faLayerGroup },
+  { label: 'Festival Hampers', href: '/admin/festival-hampers', icon: faGift },
+  { label: 'Sale & Banners', href: '/admin/sale-banner', icon: faPercent },
   { label: 'Settings', href: '/admin/settings', icon: faGear },
 ];
 
@@ -90,12 +94,15 @@ export default function AdminLayout({ children }) {
             {mobileSidebarOpen ? <FontAwesomeIcon icon={faXmark} className="text-base" /> : <FontAwesomeIcon icon={faBars} className="text-base" />}
           </button>
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl overflow-hidden bg-[#FAF6F0] p-0.5 border border-[var(--border)] flex items-center justify-center flex-shrink-0">
+            <div className="w-8 h-8 flex items-center justify-center flex-shrink-0">
               <img src="/logo.png" alt="Letters" className="w-full h-full object-contain" />
             </div>
-            <span className="font-heading font-bold text-lg text-[var(--text)] tracking-wider">
-              {settings.brandName} <span className="text-[10px] uppercase font-bold text-[var(--accent-secondary)]">Admin</span>
-            </span>
+            <div className="flex items-center gap-1.5">
+              <span className="font-brand-calligraphy text-2xl font-normal text-[var(--text)] tracking-wide">
+                {settings.brandName && settings.brandName.toUpperCase() === 'LETTERS' ? 'Letters' : (settings.brandName || 'Letters')}
+              </span>
+              <span className="text-[10px] uppercase font-bold text-[var(--accent-secondary)] tracking-wider">Admin</span>
+            </div>
           </div>
         </div>
 
@@ -129,12 +136,12 @@ export default function AdminLayout({ children }) {
           {/* Brand Header */}
           <div className="flex items-center justify-between mb-8 pb-4 border-b border-[var(--border)]">
             <div className="flex items-center gap-2.5">
-              <div className="w-10 h-10 rounded-xl overflow-hidden bg-[#FAF6F0] p-1 border border-[var(--border)] flex items-center justify-center flex-shrink-0 shadow-sm">
+              <div className="w-9 h-9 flex items-center justify-center flex-shrink-0">
                 <img src="/logo.png" alt="Letters" className="w-full h-full object-contain" />
               </div>
               <div>
-                <h2 className="font-heading font-bold text-lg text-[var(--text)] tracking-wider">
-                  {settings.brandName}
+                <h2 className="font-brand-calligraphy text-2xl font-normal text-[var(--text)] tracking-wide leading-tight">
+                  {settings.brandName && settings.brandName.toUpperCase() === 'LETTERS' ? 'Letters' : (settings.brandName || 'Letters')}
                 </h2>
                 <p className="text-[9px] uppercase tracking-widest text-[var(--accent-secondary)] font-bold">
                   Admin Panel

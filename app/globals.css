@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,600&family=Great+Vibes&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
 @theme {
@@ -73,8 +73,6 @@
   --shadow-lg:   0 12px 40px rgba(26,36,23,0.14);
 }
 
-
-
 *, *::before, *::after {
   box-sizing: border-box;
 }
@@ -86,7 +84,7 @@ html {
 body {
   background-color: var(--bg);
   color: var(--text);
-  font-family: 'Inter', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
@@ -111,17 +109,35 @@ body {
 
 /* Typography Classes */
 .font-heading {
-  font-family: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+  font-family: 'Instrument Serif', Georgia, serif;
+}
+.font-editorial {
+  font-family: 'Instrument Serif', Georgia, serif;
+}
+.font-serif-luxury {
+  font-family: 'Instrument Serif', Georgia, serif;
 }
 .font-serif-subtle {
-  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-family: 'Instrument Serif', Georgia, serif;
 }
 .font-sans-ui {
-  font-family: 'Inter', 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Manrope', sans-serif;
 }
 .font-doodle {
-  font-family: 'Caveat', cursive;
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-style: italic;
 }
+.font-brand-calligraphy,
+.font-calligraphy,
+.font-script-brand {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-style: italic;
+}
+.font-signature {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-style: italic;
+}
+
 
 /* ============================
    MODERN BUTTON SYSTEM

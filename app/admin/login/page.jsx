@@ -46,11 +46,11 @@ export default function AdminLoginPage() {
         
         {/* Brand Header */}
         <div className="text-center mb-8">
-          <div className="w-16 h-16 rounded-2xl bg-[#FAF6F0] border border-[var(--border)] overflow-hidden p-1.5 flex items-center justify-center mx-auto mb-4 shadow-md">
+          <div className="w-16 h-16 flex items-center justify-center mx-auto mb-4">
             <img src="/logo.png" alt="Letters" className="w-full h-full object-contain" />
           </div>
-          <h1 className="font-heading text-3xl font-bold text-[var(--text)] tracking-wider">
-            {settings.brandName}
+          <h1 className="font-brand-calligraphy text-4xl font-normal text-[var(--text)] tracking-wide">
+            {settings.brandName && settings.brandName.toUpperCase() === 'LETTERS' ? 'Letters' : (settings.brandName || 'Letters')}
           </h1>
           <p className="text-xs uppercase font-bold tracking-widest text-[var(--accent-secondary)] mt-1">
             Store Management Portal

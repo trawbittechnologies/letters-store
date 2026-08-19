@@ -92,10 +92,10 @@ export default function CustomGiftCTA() {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
                   <div className="absolute bottom-3 left-3">
                     <span
-                      className="text-white/90"
-                      style={{ fontFamily: "'Great Vibes', cursive", fontSize: '18px', letterSpacing: '0.02em', textShadow: '0 1px 4px rgba(0,0,0,0.4)' }}
+                      className="font-brand-calligraphy text-white/95 text-xl tracking-wide font-normal"
+                      style={{ textShadow: '0 2px 6px rgba(0,0,0,0.6)' }}
                     >
-                      {settings.brandName} · Est. {settings.establishedYear}
+                      {settings.brandName && settings.brandName.toUpperCase() === 'LETTERS' ? 'Letters' : (settings.brandName || 'Letters')} · Est. {settings.establishedYear}
                     </span>
                   </div>
                 </div>

@@ -66,6 +66,7 @@ export default function Navbar() {
 
   const navLinks = [
     { label: 'Shop', href: '/shop' },
+    { label: 'Deals', href: '/deals', badge: 'Offers' },
     { label: 'Custom Hamper', href: '/custom-gift', badge: 'Bespoke' },
     { label: 'About', href: '/about' },
     { label: 'Contact', href: '/contact' },
@@ -112,8 +113,8 @@ export default function Navbar() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 h-18 sm:h-[78px] flex items-center justify-between">
           
           {/* Brand Logo */}
-          <Link href="/" className="flex items-center gap-3 group py-1 select-none">
-            <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl overflow-hidden bg-[var(--bg-subtle)] p-1 border border-[var(--border)] group-hover:border-[var(--accent)] flex items-center justify-center shadow-sm group-hover:shadow-md transition-all duration-300 flex-shrink-0">
+          <Link href="/" className="flex items-center gap-2.5 sm:gap-3 group py-1 select-none flex-shrink-0">
+            <div className="w-10 h-10 sm:w-11 sm:h-11 flex items-center justify-center flex-shrink-0 transition-transform duration-300 group-hover:scale-105">
               <img
                 src="/logo.png"
                 alt={settings.brandName || 'LETTERS'}
@@ -122,18 +123,14 @@ export default function Navbar() {
             </div>
             <div className="flex flex-col">
               <span
+                className="font-brand-calligraphy text-[32px] sm:text-[36px] font-normal tracking-wide text-[var(--text)] leading-none group-hover:text-[var(--accent)] transition-colors"
                 style={{
-                  fontFamily: "'Great Vibes', cursive",
-                  fontSize: '30px',
-                  fontWeight: 400,
-                  letterSpacing: '0.02em',
-                  color: 'var(--text)',
-                  lineHeight: 1,
+                  fontFamily: "'Alex Brush', 'Pinyon Script', 'Great Vibes', cursive",
                 }}
               >
-                {settings.brandName || 'Letters'}
+                {settings.brandName && settings.brandName.toUpperCase() === 'LETTERS' ? 'Letters' : (settings.brandName || 'Letters')}
               </span>
-              <span className="text-[7.5px] tracking-[0.3em] text-[var(--text-muted)] font-medium uppercase" style={{ marginTop: '1px' }}>
+              <span className="text-[7.5px] tracking-[0.32em] text-[var(--text-muted)] font-semibold uppercase" style={{ marginTop: '1px' }}>
                 Est. {settings.establishedYear || '2020'}
               </span>
             </div>
@@ -163,28 +160,34 @@ export default function Navbar() {
               <AnimatePresence>
                 {collectionsOpen && (
                   <motion.div
-                    initial={{ opacity: 0, y: 10, scale: 0.97 }}
+                    initial={{ opacity: 0, y: 10, scale: 0.98 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: 8, scale: 0.97 }}
+                    exit={{ opacity: 0, y: 8, scale: 0.98 }}
                     transition={{ duration: 0.2, ease: 'easeOut' }}
                     onMouseLeave={() => setCollectionsOpen(false)}
-                    className="absolute top-[calc(100%+8px)] left-1/2 -translate-x-1/2 w-[480px] p-5 rounded-2xl glass-card border border-[var(--border)]/60 shadow-2xl shadow-black/8 z-50"
+                    className="absolute top-[calc(100%+10px)] left-1/2 -translate-x-1/2 w-[520px] p-6 rounded-3xl bg-[#FFFDF7] border border-[var(--border)] shadow-[0_24px_60px_-12px_rgba(30,40,28,0.25)] z-50 select-none"
+                    style={{ isolation: 'isolate' }}
                   >
-                    <div className="flex items-center justify-between pb-3 mb-3 border-b border-[var(--border)]/60">
-                      <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[var(--accent-hover)]">
-                        Curated Collections
-                      </span>
+                    {/* Header */}
+                    <div className="flex items-center justify-between pb-3.5 mb-4 border-b border-[var(--border)]">
+                      <div className="flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-[var(--olive)]" />
+                        <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-[var(--text)]">
+                          Curated Collections
+                        </span>
+                      </div>
                       <Link
                         href="/shop"
                         onClick={() => setCollectionsOpen(false)}
-                        className="text-[10px] font-medium text-[var(--text-muted)] hover:text-[var(--text)] transition-colors flex items-center gap-1"
+                        className="text-xs font-semibold text-[var(--olive)] hover:underline transition-colors flex items-center gap-1.5"
                       >
-                        <span>View All</span>
+                        <span>View All Categories</span>
                         <FontAwesomeIcon icon={faArrowRight} className="text-[9px]" />
                       </Link>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-2">
+                    {/* Category Cards Grid */}
+                    <div className="grid grid-cols-2 gap-3 mb-4">
                       {categories
                         .filter((c) => c.enabled)
                         .slice(0, 6)
@@ -193,45 +196,53 @@ export default function Navbar() {
                             key={cat.id}
                             href={`/category/${cat.slug}`}
                             onClick={() => setCollectionsOpen(false)}
-                            className="p-2.5 rounded-xl hover:bg-[var(--bg-subtle)]/80 border border-transparent hover:border-[var(--border)] transition-all flex items-center gap-3 group/item"
+                            className="p-3 rounded-2xl bg-[#F7F3EB] hover:bg-[#EFE9DF] border border-[var(--border)] hover:border-[var(--olive)]/60 transition-all flex items-center gap-3.5 group/item shadow-2xs"
                           >
-                            <div className="w-10 h-10 rounded-xl overflow-hidden bg-[var(--bg-subtle)] flex-shrink-0 border border-[var(--border)]/60">
+                            <div className="w-12 h-12 rounded-xl overflow-hidden bg-white flex-shrink-0 border border-[var(--border)]/80">
                               <img
                                 src={cat.image}
                                 alt={cat.name}
-                                className="w-full h-full object-cover group-hover/item:scale-110 transition-transform duration-400"
+                                className="w-full h-full object-cover group-hover/item:scale-108 transition-transform duration-400"
                               />
                             </div>
                             <div className="flex flex-col min-w-0">
-                              <span className="text-[11px] font-semibold text-[var(--text)] truncate group-hover/item:text-[var(--accent-hover)] transition-colors">
+                              <span className="text-xs font-bold text-[var(--text)] truncate group-hover/item:text-[var(--olive)] transition-colors">
                                 {cat.name}
                               </span>
-                              <span className="text-[9px] text-[var(--text-muted)] truncate">
-                                {cat.group || 'Atelier Series'}
+                              <span className="text-[10px] text-[var(--text-muted)] truncate font-normal">
+                                {cat.group || 'Bespoke Collection'}
                               </span>
                             </div>
                           </Link>
                         ))}
                     </div>
 
-                    <div className="mt-4 pt-3 border-t border-[var(--border)]/60 flex items-center justify-between bg-gradient-to-r from-[var(--bg-subtle)]/50 to-transparent p-3 rounded-xl">
-                      <div className="flex items-center gap-2">
-                        <FontAwesomeIcon icon={faWandMagicSparkles} className="text-[var(--accent)] text-xs" />
-                        <span className="text-[11px] font-medium text-[var(--text)]">Need a Custom Creation?</span>
-                      </div>
+                    {/* Bottom Custom Creation Box */}
+                    <div className="pt-3 border-t border-[var(--border)]">
                       <Link
                         href="/custom-gift"
                         onClick={() => setCollectionsOpen(false)}
-                        className="text-[10px] font-bold text-[var(--accent-hover)] hover:underline flex items-center gap-1"
+                        className="flex items-center justify-between bg-[#F1ECE2] hover:bg-[#EAE3D6] p-3.5 rounded-2xl border border-[var(--border)] transition-all group/custom"
                       >
-                        <span>Build Hamper</span>
-                        <FontAwesomeIcon icon={faArrowRight} className="text-[9px]" />
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-7 h-7 rounded-lg bg-[var(--olive)] text-white flex items-center justify-center text-xs shadow-2xs">
+                            <FontAwesomeIcon icon={faWandMagicSparkles} className="text-[10px] text-[var(--chandanam-light)]" />
+                          </div>
+                          <div>
+                            <p className="text-xs font-bold text-[var(--text)]">Design a Custom Hamper</p>
+                            <p className="text-[10px] text-[var(--text-muted)]">Pick box, gifts & personalized keepsake note</p>
+                          </div>
+                        </div>
+                        <span className="text-[11px] font-bold text-[var(--olive)] group-hover/custom:translate-x-1 transition-transform flex items-center gap-1">
+                          Build <FontAwesomeIcon icon={faArrowRight} className="text-[9px]" />
+                        </span>
                       </Link>
                     </div>
                   </motion.div>
                 )}
               </AnimatePresence>
             </div>
+
 
             {/* Standard Nav Items */}
             {navLinks.map((link) => {
@@ -259,7 +270,6 @@ export default function Navbar() {
                       transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                     />
                   )}
-                  {/* Hover underline */}
                   {!isActive && (
                     <span className="absolute bottom-0 left-0 right-0 h-[1.5px] bg-[var(--accent)] rounded-full scale-x-0 group-hover/nav:scale-x-100 transition-transform origin-left" />
                   )}
@@ -312,6 +322,7 @@ export default function Navbar() {
               )}
             </button>
           </div>
+
         </div>
 
         {/* Mobile Drawer */}
@@ -334,6 +345,7 @@ export default function Navbar() {
                   
                   {[
                     { label: 'Shop All Gifts', href: '/shop' },
+                    { label: 'Mega Deals', href: '/deals' },
                     { label: 'Our Story & Craft', href: '/about' },
                     { label: 'Contact & Studio', href: '/contact' },
                   ].map((link) => (
