@@ -23,7 +23,7 @@ export default function FloatingWhatsApp() {
     <div className="fixed bottom-6 right-6 sm:bottom-8 sm:right-8 z-50">
       <button
         onClick={handleFloatingClick}
-        className="w-14 h-14 rounded-full bg-[var(--olive)] text-[#FFFCF5] dark:bg-[var(--accent)] dark:text-[#151B13] backdrop-blur-md shadow-xl border border-[var(--border)]/60 dark:border-[var(--accent)]/30 flex items-center justify-center hover:bg-[var(--accent)] hover:text-[#232D20] dark:hover:bg-[var(--accent-hover)] hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer group"
+        className="w-13 h-13 rounded-full bg-[#25D366] text-white shadow-lg flex items-center justify-center hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer group"
         aria-label="Direct WhatsApp Concierge"
         title="Chat with our gifting concierge on WhatsApp"
       >

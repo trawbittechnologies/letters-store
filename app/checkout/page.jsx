@@ -135,55 +135,58 @@ export default function CheckoutPage() {
     }
   };
 
-  // Order Confirmation State - Square Flat
+  // Order Confirmation State
   if (createdOrder) {
     return (
       <div className="min-h-screen pt-12 pb-24 px-4 sm:px-6 lg:px-12 bg-[var(--bg)] transition-colors duration-200">
-        <div className="max-w-3xl mx-auto">
-          <div className="bg-[var(--card)] border border-[var(--border-dark)] p-8 sm:p-12 text-center">
+        <div className="max-w-2xl mx-auto">
+          <div className="bg-[var(--card)] rounded-2xl border border-[var(--border)] p-8 sm:p-12 text-center shadow-xs">
             
             {/* Celebration Icon */}
-            <div className="w-16 h-16 bg-[var(--bg)] border border-[var(--border-dark)] text-emerald-600 dark:text-emerald-400 flex items-center justify-center mx-auto mb-6">
-              <FontAwesomeIcon icon={faCircleCheck} className="text-3xl" />
+            <div className="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-5 border border-emerald-200">
+              <FontAwesomeIcon icon={faCircleCheck} className="text-2xl" />
             </div>
 
-            <span className="text-[9.5px] font-bold uppercase tracking-[0.25em] text-[var(--accent-secondary)] block mb-2">
-              Order Registered Successfully
+            <span
+              className="block mb-1 text-[var(--chandanam)]"
+              style={{ fontFamily: "'Great Vibes', cursive", fontSize: '26px' }}
+            >
+              Order Placed Successfully
             </span>
-            <h1 className="font-heading text-3xl sm:text-4xl font-bold text-[var(--text)] mb-3">
+            <h1 className="font-heading text-2xl sm:text-3xl font-bold text-[var(--text)] mb-3">
               Thank You, {createdOrder.customerName}!
             </h1>
             <p className="text-xs sm:text-sm text-[var(--text-muted)] max-w-md mx-auto leading-relaxed mb-8">
-              Your order has been recorded with status <strong>Pending</strong>. We've opened WhatsApp so you can finalize and confirm delivery with our studio concierge.
+              Your order has been recorded. We have opened WhatsApp so you can finalize and confirm delivery with our studio curators.
             </p>
 
-            {/* Order ID Box - Square */}
-            <div className="bg-[var(--bg)] border border-[var(--border)] p-4 max-w-md mx-auto mb-8 flex items-center justify-between">
+            {/* Order ID Box */}
+            <div className="bg-[var(--bg)] rounded-xl border border-[var(--border)] p-4 max-w-md mx-auto mb-8 flex items-center justify-between">
               <div className="text-left">
-                <span className="text-[9px] uppercase font-bold tracking-[0.2em] text-[var(--text-muted)]">
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-[var(--text-muted)]">
                   Order Reference ID
                 </span>
                 <p className="font-mono text-sm font-bold text-[var(--text)]">{createdOrder.id}</p>
               </div>
               <button
                 onClick={copyOrderId}
-                className="p-2 bg-[var(--card)] border border-[var(--border)] text-xs text-[var(--text)] hover:border-[var(--border-dark)] flex items-center gap-1.5 transition-colors cursor-pointer"
+                className="px-3 py-1.5 bg-[var(--card)] rounded-lg border border-[var(--border)] text-xs text-[var(--text)] hover:border-[var(--olive)] flex items-center gap-1.5 transition-colors cursor-pointer"
                 title="Copy Order ID"
               >
                 {copied ? <FontAwesomeIcon icon={faCheck} className="text-emerald-500 text-xs" /> : <FontAwesomeIcon icon={faCopy} className="text-xs" />}
-                <span className="text-[9px] font-bold uppercase tracking-wider">{copied ? 'Copied' : 'Copy'}</span>
+                <span className="text-[10px] font-semibold">{copied ? 'Copied' : 'Copy'}</span>
               </button>
             </div>
 
             {/* Order Summary Details */}
-            <div className="bg-[var(--bg)] border border-[var(--border)] p-6 text-left max-w-xl mx-auto mb-8 space-y-3 text-xs">
-              <h2 className="font-heading font-bold text-sm text-[var(--text)] border-b border-[var(--border)] pb-2 uppercase tracking-wider">
+            <div className="bg-[var(--bg)] rounded-xl border border-[var(--border)] p-6 text-left max-w-xl mx-auto mb-8 space-y-3 text-xs">
+              <h2 className="font-heading font-bold text-sm text-[var(--text)] border-b border-[var(--border)] pb-2">
                 Order Summary
               </h2>
               
               <div className="space-y-1.5">
                 {createdOrder.items.map((item, idx) => (
-                  <div key={idx} className="flex justify-between items-center text-[var(--text)] text-[11.5px]">
+                  <div key={idx} className="flex justify-between items-center text-[var(--text)] text-xs">
                     <span>{item.name} × {item.quantity}</span>
                     <span className="font-bold">₹{item.price * item.quantity}</span>
                   </div>
@@ -192,10 +195,10 @@ export default function CheckoutPage() {
 
               <div className="pt-2 border-t border-[var(--border)] flex justify-between font-bold text-sm text-[var(--text)]">
                 <span>Total:</span>
-                <span className="font-heading text-base text-[var(--text)]">₹{createdOrder.total}</span>
+                <span className="font-heading text-base text-[var(--olive)]">₹{createdOrder.total}</span>
               </div>
 
-              <div className="pt-2 border-t border-[var(--border)] text-[10.5px] text-[var(--text-muted)] space-y-1">
+              <div className="pt-2 border-t border-[var(--border)] text-[11px] text-[var(--text-muted)] space-y-1">
                 <p><strong>Address:</strong> {createdOrder.address}, PIN {createdOrder.pincode}</p>
                 <p><strong>Preferred Date:</strong> {createdOrder.deliveryDate}</p>
                 <p><strong>Occasion:</strong> {createdOrder.occasion}</p>
@@ -206,14 +209,14 @@ export default function CheckoutPage() {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               <button
                 onClick={() => window.open(getWhatsAppUrl(generateWhatsAppMessage(createdOrder)), '_blank')}
-                className="w-full sm:w-auto flex items-center justify-center gap-2 py-3.5 px-8 text-[10.5px] font-bold uppercase tracking-[0.2em] bg-[#25D366] text-white hover:bg-[#1EBE5D] border border-[#25D366] transition-colors cursor-pointer"
+                className="w-full sm:w-auto flex items-center justify-center gap-2 py-3.5 px-7 text-xs font-semibold rounded-full bg-[#25D366] text-white hover:bg-[#1EBE5D] transition-colors cursor-pointer shadow-xs"
               >
                 <FontAwesomeIcon icon={faWhatsapp} className="text-base" /> Open WhatsApp Chat Again
               </button>
 
               <Link
                 href="/"
-                className="w-full sm:w-auto outline-btn py-3.5 px-8 text-[10.5px] font-bold uppercase tracking-[0.2em] text-center"
+                className="w-full sm:w-auto secondary-pill-btn py-3.5 px-7 text-xs font-semibold text-center"
               >
                 Return to Storefront
               </Link>
@@ -225,7 +228,7 @@ export default function CheckoutPage() {
     );
   }
 
-  // Checkout Form - Square Flat
+  // Checkout Form
   return (
     <div className="min-h-screen pt-8 pb-24 px-4 sm:px-6 lg:px-12 bg-[var(--bg)] transition-colors duration-200">
       <div className="max-w-7xl mx-auto">
@@ -234,11 +237,17 @@ export default function CheckoutPage() {
         <div className="mb-8 pb-6 border-b border-[var(--border)]">
           <Link
             href="/cart"
-            className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--text-muted)] hover:text-[var(--text)] transition-colors mb-3"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--olive)] hover:text-[var(--olive-hover)] transition-colors mb-3"
           >
             <FontAwesomeIcon icon={faArrowLeft} className="text-xs" /> Back to Cart
           </Link>
-          <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-[var(--text)]">
+          <span
+            className="block mb-1 text-[var(--chandanam)]"
+            style={{ fontFamily: "'Great Vibes', cursive", fontSize: '24px' }}
+          >
+            Almost There
+          </span>
+          <h1 className="font-heading text-3xl sm:text-4xl font-bold text-[var(--text)]">
             Checkout & WhatsApp Ordering
           </h1>
           <p className="text-xs text-[var(--text-muted)] mt-1">
@@ -247,7 +256,7 @@ export default function CheckoutPage() {
         </div>
 
         {error && (
-          <div className="bg-rose-50 dark:bg-rose-950/50 border border-rose-400 text-rose-800 dark:text-rose-200 p-3.5 text-xs mb-8">
+          <div className="bg-rose-50 border border-rose-300 text-rose-800 p-3.5 text-xs rounded-xl mb-8">
             {error}
           </div>
         )}
@@ -259,16 +268,16 @@ export default function CheckoutPage() {
             <div className="lg:col-span-7 space-y-6">
               
               {/* Section 1: Contact Info */}
-              <div className="bg-[var(--card)] border border-[var(--border-dark)] p-6 sm:p-8 space-y-4">
-                <h2 className="font-heading text-base font-bold text-[var(--text)] mb-2 flex items-center gap-2 pb-3 border-b border-[var(--border)] uppercase tracking-wider">
-                  <span className="w-5 h-5 bg-[var(--text)] text-[var(--bg)] text-xs font-bold flex items-center justify-center">
+              <div className="bg-[var(--card)] rounded-2xl border border-[var(--border)] p-6 sm:p-7 space-y-4 shadow-xs">
+                <h2 className="font-heading text-base font-bold text-[var(--text)] mb-2 flex items-center gap-2.5 pb-3 border-b border-[var(--border)]">
+                  <span className="w-6 h-6 rounded-full bg-[var(--olive)] text-white text-xs font-bold flex items-center justify-center">
                     1
                   </span>
                   Your Contact Information
                 </h2>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-[var(--text)] uppercase tracking-wider mb-1">
+                  <label className="block text-xs font-semibold text-[var(--text)] mb-1">
                     Full Name *
                   </label>
                   <input
@@ -278,13 +287,13 @@ export default function CheckoutPage() {
                     placeholder="Enter your full name"
                     value={form.fullName}
                     onChange={handleChange}
-                    className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--border)] text-xs text-[var(--text)] focus:outline-none focus:border-[var(--border-dark)]"
+                    className="input-warm"
                   />
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-[10px] font-bold text-[var(--text)] uppercase tracking-wider mb-1">
+                    <label className="block text-xs font-semibold text-[var(--text)] mb-1">
                       Mobile Number *
                     </label>
                     <input
@@ -294,12 +303,12 @@ export default function CheckoutPage() {
                       placeholder="e.g. +91 98765 43210"
                       value={form.phone}
                       onChange={handleChange}
-                      className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--border)] text-xs text-[var(--text)] focus:outline-none focus:border-[var(--border-dark)]"
+                      className="input-warm"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[10px] font-bold text-[var(--text)] uppercase tracking-wider mb-1">
+                    <label className="block text-xs font-semibold text-[var(--text)] mb-1">
                       WhatsApp Number *
                     </label>
                     <input
@@ -310,10 +319,8 @@ export default function CheckoutPage() {
                       placeholder="e.g. +91 98765 43210"
                       value={form.whatsappNumber}
                       onChange={handleChange}
-                      className={`w-full px-3.5 py-2.5 border text-xs ${
-                        sameAsPhone
-                           ? 'bg-[var(--bg-subtle)] border-[var(--border)] opacity-80 cursor-not-allowed'
-                          : 'bg-[var(--bg)] border-[var(--border)] focus:outline-none focus:border-[var(--border-dark)]'
+                      className={`input-warm ${
+                        sameAsPhone ? 'bg-[var(--bg-subtle)] opacity-70 cursor-not-allowed' : ''
                       }`}
                     />
                   </div>
@@ -325,7 +332,7 @@ export default function CheckoutPage() {
                     id="sameAsPhone"
                     checked={sameAsPhone}
                     onChange={handlePhoneToggle}
-                    className="accent-[var(--text)] cursor-pointer"
+                    className="accent-[var(--olive)] cursor-pointer rounded"
                   />
                   <label htmlFor="sameAsPhone" className="text-xs text-[var(--text-muted)] cursor-pointer select-none">
                     WhatsApp number is same as mobile number
@@ -334,16 +341,16 @@ export default function CheckoutPage() {
               </div>
 
               {/* Section 2: Address */}
-              <div className="bg-[var(--card)] border border-[var(--border-dark)] p-6 sm:p-8 space-y-4">
-                <h2 className="font-heading text-base font-bold text-[var(--text)] mb-2 flex items-center gap-2 pb-3 border-b border-[var(--border)] uppercase tracking-wider">
-                  <span className="w-5 h-5 bg-[var(--text)] text-[var(--bg)] text-xs font-bold flex items-center justify-center">
+              <div className="bg-[var(--card)] rounded-2xl border border-[var(--border)] p-6 sm:p-7 space-y-4 shadow-xs">
+                <h2 className="font-heading text-base font-bold text-[var(--text)] mb-2 flex items-center gap-2.5 pb-3 border-b border-[var(--border)]">
+                  <span className="w-6 h-6 rounded-full bg-[var(--olive)] text-white text-xs font-bold flex items-center justify-center">
                     2
                   </span>
                   Delivery Address & Occasion
                 </h2>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-[var(--text)] uppercase tracking-wider mb-1">
+                  <label className="block text-xs font-semibold text-[var(--text)] mb-1">
                     Complete Delivery Address *
                   </label>
                   <textarea
@@ -353,13 +360,13 @@ export default function CheckoutPage() {
                     placeholder="House/Flat No, Street, Landmark, City"
                     value={form.address}
                     onChange={handleChange}
-                    className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--border)] text-xs text-[var(--text)] focus:outline-none focus:border-[var(--border-dark)]"
+                    className="input-warm resize-none"
                   />
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-[10px] font-bold text-[var(--text)] uppercase tracking-wider mb-1">
+                    <label className="block text-xs font-semibold text-[var(--text)] mb-1">
                       Pincode *
                     </label>
                     <input
@@ -369,12 +376,12 @@ export default function CheckoutPage() {
                       placeholder="e.g. 682036"
                       value={form.pincode}
                       onChange={handleChange}
-                      className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--border)] text-xs text-[var(--text)] focus:outline-none focus:border-[var(--border-dark)]"
+                      className="input-warm"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[10px] font-bold text-[var(--text)] uppercase tracking-wider mb-1">
+                    <label className="block text-xs font-semibold text-[var(--text)] mb-1">
                       Preferred Delivery Date
                     </label>
                     <input
@@ -382,20 +389,20 @@ export default function CheckoutPage() {
                       name="deliveryDate"
                       value={form.deliveryDate}
                       onChange={handleChange}
-                      className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--border)] text-xs text-[var(--text)] focus:outline-none focus:border-[var(--border-dark)]"
+                      className="input-warm"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-[var(--text)] uppercase tracking-wider mb-1">
+                  <label className="block text-xs font-semibold text-[var(--text)] mb-1">
                     Occasion / Celebration
                   </label>
                   <select
                     name="occasion"
                     value={form.occasion}
                     onChange={handleChange}
-                    className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--border)] text-xs text-[var(--text)] focus:outline-none focus:border-[var(--border-dark)] cursor-pointer"
+                    className="input-warm cursor-pointer"
                   >
                     <option value="Birthday">Birthday</option>
                     <option value="Anniversary">Anniversary</option>
@@ -410,16 +417,16 @@ export default function CheckoutPage() {
               </div>
 
               {/* Section 3: Message */}
-              <div className="bg-[var(--card)] border border-[var(--border-dark)] p-6 sm:p-8 space-y-4">
-                <h2 className="font-heading text-base font-bold text-[var(--text)] mb-2 flex items-center gap-2 pb-3 border-b border-[var(--border)] uppercase tracking-wider">
-                  <span className="w-5 h-5 bg-[var(--text)] text-[var(--bg)] text-xs font-bold flex items-center justify-center">
+              <div className="bg-[var(--card)] rounded-2xl border border-[var(--border)] p-6 sm:p-7 space-y-4 shadow-xs">
+                <h2 className="font-heading text-base font-bold text-[var(--text)] mb-2 flex items-center gap-2.5 pb-3 border-b border-[var(--border)]">
+                  <span className="w-6 h-6 rounded-full bg-[var(--olive)] text-white text-xs font-bold flex items-center justify-center">
                     3
                   </span>
                   Keepsake Card & Notes
                 </h2>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-[var(--text)] uppercase tracking-wider mb-1">
+                  <label className="block text-xs font-semibold text-[var(--text)] mb-1">
                     Custom Message for Card
                   </label>
                   <textarea
@@ -428,12 +435,12 @@ export default function CheckoutPage() {
                     placeholder="Enter message to be handwritten on greeting card..."
                     value={form.customMessage}
                     onChange={handleChange}
-                    className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--border)] text-xs text-[var(--text)] focus:outline-none focus:border-[var(--border-dark)]"
+                    className="input-warm resize-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-[var(--text)] uppercase tracking-wider mb-1">
+                  <label className="block text-xs font-semibold text-[var(--text)] mb-1">
                     Special Delivery Instructions
                   </label>
                   <input
@@ -442,7 +449,7 @@ export default function CheckoutPage() {
                     placeholder="e.g. Surprise gift - do not reveal sender until delivered"
                     value={form.specialInstructions}
                     onChange={handleChange}
-                    className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--border)] text-xs text-[var(--text)] focus:outline-none focus:border-[var(--border-dark)]"
+                    className="input-warm"
                   />
                 </div>
               </div>
@@ -451,22 +458,22 @@ export default function CheckoutPage() {
 
             {/* Right: Order Breakdown & WhatsApp Place Order CTA */}
             <div className="lg:col-span-5 sticky top-24">
-              <div className="bg-[var(--card)] border border-[var(--border-dark)] p-6 sm:p-8 space-y-6">
+              <div className="bg-[var(--card)] rounded-2xl border border-[var(--border)] p-6 sm:p-7 space-y-6 shadow-xs">
                 
                 <div className="border-b border-[var(--border)] pb-3">
-                  <h2 className="font-heading text-xl font-bold text-[var(--text)] uppercase tracking-wider">Order Items ({items.length})</h2>
-                  <p className="text-[9.5px] text-[var(--text-muted)] uppercase tracking-wider">LETTERS Atelier Catalog</p>
+                  <h2 className="font-heading text-lg font-bold text-[var(--text)]">Order Items ({items.length})</h2>
+                  <p className="text-[10.5px] text-[var(--text-muted)] mt-0.5">LETTERS Atelier Catalog</p>
                 </div>
 
                 {/* Items List */}
                 <div className="space-y-2.5 max-h-64 overflow-y-auto pr-1">
                   {items.map((item) => (
-                    <div key={item.cartItemId} className="flex items-center justify-between gap-3 text-xs border-b border-[var(--border)] pb-2">
+                    <div key={item.cartItemId} className="flex items-center justify-between gap-3 text-xs border-b border-[var(--border)]/60 pb-2">
                       <div className="flex items-center gap-2.5 overflow-hidden">
-                        <img src={item.image} alt={item.name} className="w-10 h-10 object-cover flex-shrink-0 border border-[var(--border)]" />
+                        <img src={item.image} alt={item.name} className="w-10 h-10 object-cover flex-shrink-0 rounded-lg border border-[var(--border)]" />
                         <div className="overflow-hidden">
-                          <p className="font-bold text-[var(--text)] truncate text-[11.5px]">{item.name}</p>
-                          <p className="text-[9.5px] text-[var(--text-muted)]">Qty: {item.quantity}</p>
+                          <p className="font-semibold text-[var(--text)] truncate text-[11.5px]">{item.name}</p>
+                          <p className="text-[10px] text-[var(--text-muted)]">Qty: {item.quantity}</p>
                         </div>
                       </div>
                       <span className="font-bold text-[var(--text)] whitespace-nowrap">
@@ -480,11 +487,11 @@ export default function CheckoutPage() {
                 <div className="pt-2 border-t border-[var(--border)] space-y-2 text-xs">
                   <div className="flex justify-between text-[var(--text-muted)]">
                     <span>Items Subtotal</span>
-                    <span className="font-bold text-[var(--text)]">₹{subtotal.toLocaleString()}</span>
+                    <span className="font-semibold text-[var(--text)]">₹{subtotal.toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between text-[var(--text-muted)]">
                     <span>Delivery Packaging</span>
-                    <span className="font-bold text-[var(--text)]">
+                    <span className="font-semibold text-[var(--text)]">
                       {deliveryCharge === 0 ? <span className="text-emerald-600">FREE</span> : `₹${deliveryCharge}`}
                     </span>
                   </div>
@@ -492,7 +499,7 @@ export default function CheckoutPage() {
 
                 {/* Total */}
                 <div className="pt-3 border-t border-[var(--border)] flex justify-between items-baseline">
-                  <span className="text-xs font-bold uppercase tracking-wider text-[var(--text)]">Total Payable</span>
+                  <span className="text-xs font-semibold text-[var(--text)]">Total Payable</span>
                   <span className="font-heading text-2xl font-bold text-[var(--text)]">
                     ₹{total.toLocaleString()}
                   </span>
@@ -502,13 +509,13 @@ export default function CheckoutPage() {
                 <button
                   type="submit"
                   disabled={submitting || items.length === 0}
-                  className="w-full flex items-center justify-center gap-2 py-4 px-6 text-[11px] font-bold uppercase tracking-[0.2em] bg-[#25D366] text-white hover:bg-[#1EBE5D] border border-[#25D366] transition-colors disabled:opacity-50 cursor-pointer"
+                  className="w-full flex items-center justify-center gap-2 py-4 px-6 text-xs font-semibold rounded-full bg-[#25D366] text-white hover:bg-[#1EBE5D] transition-colors disabled:opacity-50 cursor-pointer shadow-xs"
                 >
                   <FontAwesomeIcon icon={faWhatsapp} className="text-base" />
                   {submitting ? 'Saving...' : 'Place Order & Open WhatsApp'}
                 </button>
 
-                <div className="text-[9.5px] text-center text-[var(--text-muted)] space-y-1 pt-1 uppercase tracking-wider">
+                <div className="text-[10px] text-center text-[var(--text-muted)] space-y-0.5 pt-1">
                   <p>✓ Order is saved in atelier database</p>
                   <p>✓ Opens WhatsApp with prefilled order details</p>
                 </div>
