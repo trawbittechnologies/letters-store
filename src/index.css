@@ -3,31 +3,35 @@
 
 :root {
   /* LETTERS Premium Gifting Brand Palette */
-  --bg: #FAF7F2;              /* Warm Ivory */
-  --bg-subtle: #F3ECE2;       /* Soft Sand */
-  --text: #1F2421;            /* Deep Charcoal */
-  --text-muted: #5C6255;      /* Muted Warm Slate */
-  --accent: #C8A870;          /* Subtle Champagne / Warm Gold */
-  --accent-hover: #B59359;    /* Rich Golden Ochre */
-  --accent-secondary: #C47B7B;/* Muted Rose / Dusty Pink */
-  --accent-rose-hover: #B36868;
-  --border: #E8DCCF;          /* Warm Cream Border */
-  --card: #FFFDFB;            /* Soft Cream Card */
-  --card-hover: #FFFFFF;
+  --bg: #F8F4EC;              /* Primary Background: Warm Ivory */
+  --bg-subtle: #EFE7DA;       /* Secondary Background: Soft Cream */
+  --text: #1C1C1A;            /* Primary Text: Deep Charcoal */
+  --text-muted: #766F65;      /* Secondary Text: Warm Taupe */
+  --accent: #C9A46C;          /* Brand Accent: Champagne Gold */
+  --accent-hover: #A9824D;    /* Gold Dark / Hover: Antique Gold */
+  --accent-secondary: #766F65;/* Warm Taupe */
+  --accent-rose-hover: #A9824D;
+  --border: #DDD3C4;          /* Borders: Soft Beige */
+  --border-dark: #1C1C1A;     /* Deep Charcoal */
+  --card: #FFFDF9;            /* Cards: Pure Warm White */
+  --card-hover: #FAF7F0;
+  --success: #71806C;         /* Success / Available: Muted Sage */
 }
 
 .dark {
-  --bg: #141716;              /* Deep Midnight Charcoal */
-  --bg-subtle: #1C201E;       /* Dark Olive Slate */
-  --text: #FAF7F2;            /* Warm Ivory */
-  --text-muted: #B8BAAE;      /* Soft Ash Sage */
-  --accent: #D4AF37;          /* Luminous Champagne Gold */
-  --accent-hover: #E2C255;
-  --accent-secondary: #D48B88;/* Warm Muted Rose */
-  --accent-rose-hover: #E29B98;
-  --border: #2C332F;          /* Subtle Slate Border */
-  --card: #1C201E;            /* Dark Charcoal Card */
-  --card-hover: #242927;
+  --bg: #161513;              /* Warm Obsidian Charcoal */
+  --bg-subtle: #211E1B;       /* Subtle Dark Taupe */
+  --text: #F8F4EC;            /* Warm Ivory */
+  --text-muted: #A69F94;      /* Soft Taupe Neutral */
+  --accent: #C9A46C;          /* Champagne Gold */
+  --accent-hover: #D8B57E;    /* Luminous Gold Hover */
+  --accent-secondary: #A69F94;
+  --accent-rose-hover: #C9A46C;
+  --border: #332F2A;          /* Subtle Slate Border */
+  --border-dark: #F8F4EC;
+  --card: #1E1C19;            /* Dark Charcoal Card */
+  --card-hover: #26231F;
+  --success: #8A9B84;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -60,35 +64,36 @@ body {
 
 .gold-btn {
   background: var(--accent);
-  color: #1F2421;
+  color: #1C1C1A;
   font-weight: 600;
   border-radius: 9999px;
   transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-  box-shadow: 0 4px 15px rgba(200, 168, 112, 0.2);
+  box-shadow: 0 4px 15px rgba(201, 164, 108, 0.25);
 }
 .dark .gold-btn {
   background: var(--accent);
-  color: #141716;
-  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.25);
+  color: #161513;
+  box-shadow: 0 4px 15px rgba(201, 164, 108, 0.3);
 }
 .gold-btn:hover {
   background: var(--accent-hover);
+  color: #FFFDF9;
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(200, 168, 112, 0.3);
+  box-shadow: 0 6px 20px rgba(169, 130, 77, 0.35);
 }
 
 .rose-btn {
-  background: var(--accent-secondary);
-  color: #FFFFFF;
+  background: var(--bg-subtle);
+  color: var(--text);
   font-weight: 600;
   border-radius: 9999px;
+  border: 1px solid var(--border);
   transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-  box-shadow: 0 4px 15px rgba(196, 123, 123, 0.2);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
 }
 .rose-btn:hover {
-  background: var(--accent-rose-hover);
+  background: #DDD3C4;
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(196, 123, 123, 0.3);
 }
 
 .outline-btn {
@@ -113,41 +118,28 @@ body {
 .card-minimal:hover {
   border-color: var(--accent);
   transform: translateY(-4px);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 12px 30px rgba(28, 28, 26, 0.08);
 }
 .dark .card-minimal:hover {
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+  border-color: #C9A46C;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
 }
 
 .badge-gold {
-  background: rgba(200, 168, 112, 0.15);
-  color: #9D7B38;
-  border: 1px solid rgba(200, 168, 112, 0.3);
+  background: rgba(201, 164, 108, 0.15);
+  color: #8A6730;
+  border: 1px solid rgba(201, 164, 108, 0.35);
 }
 .dark .badge-gold {
-  background: rgba(212, 175, 55, 0.2);
-  color: #E2C255;
-  border: 1px solid rgba(212, 175, 55, 0.4);
+  color: #D8B57E;
+  border: 1px solid rgba(201, 164, 108, 0.45);
 }
 
-.badge-rose {
-  background: rgba(196, 123, 123, 0.15);
-  color: #A35050;
-  border: 1px solid rgba(196, 123, 123, 0.3);
+.badge-sage, .badge-green {
+  background: rgba(113, 128, 108, 0.15);
+  color: #556351;
+  border: 1px solid rgba(113, 128, 108, 0.35);
 }
-.dark .badge-rose {
-  background: rgba(212, 139, 136, 0.2);
-  color: #EFA6A4;
-  border: 1px solid rgba(212, 139, 136, 0.4);
-}
-
-.badge-green {
-  background: rgba(37, 211, 102, 0.12);
-  color: #128C7E;
-  border: 1px solid rgba(37, 211, 102, 0.25);
-}
-.dark .badge-green {
-  background: rgba(37, 211, 102, 0.2);
-  color: #25D366;
-  border: 1px solid rgba(37, 211, 102, 0.4);
+.dark .badge-sage, .dark .badge-green {
+  color: #8A9B84;
 }

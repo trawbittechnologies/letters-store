@@ -1,45 +1,53 @@
-@import url('https://fonts.googleapis.com/css2?family=Allura&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Italiana&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,600&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
 
+@theme {
+  --color-warm-ivory: #F8F4EC;
+  --color-soft-cream: #EFE7DA;
+  --color-deep-charcoal: #1C1C1A;
+  --color-warm-taupe: #766F65;
+  --color-champagne-gold: #C9A46C;
+  --color-antique-gold: #A9824D;
+  --color-pure-warm-white: #FFFDF9;
+  --color-soft-beige: #DDD3C4;
+  --color-muted-sage: #71806C;
+}
+
 :root {
-  /* LETTERS Square Minimalist Modern Brand Palette */
-  --bg: #FBF9F5;              /* Pure Warm Alabaster */
-  --bg-subtle: #F2EDE4;       /* Geometric Linen */
-  --text: #111312;            /* Deep Stark Charcoal */
-  --text-muted: #5E635F;      /* Muted Architectural Slate */
-  --accent: #C29F62;          /* Champagne Ochre */
-  --accent-hover: #A8864B;    /* Deep Bronze Ochre */
-  --accent-secondary: #B05D5D;/* Muted Terracotta Rose */
-  --accent-rose-hover: #964A4A;
-  --border: #E5DCD0;          /* Crisp Hairline Border */
-  --border-dark: #111312;     /* Stark Contrast Border */
-  --card: #FFFFFF;            /* Pure Clean Card */
-  --card-hover: #FAF7F2;
+  /* Brand Luxury Palette */
+  --bg: #F8F4EC;              /* Primary Background: Warm Ivory */
+  --bg-subtle: #EFE7DA;       /* Secondary Background: Soft Cream */
+  --text: #1C1C1A;            /* Primary Text: Deep Charcoal */
+  --text-muted: #766F65;      /* Secondary Text: Warm Taupe */
+  --accent: #C9A46C;          /* Brand Accent: Champagne Gold */
+  --accent-hover: #A9824D;    /* Gold Dark / Hover: Antique Gold */
+  --accent-secondary: #766F65;/* Warm Taupe */
+  --accent-rose-hover: #A9824D;
+  --border: #DDD3C4;          /* Borders: Soft Beige */
+  --border-dark: #1C1C1A;     /* Deep Charcoal */
+  --card: #FFFDF9;            /* Cards: Pure Warm White */
+  --card-hover: #FAF7F0;
+  --success: #71806C;         /* Success / Available: Muted Sage */
 }
 
 .dark {
-  --bg: #0D0F0E;              /* Stark Obsidian */
-  --bg-subtle: #141816;       /* Dark Olive Onyx */
-  --text: #FBF9F5;            /* Pure Warm Alabaster */
-  --text-muted: #8E948F;      /* Slate Mist */
-  --accent: #D4AF37;          /* Luminous Champagne Gold */
-  --accent-hover: #E5C358;
-  --accent-secondary: #D47B78;/* Terracotta Rose */
-  --accent-rose-hover: #E2908D;
-  --border: #222724;          /* Dark Hairline Border */
-  --border-dark: #FBF9F5;     /* Stark Contrast Border */
-  --card: #131615;            /* Stark Charcoal Card */
-  --card-hover: #181C1A;
+  --bg: #161513;              /* Warm Obsidian Charcoal */
+  --bg-subtle: #211E1B;       /* Subtle Dark Taupe */
+  --text: #F8F4EC;            /* Warm Ivory */
+  --text-muted: #A69F94;      /* Soft Taupe Neutral */
+  --accent: #C9A46C;          /* Champagne Gold */
+  --accent-hover: #D8B57E;    /* Luminous Gold Hover */
+  --accent-secondary: #A69F94;
+  --accent-rose-hover: #C9A46C;
+  --border: #332F2A;          /* Hairline Warm Dark Border */
+  --border-dark: #F8F4EC;
+  --card: #1E1C19;            /* Charcoal Card */
+  --card-hover: #26231F;
+  --success: #8A9B84;         /* Soft Sage Green */
 }
 
 *, *::before, *::after {
   box-sizing: border-box;
-  border-radius: 0 !important; /* Force true square geometric minimalism */
-}
-
-/* Allow select exceptions only if explicitly needed */
-.allow-round {
-  border-radius: 9999px !important;
 }
 
 html {
@@ -49,23 +57,27 @@ html {
 body {
   background-color: var(--bg);
   color: var(--text);
-  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: 'Inter', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
   transition: background-color 0.25s ease, color 0.25s ease;
 }
 
-/* Minimal Square Scrollbar */
+/* Minimal Luxury Scrollbar */
 ::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
   background: var(--bg);
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--accent);
+  background: #C9A46C;
+  border-radius: 9999px;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: #A9824D;
 }
 
 /* Typography Classes */
@@ -75,108 +87,186 @@ body {
 .font-serif-subtle {
   font-family: 'Cormorant Garamond', Georgia, serif;
 }
-.font-editorial {
-  font-family: 'Italiana', 'Playfair Display', serif;
-}
-.font-mono-clean {
-  font-family: 'Space Grotesk', monospace, sans-serif;
+.font-sans-ui {
+  font-family: 'Inter', 'Plus Jakarta Sans', sans-serif;
 }
 
-/* Square Non-Shadow Clean Buttons */
-.gold-btn {
-  background: var(--accent);
-  color: #111312;
-  font-weight: 700;
-  border: 1px solid var(--accent);
-  box-shadow: none !important;
-  transition: all 0.2s ease;
+/* Modern Luxury Pill Buttons & Micro-interactions */
+.gold-btn, .primary-pill-btn {
+  background: #C9A46C;
+  color: #1C1C1A;
+  font-weight: 600;
+  border-radius: 9999px;
+  border: 1px solid #C9A46C;
+  box-shadow: 0 2px 10px rgba(201, 164, 108, 0.25);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
 }
-.dark .gold-btn {
-  background: var(--accent);
-  color: #0D0F0E;
-  border-color: var(--accent);
+.dark .gold-btn, .dark .primary-pill-btn {
+  background: #C9A46C;
+  color: #161513;
+  border-color: #C9A46C;
+  box-shadow: 0 2px 12px rgba(201, 164, 108, 0.3);
 }
-.gold-btn:hover {
-  background: var(--text);
-  color: var(--bg);
-  border-color: var(--text);
+.gold-btn:hover, .primary-pill-btn:hover {
+  background: #A9824D;
+  border-color: #A9824D;
+  color: #FFFDF9;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(169, 130, 77, 0.35);
+}
+.dark .gold-btn:hover, .dark .primary-pill-btn:hover {
+  background: #D8B57E;
+  border-color: #D8B57E;
+  color: #161513;
+}
+.gold-btn:active, .primary-pill-btn:active {
+  transform: scale(0.97);
 }
 
-.rose-btn {
-  background: var(--accent-secondary);
-  color: #FFFFFF;
-  font-weight: 700;
-  border: 1px solid var(--accent-secondary);
-  box-shadow: none !important;
-  transition: all 0.2s ease;
+.charcoal-btn {
+  background: #1C1C1A;
+  color: #FFFDF9;
+  font-weight: 500;
+  border-radius: 9999px;
+  border: 1px solid #1C1C1A;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
 }
-.rose-btn:hover {
-  background: var(--text);
-  color: var(--bg);
-  border-color: var(--text);
+.charcoal-btn:hover {
+  background: #C9A46C;
+  border-color: #C9A46C;
+  color: #1C1C1A;
+  transform: translateY(-1px);
+}
+.dark .charcoal-btn {
+  background: #F8F4EC;
+  color: #1C1C1A;
+  border-color: #F8F4EC;
+}
+.dark .charcoal-btn:hover {
+  background: #C9A46C;
+  border-color: #C9A46C;
+  color: #161513;
+}
+
+.rose-btn, .secondary-pill-btn {
+  background: var(--bg-subtle);
+  color: var(--text);
+  font-weight: 500;
+  border-radius: 9999px;
+  border: 1px solid var(--border);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.rose-btn:hover, .secondary-pill-btn:hover {
+  background: #DDD3C4;
+  border-color: #C9A46C;
+  color: #1C1C1A;
+}
+.rose-btn:active, .secondary-pill-btn:active {
+  transform: scale(0.97);
 }
 
 .outline-btn {
   background: transparent;
-  border: 1px solid var(--border-dark);
+  border: 1px solid var(--border);
   color: var(--text);
-  font-weight: 700;
+  font-weight: 500;
+  border-radius: 9999px;
   box-shadow: none !important;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
 }
 .outline-btn:hover {
-  background: var(--text);
-  color: var(--bg);
-  border-color: var(--text);
+  background: var(--bg-subtle);
+  border-color: var(--accent);
+  color: var(--accent-hover);
+  transform: translateY(-1px);
+}
+.outline-btn:active {
+  transform: scale(0.97);
 }
 
-/* Square Non-Shadow Card Minimal */
+/* Modern Luxury Minimal Card */
 .card-minimal {
   background: var(--card);
   border: 1px solid var(--border);
-  box-shadow: none !important;
-  transition: border-color 0.2s ease, background-color 0.2s ease;
+  border-radius: 1.25rem;
+  box-shadow: 0 1px 4px rgba(28, 28, 26, 0.03);
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
 }
 .card-minimal:hover {
   border-color: var(--accent);
+  box-shadow: 0 12px 28px -6px rgba(28, 28, 26, 0.08);
+}
+.dark .card-minimal:hover {
+  border-color: #C9A46C;
+  box-shadow: 0 12px 28px -6px rgba(0, 0, 0, 0.4);
 }
 
-/* Square Minimal Badge */
-.badge-minimal {
+/* Modern Minimal Pill Badges */
+.badge-minimal, .badge-pill {
   border: 1px solid var(--border);
-  background: var(--bg);
+  background: var(--bg-subtle);
   color: var(--text);
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  padding: 3px 8px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .badge-gold {
-  border: 1px solid var(--accent);
-  background: transparent;
-  color: var(--accent-hover);
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  padding: 3px 8px;
+  border: 1px solid rgba(201, 164, 108, 0.35);
+  background: rgba(201, 164, 108, 0.15);
+  color: #8A6730;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
 .dark .badge-gold {
-  color: var(--accent);
+  color: #D8B57E;
+  border-color: rgba(201, 164, 108, 0.45);
+}
+
+.badge-sage, .badge-success, .badge-green {
+  border: 1px solid rgba(113, 128, 108, 0.35);
+  background: rgba(113, 128, 108, 0.15);
+  color: #556351;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.dark .badge-sage, .dark .badge-success, .dark .badge-green {
+  color: #8A9B84;
 }
 
 /* Infinite Marquee */

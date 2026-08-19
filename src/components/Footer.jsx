@@ -23,13 +23,13 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-[var(--card)] text-[var(--text)] transition-colors duration-200 border-t border-[var(--border-dark)] pt-20 pb-12 px-4 sm:px-6 lg:px-12 select-none">
+    <footer className="bg-[var(--card)] text-[var(--text)] transition-colors duration-200 border-t border-[var(--border)] pt-20 pb-12 px-4 sm:px-6 lg:px-12 select-none">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-12 pb-16 border-b border-[var(--border)]">
         
         {/* Brand & Story */}
         <div className="lg:col-span-2 space-y-5">
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 bg-[var(--bg)] border border-[var(--border-dark)] flex items-center justify-center">
+            <div className="w-10 h-10 bg-[var(--bg-subtle)] border border-[var(--border)] rounded-xl flex items-center justify-center">
               <Gift size={18} className="text-[var(--accent)]" />
             </div>
             <div className="flex flex-col">
@@ -46,27 +46,27 @@ export default function Footer() {
             {settings.tagline}. Thoughtfully curated luxury hampers, bespoke floral & chocolate bouquets, customized keepsakes, and personalized gifting.
           </p>
 
-          {/* Social and WhatsApp Buttons - Square Frame */}
+          {/* Social and WhatsApp Buttons - Rounded Pill/Circle Frame */}
           <div className="flex items-center gap-2 pt-2">
             <a
               href={settings.instagram}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-9 h-9 bg-[var(--bg)] border border-[var(--border-dark)] flex items-center justify-center hover:bg-[var(--text)] hover:text-[var(--bg)] transition-colors"
+              className="w-9 h-9 rounded-full bg-[var(--bg-subtle)] border border-[var(--border)] flex items-center justify-center text-[var(--text)] hover:bg-[var(--accent)] hover:text-[#1C1C1A] hover:border-[var(--accent)] transition-colors"
               aria-label="Instagram"
             >
               <InstagramIcon size={14} />
             </a>
             <button
               onClick={handleWhatsAppClick}
-              className="w-9 h-9 bg-[var(--bg)] border border-[var(--border-dark)] flex items-center justify-center hover:bg-[#25D366] hover:text-white transition-colors cursor-pointer"
+              className="w-9 h-9 rounded-full bg-[var(--bg-subtle)] border border-[var(--border)] flex items-center justify-center text-[var(--text)] hover:bg-[#71806C] hover:text-white hover:border-[#71806C] transition-colors cursor-pointer"
               aria-label="WhatsApp"
             >
               <MessageCircle size={14} />
             </button>
             <a
               href={`mailto:${settings.email}`}
-              className="w-9 h-9 bg-[var(--bg)] border border-[var(--border-dark)] flex items-center justify-center hover:bg-[var(--text)] hover:text-[var(--bg)] transition-colors"
+              className="w-9 h-9 rounded-full bg-[var(--bg-subtle)] border border-[var(--border)] flex items-center justify-center text-[var(--text)] hover:bg-[var(--accent)] hover:text-[#1C1C1A] hover:border-[var(--accent)] transition-colors"
               aria-label="Email"
             >
               <Mail size={14} />
@@ -121,7 +121,7 @@ export default function Footer() {
 
           <button
             onClick={handleWhatsAppClick}
-            className="w-full flex items-center justify-center gap-2 py-3 px-4 text-[10px] font-bold uppercase tracking-[0.2em] bg-[#25D366] text-white hover:bg-[#1EBE5D] border border-[#25D366] transition-colors mt-4 cursor-pointer"
+            className="w-full flex items-center justify-center gap-2 py-3 px-4 text-[10px] font-bold uppercase tracking-[0.2em] rounded-full bg-[#C9A46C] text-[#1C1C1A] hover:bg-[#A9824D] hover:text-[#FFFDF9] transition-colors mt-4 cursor-pointer shadow-sm"
           >
             <MessageCircle size={14} className="fill-current" /> Order on WhatsApp
           </button>

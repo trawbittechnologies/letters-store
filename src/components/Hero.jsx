@@ -1,6 +1,6 @@
 'use client';
 
-import { Gift, Sparkles, ArrowRight, MessageCircle } from 'lucide-react';
+import { Sparkles, ArrowRight, MessageCircle, Package, ShieldCheck, HeartHandshake } from 'lucide-react';
 import Link from 'next/link';
 import { useSettingsStore } from '../store/settingsStore';
 
@@ -8,143 +8,144 @@ export default function Hero() {
   const { settings, getWhatsAppUrl } = useSettingsStore();
 
   const handleQuickWhatsAppChat = () => {
-    const message = `Hello LETTERS Gifting, I would like to inquire about your bespoke luxury hampers and personalized gifts.`;
+    const message = `Hello ${settings.brandName}, I would like to inquire about your bespoke luxury hampers and personalized gifts.`;
     window.open(getWhatsAppUrl(message), '_blank');
   };
 
   return (
-    <section className="relative min-h-[88vh] flex flex-col justify-center bg-[var(--bg)] pt-12 pb-20 border-b border-[var(--border)] transition-colors duration-200">
+    <section className="relative min-h-[85vh] flex flex-col justify-center bg-[var(--bg)] pt-12 pb-24 border-b border-[var(--border)] transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-center">
           
-          {/* Left Column: Editorial Headline & Actions */}
+          {/* Left Column: Editorial Headline & Modern CTAs */}
           <div className="lg:col-span-7 flex flex-col justify-center text-left">
             
-            {/* Tagline Box - Square Tag */}
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 border border-[var(--border-dark)] bg-[var(--card)] mb-6 w-fit select-none">
-              <Sparkles size={12} className="text-[var(--accent)]" />
-              <span className="text-[10px] font-bold tracking-[0.25em] uppercase text-[var(--text)]">
-                {settings.tagline} • EST. {settings.establishedYear}
+            {/* Tagline Badge - Small Pill with soft cream bg */}
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[var(--bg-subtle)] border border-[var(--border)] text-[var(--text)] mb-6 w-fit select-none">
+              <Sparkles size={13} className="text-[var(--accent)]" />
+              <span className="text-xs font-medium tracking-wide">
+                {settings.tagline} • Est. {settings.establishedYear}
               </span>
             </div>
 
-            {/* Main Editorial Headline */}
-            <h1 className="font-heading font-bold text-4xl sm:text-5xl lg:text-6xl text-[var(--text)] leading-[1.1] tracking-tight mb-6">
+            {/* Main Editorial Headline with High-Contrast Serif */}
+            <h1 className="font-heading font-medium text-4xl sm:text-5xl lg:text-6xl text-[var(--text)] leading-[1.12] tracking-tight mb-6">
               Making Moments <br />
-              <span className="italic font-normal text-[var(--accent-secondary)]">
+              <span className="italic font-normal text-[var(--accent-hover)]">
                 Exquisitely Memorable.
               </span>
             </h1>
 
-            {/* Description */}
-            <p className="text-[var(--text-muted)] text-sm sm:text-base leading-relaxed max-w-xl font-normal mb-8 border-l-2 border-[var(--accent)] pl-4">
-              Thoughtfully curated hampers, bespoke floral arrangements, and personalized keepsakes for life's most precious celebrations. Handcrafted with precision in our studio.
+            {/* Editorial Description */}
+            <p className="text-[var(--text-muted)] text-base sm:text-lg leading-relaxed max-w-xl font-normal mb-10">
+              Thoughtfully curated hampers, bespoke floral arrangements, and personalized keepsakes for life's most cherished milestones. Handcrafted with meticulous precision in our studio.
             </p>
 
-            {/* CTAs - Square Geometric Buttons */}
-            <div className="flex flex-wrap items-center gap-3 mb-12">
+            {/* Pill-shaped CTA Buttons with Micro-interactions */}
+            <div className="flex flex-wrap items-center gap-3.5 mb-14">
               <Link
                 href="/shop"
-                className="gold-btn px-7 py-3.5 text-[11px] font-bold tracking-[0.2em] uppercase"
+                className="gold-btn px-7 py-3.5 text-xs font-semibold tracking-wider flex items-center gap-2"
               >
-                <Gift size={15} className="mr-2" />
-                Explore Catalog
+                <span>Explore Catalog</span>
+                <ArrowRight size={14} />
               </Link>
 
               <Link
                 href="/custom-gift"
-                className="rose-btn px-7 py-3.5 text-[11px] font-bold tracking-[0.2em] uppercase"
+                className="secondary-pill-btn px-7 py-3.5 text-xs font-medium tracking-wider flex items-center gap-2"
               >
-                <Sparkles size={15} className="mr-2" />
-                Custom Hamper
+                <Sparkles size={14} className="text-[var(--accent)]" />
+                <span>Custom Hamper</span>
               </Link>
 
               <button
                 onClick={handleQuickWhatsAppChat}
-                className="outline-btn px-6 py-3.5 text-[11px] font-bold tracking-[0.2em] uppercase cursor-pointer"
+                className="outline-btn px-6 py-3.5 text-xs font-medium tracking-wider flex items-center gap-2 cursor-pointer"
                 title="Direct WhatsApp Inquiry"
               >
-                <MessageCircle size={15} className="text-[#25D366] mr-2" />
-                WhatsApp Desk
+                <MessageCircle size={14} className="text-[#71806C]" />
+                <span>WhatsApp Desk</span>
               </button>
             </div>
 
-            {/* Trust Badges - Geometric Grid */}
-            <div className="grid grid-cols-3 gap-0 border border-[var(--border)] max-w-xl divide-x divide-[var(--border)] bg-[var(--card)]">
-              <div className="p-3.5 flex flex-col justify-between">
-                <span className="text-[9px] font-bold text-[var(--accent-hover)] uppercase tracking-widest block mb-1">
-                  01 / Craft
-                </span>
-                <h4 className="text-xs font-bold text-[var(--text)] uppercase tracking-wider">Artisan Curated</h4>
-                <p className="text-[9px] text-[var(--text-muted)] mt-0.5">Since {settings.establishedYear}</p>
+            {/* Borderless Feature Highlights with elegant icons & muted text */}
+            <div className="grid grid-cols-3 gap-6 max-w-xl pt-4">
+              <div className="flex flex-col gap-1.5">
+                <div className="flex items-center gap-1.5 text-[var(--text)]">
+                  <ShieldCheck size={16} strokeWidth={1.75} className="text-[var(--accent)]" />
+                  <h4 className="text-xs font-semibold tracking-wide">Artisan Curated</h4>
+                </div>
+                <p className="text-xs text-[var(--text-muted)] leading-relaxed">
+                  Handcrafted with signature quality since {settings.establishedYear}.
+                </p>
               </div>
 
-              <div className="p-3.5 flex flex-col justify-between">
-                <span className="text-[9px] font-bold text-[var(--accent-secondary)] uppercase tracking-widest block mb-1">
-                  02 / Logistics
-                </span>
-                <h4 className="text-xs font-bold text-[var(--text)] uppercase tracking-wider">Padded Dispatch</h4>
-                <p className="text-[9px] text-[var(--text-muted)] mt-0.5">Secure transit</p>
+              <div className="flex flex-col gap-1.5">
+                <div className="flex items-center gap-1.5 text-[var(--text)]">
+                  <Package size={16} strokeWidth={1.75} className="text-[var(--accent)]" />
+                  <h4 className="text-xs font-semibold tracking-wide">Padded Dispatch</h4>
+                </div>
+                <p className="text-xs text-[var(--text-muted)] leading-relaxed">
+                  Carefully boxed & insulated for seamless transit.
+                </p>
               </div>
 
-              <div className="p-3.5 flex flex-col justify-between">
-                <span className="text-[9px] font-bold text-emerald-600 uppercase tracking-widest block mb-1">
-                  03 / Care
-                </span>
-                <h4 className="text-xs font-bold text-[var(--text)] uppercase tracking-wider">Direct WhatsApp</h4>
-                <p className="text-[9px] text-[var(--text-muted)] mt-0.5">Live photo preview</p>
+              <div className="flex flex-col gap-1.5">
+                <div className="flex items-center gap-1.5 text-[var(--text)]">
+                  <HeartHandshake size={16} strokeWidth={1.75} className="text-[var(--accent)]" />
+                  <h4 className="text-xs font-semibold tracking-wide">Direct Care</h4>
+                </div>
+                <p className="text-xs text-[var(--text-muted)] leading-relaxed">
+                  Live photo preview via WhatsApp before dispatch.
+                </p>
               </div>
             </div>
 
           </div>
 
-          {/* Right Column: Square Geometric Visual Showcase */}
+          {/* Right Column: Borderless Softly Rounded Visual Showcase */}
           <div className="lg:col-span-5 relative">
-            <div className="relative border border-[var(--border-dark)] bg-[var(--card)] p-2">
-              {/* Main Visual Image Box */}
-              <div className="relative aspect-[4/5] overflow-hidden bg-[var(--bg-subtle)] border border-[var(--border)] group">
+            <div className="relative rounded-3xl overflow-hidden shadow-2xl shadow-black/5 bg-[var(--bg-subtle)] border border-[var(--border)] group">
+              {/* Main Visual Image */}
+              <div className="relative aspect-[4/5] overflow-hidden">
                 <img
                   src="https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=1000&q=80"
                   alt="LETTERS Luxury Gifting Showcase"
-                  className="w-full h-full object-cover grayscale-[15%] group-hover:grayscale-0 group-hover:scale-103 transition-all duration-500"
+                  className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-700 ease-out"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
                 
-                {/* Flat Square Bottom Pill */}
-                <div className="absolute bottom-4 left-4 right-4 p-4 bg-[var(--card)] border border-[var(--border-dark)] flex items-center justify-between">
+                {/* Floating Glassmorphic Pill Banner */}
+                <div className="absolute bottom-5 left-5 right-5 p-4 rounded-2xl bg-[#FFFDF9]/90 dark:bg-[#161513]/90 backdrop-blur-md border border-[#DDD3C4]/60 dark:border-[#332F2A] flex items-center justify-between shadow-lg">
                   <div>
-                    <span className="text-[9px] font-bold uppercase tracking-[0.25em] text-[var(--accent-secondary)] block">
+                    <span className="text-[11px] font-medium text-[var(--text-muted)] block mb-0.5">
                       Featured Series
                     </span>
-                    <h3 className="font-heading font-bold text-sm text-[var(--text)]">
+                    <h3 className="font-heading font-semibold text-sm text-[var(--text)]">
                       Bespoke Hampers & Bouquets
                     </h3>
                   </div>
                   <Link
                     href="/shop"
-                    className="w-8 h-8 bg-[var(--text)] text-[var(--bg)] flex items-center justify-center hover:bg-[var(--accent)] hover:text-[#111312] transition-colors"
+                    className="w-9 h-9 rounded-full bg-[#1C1C1A] text-[#FFFDF9] dark:bg-[#C9A46C] dark:text-[#161513] hover:bg-[#C9A46C] hover:text-[#1C1C1A] flex items-center justify-center transition-all shadow-sm"
                     aria-label="View shop"
                   >
-                    <ArrowRight size={14} />
+                    <ArrowRight size={15} />
                   </Link>
                 </div>
               </div>
 
-              {/* Square Rating Box Top-Left */}
-              <div className="absolute -top-3 -left-3 p-3 bg-[var(--card)] border border-[var(--border-dark)] flex items-center gap-2.5">
-                <div className="w-7 h-7 bg-[var(--text)] text-[var(--bg)] flex items-center justify-center font-bold text-xs">
-                  5★
-                </div>
-                <div>
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-[var(--text)]">2,500+ Hampers</p>
-                  <p className="text-[8.5px] text-[var(--text-muted)] uppercase tracking-wider">Handcrafted</p>
-                </div>
+              {/* Floating Pill Rating Tag */}
+              <div className="absolute top-4 left-4 px-3.5 py-1.5 rounded-full bg-[#FFFDF9]/90 dark:bg-[#161513]/90 backdrop-blur-md border border-[#DDD3C4]/60 dark:border-[#332F2A] flex items-center gap-2 shadow-sm">
+                <span className="text-xs font-semibold text-[var(--text)]">5.0 ★</span>
+                <span className="text-[11px] text-[var(--text-muted)]">2,500+ Hampers</span>
               </div>
 
-              {/* Square Customization Box Bottom-Right */}
-              <div className="absolute -bottom-3 -right-3 px-3.5 py-2 bg-[var(--card)] border border-[var(--border-dark)] flex items-center gap-2">
-                <Sparkles size={13} className="text-[var(--accent)]" />
-                <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-[var(--text)]">
+              {/* Name Engraved Pill Badge */}
+              <div className="absolute top-4 right-4 px-3 py-1.5 rounded-full bg-[#FFFDF9]/90 dark:bg-[#161513]/90 backdrop-blur-md border border-[#DDD3C4]/60 dark:border-[#332F2A] flex items-center gap-1.5 shadow-sm">
+                <Sparkles size={12} className="text-[var(--accent)]" />
+                <span className="text-[11px] font-medium text-[var(--text)]">
                   Name Engraved
                 </span>
               </div>
