@@ -9,7 +9,6 @@ import {
   faBagShopping,
   faArrowRight,
   faChevronDown,
-  faGift,
   faWandMagicSparkles,
 } from '@fortawesome/free-solid-svg-icons';
 import { faWhatsapp } from '@fortawesome/free-brands-svg-icons';
@@ -65,6 +64,7 @@ export default function Navbar() {
   };
 
   const navLinks = [
+    { label: 'Home', href: '/' },
     { label: 'Shop', href: '/shop' },
     { label: 'Deals', href: '/deals', badge: 'Offers' },
     { label: 'Custom Hamper', href: '/custom-gift', badge: 'Bespoke' },
@@ -75,7 +75,7 @@ export default function Navbar() {
   return (
     <>
       {/* Top Announcement Strip */}
-      <div className="bg-gradient-to-r from-[var(--bg-subtle)] via-[var(--bg)] to-[var(--bg-subtle)] text-[var(--text)] text-[11px] py-2 px-4 sm:px-8 tracking-[0.2em] uppercase font-medium flex items-center justify-between border-b border-[var(--border)] select-none relative z-50 transition-colors">
+      <div className="bg-gradient-to-r from-[var(--bg-subtle)] via-[var(--bg)] to-[var(--bg-subtle)] text-[var(--text)] text-[11px] py-2 px-4 sm:px-8 lg:px-12 xl:px-16 tracking-[0.2em] uppercase font-medium flex items-center justify-between border-b border-[var(--border)] select-none relative z-50 transition-colors font-sans-ui">
         <div className="hidden sm:flex items-center gap-2 text-[10px] text-[var(--accent-hover)] font-semibold">
           <div className="w-4 h-4 rounded-full bg-gradient-to-br from-[var(--accent)] to-[var(--accent-hover)] flex items-center justify-center shadow-xs">
             <FontAwesomeIcon icon={faWandMagicSparkles} className="text-white text-[7px]" />
@@ -104,48 +104,83 @@ export default function Navbar() {
 
       {/* Main Header */}
       <header
-        className={`sticky top-0 left-0 right-0 z-40 transition-all duration-500 ${
+        className={`sticky top-0 left-0 right-0 z-40 transition-all duration-300 ${
           scrolled
-            ? 'glass-nav border-b border-[var(--border)]/70 shadow-[0_4px_30px_-4px_rgba(35,45,32,0.06)]'
-            : 'bg-[var(--bg)]/80 backdrop-blur-sm border-b border-[var(--border)]/40'
+            ? 'bg-[#FAF7F0]/95 backdrop-blur-md border-b border-[var(--border)] shadow-[0_4px_25px_-4px_rgba(35,45,32,0.08)]'
+            : 'bg-[#FAF7F0] border-b border-[var(--border)]/60'
         }`}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 h-18 sm:h-[78px] flex items-center justify-between">
+        <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 h-18 sm:h-[80px] flex items-center justify-between font-sans-ui">
           
-          {/* Brand Logo */}
-          <Link href="/" className="flex items-center gap-2.5 sm:gap-3 group py-1 select-none flex-shrink-0">
+          {/* Brand Logo & Name (Far Left) */}
+          <Link href="/" className="flex items-center gap-3 group py-1 select-none flex-shrink-0">
+
             <div className="w-10 h-10 sm:w-11 sm:h-11 flex items-center justify-center flex-shrink-0 transition-transform duration-300 group-hover:scale-105">
               <img
                 src="/logo.png"
-                alt={settings.brandName || 'LETTERS'}
+                alt={settings.brandName || 'Letters'}
                 className="w-full h-full object-contain"
               />
             </div>
             <div className="flex flex-col">
               <span
-                className="font-brand-calligraphy text-[32px] sm:text-[36px] font-normal tracking-wide text-[var(--text)] leading-none group-hover:text-[var(--accent)] transition-colors"
+                className="text-[34px] sm:text-[40px] font-normal tracking-wide text-[var(--text)] leading-none group-hover:text-[var(--olive)] transition-colors"
                 style={{
                   fontFamily: "'Alex Brush', 'Pinyon Script', 'Great Vibes', cursive",
                 }}
               >
                 {settings.brandName && settings.brandName.toUpperCase() === 'LETTERS' ? 'Letters' : (settings.brandName || 'Letters')}
               </span>
-              <span className="text-[7.5px] tracking-[0.32em] text-[var(--text-muted)] font-semibold uppercase" style={{ marginTop: '1px' }}>
-                Est. {settings.establishedYear || '2020'}
+              <span className="text-[7.5px] tracking-[0.34em] text-[var(--text-muted)] font-bold uppercase mt-0.5 font-sans-ui">
+                EST. {settings.establishedYear || '2020'}
               </span>
             </div>
+
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-8 lg:gap-10" aria-label="Main Navigation">
+          <nav className="hidden md:flex items-center gap-6 lg:gap-8" aria-label="Main Navigation">
+            {/* Standard Nav Items with Home */}
+            {navLinks.map((link) => {
+              const isActive = pathname === link.href;
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`text-xs uppercase tracking-[0.14em] font-medium transition-all relative py-2 flex items-center gap-1.5 group/nav ${
+                    isActive
+                      ? 'text-[var(--text)] font-bold'
+                      : 'text-[var(--text-muted)] hover:text-[var(--text)]'
+                  }`}
+                >
+                  <span>{link.label}</span>
+                  {link.badge && (
+                    <span className="text-[8.5px] font-bold tracking-wider uppercase px-1.5 py-0.5 rounded-full bg-[var(--maroon-light)] text-[var(--maroon)] border border-[var(--maroon)]/25">
+                      {link.badge}
+                    </span>
+                  )}
+                  {isActive && (
+                    <motion.div
+                      layoutId="activeNavLine"
+                      className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[var(--olive)] to-[var(--chandanam)] rounded-full"
+                      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                    />
+                  )}
+                  {!isActive && (
+                    <span className="absolute bottom-0 left-0 right-0 h-[1.5px] bg-[var(--olive)] rounded-full scale-x-0 group-hover/nav:scale-x-100 transition-transform origin-left" />
+                  )}
+                </Link>
+              );
+            })}
+
             {/* Collections Dropdown */}
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setCollectionsOpen(!collectionsOpen)}
                 onMouseEnter={() => setCollectionsOpen(true)}
-                className={`flex items-center gap-1.5 text-[11px] uppercase tracking-[0.2em] font-medium transition-colors py-2 cursor-pointer ${
+                className={`flex items-center gap-1.5 text-xs uppercase tracking-[0.14em] font-medium transition-colors py-2 cursor-pointer ${
                   collectionsOpen || pathname.startsWith('/category')
-                    ? 'text-[#A9824D] font-semibold'
+                    ? 'text-[var(--olive)] font-bold'
                     : 'text-[var(--text-muted)] hover:text-[var(--text)]'
                 }`}
                 aria-expanded={collectionsOpen}
@@ -153,7 +188,7 @@ export default function Navbar() {
                 <span>Collections</span>
                 <FontAwesomeIcon
                   icon={faChevronDown}
-                  className={`text-[9px] transition-transform duration-300 ${collectionsOpen ? 'rotate-180 text-[var(--accent)]' : 'opacity-50'}`}
+                  className={`text-[9px] transition-transform duration-300 ${collectionsOpen ? 'rotate-180 text-[var(--olive)]' : 'opacity-50'}`}
                 />
               </button>
 
@@ -242,58 +277,24 @@ export default function Navbar() {
                 )}
               </AnimatePresence>
             </div>
-
-
-            {/* Standard Nav Items */}
-            {navLinks.map((link) => {
-              const isActive = pathname === link.href;
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={`text-[11px] uppercase tracking-[0.2em] font-medium transition-all relative py-2 flex items-center gap-1.5 group/nav ${
-                    isActive
-                      ? 'text-[var(--text)] font-bold'
-                      : 'text-[var(--text-muted)] hover:text-[var(--text)]'
-                  }`}
-                >
-                  <span>{link.label}</span>
-                  {link.badge && (
-                    <span className="text-[8px] font-bold tracking-wider uppercase px-1.5 py-0.5 rounded-full bg-[var(--maroon-light)] text-[var(--maroon)] border border-[var(--maroon)]/25">
-                      {link.badge}
-                    </span>
-                  )}
-                  {isActive && (
-                    <motion.div
-                      layoutId="activeNavLine"
-                      className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[var(--accent)] to-[var(--maroon)] rounded-full"
-                      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                    />
-                  )}
-                  {!isActive && (
-                    <span className="absolute bottom-0 left-0 right-0 h-[1.5px] bg-[var(--accent)] rounded-full scale-x-0 group-hover/nav:scale-x-100 transition-transform origin-left" />
-                  )}
-                </Link>
-              );
-            })}
           </nav>
 
           {/* Right Actions */}
-          <div className="flex items-center gap-2 sm:gap-2.5">
+          <div className="flex items-center gap-2.5 sm:gap-3">
             {/* WhatsApp Concierge (Desktop) */}
             <button
               onClick={handleWhatsAppQuickInquiry}
-              className="hidden lg:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-medium tracking-wide bg-gradient-to-r from-[var(--bg-subtle)] to-[var(--card)] text-[var(--text)] border border-[var(--border)] hover:border-[var(--olive)] hover:text-[var(--olive)] transition-all cursor-pointer shadow-sm active:scale-95"
+              className="hidden lg:inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold tracking-wide bg-[var(--bg-subtle)] text-[var(--text)] border border-[var(--border)] hover:border-[var(--olive)] hover:text-[var(--olive)] transition-all cursor-pointer shadow-2xs active:scale-95"
               title="Chat directly on WhatsApp"
             >
               <FontAwesomeIcon icon={faWhatsapp} className="text-[var(--olive)] text-sm" />
-              <span className="text-[10px] font-bold uppercase tracking-wider">Concierge</span>
+              <span className="text-[10.5px] font-bold uppercase tracking-wider">Concierge</span>
             </button>
 
             {/* Cart */}
             <Link
               href="/cart"
-              className="relative w-10 h-10 rounded-2xl flex items-center justify-center text-[var(--text)] bg-gradient-to-br from-[var(--bg-subtle)]/80 to-[var(--card)]/80 hover:from-[var(--bg-subtle)] hover:to-[var(--card)] border border-[var(--border)] active:scale-90 transition-all duration-300 cursor-pointer shadow-sm hover:shadow-md"
+              className="relative w-10 h-10 rounded-2xl flex items-center justify-center text-[var(--text)] bg-[var(--bg-subtle)] hover:bg-[var(--card)] border border-[var(--border)] active:scale-90 transition-all duration-300 cursor-pointer shadow-2xs hover:shadow-xs"
               aria-label={`Shopping bag with ${itemCount} items`}
             >
               <FontAwesomeIcon icon={faBagShopping} className="text-[15px]" />
@@ -301,7 +302,7 @@ export default function Navbar() {
                 <motion.span
                   initial={{ scale: 0.5 }}
                   animate={{ scale: 1 }}
-                  className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 bg-gradient-to-br from-[var(--maroon)] to-[var(--maroon-hover)] text-white font-bold rounded-full text-[9px] flex items-center justify-center shadow-sm shadow-[var(--maroon)]/30"
+                  className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 bg-gradient-to-br from-[var(--maroon)] to-[var(--maroon-hover)] text-white font-bold rounded-full text-[9px] flex items-center justify-center shadow-xs"
                 >
                   {itemCount}
                 </motion.span>
@@ -310,7 +311,7 @@ export default function Navbar() {
 
             {/* Mobile Hamburger */}
             <button
-              className="md:hidden w-10 h-10 rounded-2xl flex items-center justify-center text-[var(--text)] bg-gradient-to-br from-[var(--bg-subtle)]/80 to-[var(--card)]/80 hover:from-[var(--bg-subtle)] hover:to-[var(--card)] border border-[var(--border)] active:scale-90 transition-all duration-300 cursor-pointer"
+              className="md:hidden w-10 h-10 rounded-2xl flex items-center justify-center text-[var(--text)] bg-[var(--bg-subtle)] hover:bg-[var(--card)] border border-[var(--border)] active:scale-90 transition-all duration-300 cursor-pointer"
               onClick={() => setMenuOpen(!menuOpen)}
               aria-label={menuOpen ? 'Close Navigation Menu' : 'Open Navigation Menu'}
               aria-expanded={menuOpen}
@@ -333,7 +334,7 @@ export default function Navbar() {
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-              className="md:hidden overflow-hidden glass-nav border-b border-[var(--border)] shadow-2xl"
+              className="md:hidden overflow-hidden bg-[#FFFDF7] border-b border-[var(--border)] shadow-2xl font-sans-ui"
             >
               <div className="px-6 py-8 flex flex-col gap-6 max-h-[80vh] overflow-y-auto">
                 
@@ -344,6 +345,7 @@ export default function Navbar() {
                   </span>
                   
                   {[
+                    { label: 'Home', href: '/' },
                     { label: 'Shop All Gifts', href: '/shop' },
                     { label: 'Mega Deals', href: '/deals' },
                     { label: 'Our Story & Craft', href: '/about' },
@@ -353,7 +355,7 @@ export default function Navbar() {
                       key={link.href}
                       href={link.href}
                       onClick={() => setMenuOpen(false)}
-                      className="text-lg font-heading font-medium tracking-wide text-[var(--text)] hover:text-[var(--accent-hover)] py-3 flex items-center justify-between border-b border-[var(--border)]/50 transition-colors"
+                      className="text-base font-bold tracking-wide text-[var(--text)] hover:text-[var(--olive)] py-3 flex items-center justify-between border-b border-[var(--border)]/50 transition-colors"
                     >
                       <span>{link.label}</span>
                       <FontAwesomeIcon icon={faArrowRight} className="text-xs text-[var(--text-muted)]" />
@@ -363,7 +365,7 @@ export default function Navbar() {
                   <Link
                     href="/custom-gift"
                     onClick={() => setMenuOpen(false)}
-                    className="text-lg font-heading font-medium tracking-wide text-[var(--text)] hover:text-[var(--accent-hover)] py-3 flex items-center justify-between border-b border-[var(--border)]/50 transition-colors"
+                    className="text-base font-bold tracking-wide text-[var(--text)] hover:text-[var(--olive)] py-3 flex items-center justify-between border-b border-[var(--border)]/50 transition-colors"
                   >
                     <div className="flex items-center gap-2.5">
                       <span>Custom Hamper Studio</span>
@@ -390,7 +392,7 @@ export default function Navbar() {
                             key={cat.id}
                             href={`/category/${cat.slug}`}
                             onClick={() => setMenuOpen(false)}
-                            className="p-3 rounded-xl bg-gradient-to-br from-[var(--bg-subtle)] to-[var(--card)] border border-[var(--border)] text-[11px] font-medium text-[var(--text)] hover:border-[var(--accent)] transition-all flex items-center justify-between"
+                            className="p-3 rounded-xl bg-[#F7F3EB] border border-[var(--border)] text-xs font-semibold text-[var(--text)] hover:border-[var(--olive)] transition-all flex items-center justify-between"
                           >
                             <span className="truncate">{cat.name}</span>
                           </Link>
@@ -406,7 +408,7 @@ export default function Navbar() {
                       setMenuOpen(false);
                       handleWhatsAppQuickInquiry();
                     }}
-                    className="w-full py-3.5 px-4 rounded-full bg-gradient-to-r from-[var(--olive)] to-[var(--olive-hover)] text-white text-[11px] font-bold uppercase tracking-wider flex items-center justify-center gap-2 shadow-md hover:shadow-lg active:scale-95 transition-all cursor-pointer"
+                    className="w-full py-3.5 px-4 rounded-full bg-gradient-to-r from-[var(--olive)] to-[var(--olive-hover)] text-white text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 shadow-md hover:shadow-lg active:scale-95 transition-all cursor-pointer"
                   >
                     <FontAwesomeIcon icon={faWhatsapp} className="text-base" />
                     <span>WhatsApp Concierge</span>
@@ -415,7 +417,7 @@ export default function Navbar() {
 
                 {/* Footer Info */}
                 <div className="pt-4 border-t border-[var(--border)]/50 flex items-center justify-between text-[10px] text-[var(--text-muted)]">
-                  <span>{settings.brandName || 'LETTERS'} Atelier</span>
+                  <span>{settings.brandName || 'Letters'} Atelier</span>
                   <span>Est. {settings.establishedYear || '2020'}</span>
                 </div>
               </div>
