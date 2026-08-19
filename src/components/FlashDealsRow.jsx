@@ -105,7 +105,7 @@ export default function FlashDealsRow() {
                     </h4>
                   </Link>
 
-                  <div className="flex items-baseline gap-1.5 mb-2">
+                  <div className="flex items-baseline gap-1.5 mb-3">
                     <span className="font-heading text-sm font-bold text-[var(--text)]">
                       ₹{item.price.toLocaleString()}
                     </span>
@@ -113,17 +113,8 @@ export default function FlashDealsRow() {
                       ₹{item.originalPrice.toLocaleString()}
                     </span>
                   </div>
-
-                  {/* Claim Progress */}
-                  <div className="space-y-1 mb-3">
-                    <div className="w-full bg-[var(--border)] h-1.5 rounded-full overflow-hidden">
-                      <div className="bg-[var(--maroon)] h-full rounded-full" style={{ width: `${item.claimed}%` }} />
-                    </div>
-                    <span className="text-[9.5px] text-[var(--text-muted)] block font-medium">
-                      {item.claimed}% Claimed
-                    </span>
-                  </div>
                 </div>
+
 
                 <button
                   onClick={(e) => handleAdd(e, item)}

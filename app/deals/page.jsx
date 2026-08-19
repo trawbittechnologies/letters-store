@@ -559,23 +559,10 @@ export default function DealsPage() {
                         </span>
                       )}
                     </div>
-
-                    {/* Limited Stock Progress Bar (Flipkart Style) */}
-                    <div className="space-y-1">
-                      <div className="flex justify-between text-[9.5px] font-bold text-[var(--text-muted)]">
-                        <span>Deal Claimed</span>
-                        <span className="text-[var(--maroon)]">{item.claimedPercent}% Sold</span>
-                      </div>
-                      <div className="w-full h-1.5 bg-[var(--bg-subtle)] rounded-full overflow-hidden">
-                        <div
-                          className="h-full bg-gradient-to-r from-[#E5A04D] to-[#721C28] rounded-full"
-                          style={{ width: `${item.claimedPercent}%` }}
-                        />
-                      </div>
-                    </div>
                   </div>
 
                   {/* Actions (Add to Cart & WhatsApp) */}
+
                   <div className="grid grid-cols-2 gap-2 pt-3 border-t border-[var(--border)]/60">
                     <button
                       onClick={(e) => handleAddToCart(item, e)}

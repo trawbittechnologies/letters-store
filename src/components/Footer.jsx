@@ -35,29 +35,25 @@ export default function Footer() {
         
         {/* Brand & Story */}
         <div className="lg:col-span-2 space-y-5">
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-12 h-12 bg-[var(--bg-subtle)] border border-[var(--border)] rounded-2xl p-1 flex items-center justify-center shadow-sm overflow-hidden flex-shrink-0">
+          <Link href="/" className="flex items-center gap-3 group select-none">
+            <div className="w-11 h-11 bg-[var(--bg-subtle)] border border-[var(--border)] rounded-2xl p-1 flex items-center justify-center shadow-xs overflow-hidden flex-shrink-0 transition-transform duration-300 group-hover:scale-105">
               <img
                 src="/logo.png"
-                alt={settings.brandName}
+                alt={settings.brandName || 'Letters'}
                 className="w-full h-full object-contain"
               />
             </div>
             <div className="flex flex-col">
               <span
+                className="text-[34px] sm:text-[38px] font-normal tracking-wide text-[var(--text)] leading-none group-hover:text-[var(--olive)] transition-colors"
                 style={{
-                  fontFamily: "'Great Vibes', cursive",
-                  fontSize: '30px',
-                  fontWeight: 400,
-                  letterSpacing: '0.02em',
-                  color: 'var(--text)',
-                  lineHeight: 1,
+                  fontFamily: "'Alex Brush', 'Pinyon Script', 'Great Vibes', cursive",
                 }}
               >
-                {settings.brandName}
+                {settings.brandName && settings.brandName.toUpperCase() === 'LETTERS' ? 'Letters' : (settings.brandName || 'Letters')}
               </span>
-              <span className="text-[7.5px] tracking-[0.3em] text-[var(--text-muted)] font-medium uppercase" style={{ marginTop: '1px' }}>
-                Est. {settings.establishedYear}
+              <span className="text-[7.5px] tracking-[0.34em] text-[var(--text-muted)] font-bold uppercase mt-0.5 font-sans-ui">
+                EST. {settings.establishedYear || '2020'}
               </span>
             </div>
           </Link>

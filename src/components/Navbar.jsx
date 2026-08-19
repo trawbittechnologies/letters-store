@@ -281,17 +281,8 @@ export default function Navbar() {
 
           {/* Right Actions */}
           <div className="flex items-center gap-2.5 sm:gap-3">
-            {/* WhatsApp Concierge (Desktop) */}
-            <button
-              onClick={handleWhatsAppQuickInquiry}
-              className="hidden lg:inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold tracking-wide bg-[var(--bg-subtle)] text-[var(--text)] border border-[var(--border)] hover:border-[var(--olive)] hover:text-[var(--olive)] transition-all cursor-pointer shadow-2xs active:scale-95"
-              title="Chat directly on WhatsApp"
-            >
-              <FontAwesomeIcon icon={faWhatsapp} className="text-[var(--olive)] text-sm" />
-              <span className="text-[10.5px] font-bold uppercase tracking-wider">Concierge</span>
-            </button>
-
             {/* Cart */}
+
             <Link
               href="/cart"
               className="relative w-10 h-10 rounded-2xl flex items-center justify-center text-[var(--text)] bg-[var(--bg-subtle)] hover:bg-[var(--card)] border border-[var(--border)] active:scale-90 transition-all duration-300 cursor-pointer shadow-2xs hover:shadow-xs"
