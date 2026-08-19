@@ -1,17 +1,18 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  Plus,
-  Search,
-  Edit2,
-  Trash2,
-  Eye,
-  EyeOff,
-  Star,
-  X,
-  Package,
-} from 'lucide-react';
+  faPlus,
+  faSearch,
+  faPenToSquare,
+  faTrashCan,
+  faEye,
+  faEyeSlash,
+  faStar,
+  faXmark,
+  faBox,
+} from '@fortawesome/free-solid-svg-icons';
 import { useProductStore } from '@/src/store/productStore';
 import { useCategoryStore } from '@/src/store/categoryStore';
 
@@ -141,7 +142,7 @@ export default function AdminProductsPage() {
             onClick={openAddModal}
             className="gold-btn inline-flex items-center gap-2 px-4 py-2.5 text-xs font-bold uppercase tracking-wider shadow-sm cursor-pointer"
           >
-            <Plus size={15} /> Add New Product
+            <FontAwesomeIcon icon={faPlus} className="text-xs" /> Add New Product
           </button>
         </div>
       </div>
@@ -150,7 +151,7 @@ export default function AdminProductsPage() {
       <div className="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-4 sm:p-5 shadow-sm space-y-4">
         <div className="flex flex-col sm:flex-row items-center gap-4">
           <div className="w-full sm:flex-1 relative">
-            <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
+            <FontAwesomeIcon icon={faSearch} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--text-muted)] text-xs" />
             <input
               type="text"
               placeholder="Search product by name or category..."
@@ -248,7 +249,7 @@ export default function AdminProductsPage() {
                           }`}
                           title="Toggle Featured"
                         >
-                          <Star size={12} className={p.featured ? 'fill-current text-amber-500' : ''} />
+                          <FontAwesomeIcon icon={faStar} className={`text-xs ${p.featured ? 'text-amber-500' : ''}`} />
                           {p.featured ? 'Featured' : 'Standard'}
                         </button>
 
@@ -264,13 +265,13 @@ export default function AdminProductsPage() {
                     <td className="py-3.5 whitespace-nowrap">
                       <button
                         onClick={() => toggleProductActive(p.id)}
-                        className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold transition-colors cursor-pointer ${
+                        className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold transition-colors cursor-pointer ${
                           p.active
                             ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
                             : 'bg-stone-200 text-stone-700 dark:bg-stone-800 dark:text-stone-300'
                         }`}
                       >
-                        {p.active ? <Eye size={12} /> : <EyeOff size={12} />}
+                        <FontAwesomeIcon icon={p.active ? faEye : faEyeSlash} className="text-xs" />
                         {p.active ? 'Active' : 'Disabled'}
                       </button>
                     </td>
@@ -283,14 +284,14 @@ export default function AdminProductsPage() {
                           className="p-1.5 rounded-lg border border-[var(--border)] hover:bg-[var(--accent)]/15 text-[var(--text)] transition-colors cursor-pointer"
                           title="Edit Product"
                         >
-                          <Edit2 size={14} />
+                          <FontAwesomeIcon icon={faPenToSquare} className="text-xs" />
                         </button>
                         <button
                           onClick={() => handleDelete(p.id, p.name)}
                           className="p-1.5 rounded-lg border border-[var(--border)] hover:bg-rose-100 text-rose-600 transition-colors cursor-pointer"
                           title="Delete Product"
                         >
-                          <Trash2 size={14} />
+                          <FontAwesomeIcon icon={faTrashCan} className="text-xs" />
                         </button>
                       </div>
                     </td>
@@ -302,7 +303,7 @@ export default function AdminProductsPage() {
           </div>
         ) : (
           <div className="text-center py-12">
-            <Package size={36} className="mx-auto text-[var(--text-muted)] mb-3 opacity-40" />
+            <FontAwesomeIcon icon={faBox} className="mx-auto text-[var(--text-muted)] mb-3 text-3xl opacity-40 block" />
             <p className="text-sm font-semibold text-[var(--text)]">No products match your search</p>
           </div>
         )}
@@ -321,7 +322,7 @@ export default function AdminProductsPage() {
                 onClick={() => setIsNewProductModal(false)}
                 className="p-2 rounded-full hover:bg-[var(--bg)] text-[var(--text-muted)] hover:text-[var(--text)] cursor-pointer"
               >
-                <X size={20} />
+                <FontAwesomeIcon icon={faXmark} className="text-base" />
               </button>
             </div>
 

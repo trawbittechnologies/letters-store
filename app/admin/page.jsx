@@ -1,18 +1,19 @@
 'use client';
 
 import Link from 'next/link';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  ShoppingBag,
-  Clock,
-  CheckCircle2,
-  Truck,
-  Package,
-  IndianRupee,
-  ArrowRight,
-  MessageCircle,
-  ExternalLink,
-  Plus,
-} from 'lucide-react';
+  faBagShopping,
+  faClock,
+  faCircleCheck,
+  faTruck,
+  faBox,
+  faIndianRupeeSign,
+  faArrowRight,
+  faPlus,
+  faArrowUpRightFromSquare,
+} from '@fortawesome/free-solid-svg-icons';
+import { faWhatsapp } from '@fortawesome/free-brands-svg-icons';
 import { useOrderStore } from '@/src/store/orderStore';
 import { useProductStore } from '@/src/store/productStore';
 import { useSettingsStore } from '@/src/store/settingsStore';
@@ -75,7 +76,7 @@ export default function AdminDashboardPage() {
             href="/admin/products"
             className="gold-btn inline-flex items-center gap-2 px-4 py-2.5 text-xs font-bold uppercase tracking-wider shadow-sm cursor-pointer"
           >
-            <Plus size={14} /> Add Product
+            <FontAwesomeIcon icon={faPlus} className="text-xs" /> Add Product
           </Link>
           <Link
             href="/admin/orders"
@@ -93,7 +94,7 @@ export default function AdminDashboardPage() {
         <div className="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 shadow-sm flex flex-col justify-between">
           <div className="flex items-center justify-between text-[var(--text-muted)] mb-3">
             <span className="text-[11px] font-bold uppercase tracking-wider">Total Orders</span>
-            <ShoppingBag size={18} className="text-[var(--accent)]" />
+            <FontAwesomeIcon icon={faBagShopping} className="text-[var(--accent)] text-lg" />
           </div>
           <span className="font-heading text-3xl font-bold text-[var(--text)]">{totalOrders}</span>
         </div>
@@ -102,7 +103,7 @@ export default function AdminDashboardPage() {
         <div className="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 shadow-sm flex flex-col justify-between">
           <div className="flex items-center justify-between text-[var(--text-muted)] mb-3">
             <span className="text-[11px] font-bold uppercase tracking-wider">Pending Orders</span>
-            <Clock size={18} className="text-amber-500" />
+            <FontAwesomeIcon icon={faClock} className="text-amber-500 text-lg" />
           </div>
           <span className="font-heading text-3xl font-bold text-amber-600 dark:text-amber-400">{pendingOrders}</span>
         </div>
@@ -111,7 +112,7 @@ export default function AdminDashboardPage() {
         <div className="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 shadow-sm flex flex-col justify-between">
           <div className="flex items-center justify-between text-[var(--text-muted)] mb-3">
             <span className="text-[11px] font-bold uppercase tracking-wider">Confirmed</span>
-            <CheckCircle2 size={18} className="text-blue-500" />
+            <FontAwesomeIcon icon={faCircleCheck} className="text-blue-500 text-lg" />
           </div>
           <span className="font-heading text-3xl font-bold text-blue-600 dark:text-blue-400">{confirmedOrders}</span>
         </div>
@@ -120,7 +121,7 @@ export default function AdminDashboardPage() {
         <div className="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 shadow-sm flex flex-col justify-between">
           <div className="flex items-center justify-between text-[var(--text-muted)] mb-3">
             <span className="text-[11px] font-bold uppercase tracking-wider">Delivered</span>
-            <Truck size={18} className="text-emerald-500" />
+            <FontAwesomeIcon icon={faTruck} className="text-emerald-500 text-lg" />
           </div>
           <span className="font-heading text-3xl font-bold text-emerald-600 dark:text-emerald-400">{deliveredOrders}</span>
         </div>
@@ -129,7 +130,7 @@ export default function AdminDashboardPage() {
         <div className="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 shadow-sm flex flex-col justify-between">
           <div className="flex items-center justify-between text-[var(--text-muted)] mb-3">
             <span className="text-[11px] font-bold uppercase tracking-wider">Total Products</span>
-            <Package size={18} className="text-[var(--accent-secondary)]" />
+            <FontAwesomeIcon icon={faBox} className="text-[var(--accent-secondary)] text-lg" />
           </div>
           <span className="font-heading text-3xl font-bold text-[var(--text)]">{products.length}</span>
         </div>
@@ -138,7 +139,7 @@ export default function AdminDashboardPage() {
         <div className="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-5 shadow-sm flex flex-col justify-between">
           <div className="flex items-center justify-between text-[var(--text-muted)] mb-3">
             <span className="text-[11px] font-bold uppercase tracking-wider">Revenue</span>
-            <IndianRupee size={18} className="text-[var(--accent)]" />
+            <FontAwesomeIcon icon={faIndianRupeeSign} className="text-[var(--accent)] text-lg" />
           </div>
           <span className="font-heading text-2xl font-bold text-[var(--accent-hover)]">
             ₹{totalRevenue.toLocaleString()}
@@ -160,7 +161,8 @@ export default function AdminDashboardPage() {
             href="/admin/orders"
             className="text-xs font-bold uppercase tracking-wider text-[var(--accent-secondary)] hover:underline flex items-center gap-1"
           >
-            View All ({orders.length}) <ArrowRight size={14} />
+            <span>View All ({orders.length})</span>
+            <FontAwesomeIcon icon={faArrowRight} className="text-xs" />
           </Link>
         </div>
 
@@ -230,14 +232,14 @@ export default function AdminDashboardPage() {
                         className="p-1.5 rounded-lg bg-[#25D366]/15 text-[#128C7E] dark:text-[#25D366] hover:bg-[#25D366] hover:text-white transition-colors cursor-pointer"
                         title="Contact Customer on WhatsApp"
                       >
-                        <MessageCircle size={15} />
+                        <FontAwesomeIcon icon={faWhatsapp} className="text-sm" />
                       </button>
                       <Link
                         href="/admin/orders"
                         className="p-1.5 rounded-lg border border-[var(--border)] text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-[var(--card)] transition-colors"
                         title="View Full Details"
                       >
-                        <ExternalLink size={15} />
+                        <FontAwesomeIcon icon={faArrowUpRightFromSquare} className="text-xs" />
                       </Link>
                     </div>
                   </td>

@@ -2,7 +2,8 @@
 
 import { useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Gift } from 'lucide-react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faGift } from '@fortawesome/free-solid-svg-icons';
 import { useSettingsStore } from '../store/settingsStore';
 
 export default function LoadingScreen({ onComplete }) {
@@ -66,9 +67,13 @@ export default function LoadingScreen({ onComplete }) {
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-          className="w-28 h-28 md:w-32 md:h-32 rounded-full overflow-hidden border-2 border-[var(--border)] shadow-2xl p-4 bg-[var(--card)] flex items-center justify-center z-10"
+          className="w-28 h-28 md:w-32 md:h-32 rounded-3xl overflow-hidden border-2 border-[var(--border)] shadow-2xl p-3 bg-[var(--bg-subtle)] flex items-center justify-center z-10"
         >
-          <Gift size={48} className="text-[var(--accent)]" />
+          <img
+            src="/logo.png"
+            alt={settings.brandName || 'LETTERS'}
+            className="w-full h-full object-contain"
+          />
         </motion.div>
       </div>
 

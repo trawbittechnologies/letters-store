@@ -3,27 +3,28 @@
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
-import { Heart, Star, Scissors } from 'lucide-react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHeart, faStar, faScissors } from '@fortawesome/free-solid-svg-icons';
 
 const features = [
   {
-    icon: Heart,
+    icon: faHeart,
     title: 'Crafted with Love',
     desc: 'Every stitch and arrangement is made by hand with genuine care and passion for gifting.',
   },
   {
-    icon: Star,
+    icon: faStar,
     title: 'Premium Quality',
     desc: 'Using only the finest materials, artisanal chocolates, and preserved blooms.',
   },
   {
-    icon: Scissors,
+    icon: faScissors,
     title: 'Bespoke Artistry',
     desc: 'Each hamper is tailored to order with personalized engraving and attention to detail.',
   },
 ];
 
-function FeatureCard({ icon: Icon, title, desc, delay }) {
+function FeatureCard({ icon, title, desc, delay }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-80px' });
 
@@ -36,7 +37,7 @@ function FeatureCard({ icon: Icon, title, desc, delay }) {
       className="card-minimal p-8 flex flex-col items-center text-center gap-4 bg-[var(--card)] border border-[var(--border)]"
     >
       <div className="w-14 h-14 rounded-full flex items-center justify-center bg-[var(--accent)]/15 border border-[var(--accent)]/30 text-[var(--accent-hover)]">
-        <Icon size={24} />
+        <FontAwesomeIcon icon={icon} className="text-xl" />
       </div>
       <h3 className="font-heading text-xl font-semibold text-[var(--text)]">{title}</h3>
       <p className="text-[var(--text-muted)] text-sm leading-relaxed font-normal">{desc}</p>

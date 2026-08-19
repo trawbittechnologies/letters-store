@@ -1,6 +1,8 @@
 'use client';
 
-import { MessageCircle } from 'lucide-react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faWhatsapp } from '@fortawesome/free-brands-svg-icons';
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { useSettingsStore } from '../store/settingsStore';
 
 export default function WhatsAppCTA() {
@@ -12,21 +14,22 @@ export default function WhatsAppCTA() {
   };
 
   return (
-    <section className="py-24 px-4 sm:px-6 lg:px-12 bg-[var(--bg)] border-t border-[var(--border)] transition-colors duration-200">
+    <section className="py-20 lg:py-28 px-4 sm:px-6 lg:px-12 bg-[var(--bg-subtle)] border-t border-[var(--border)]/50 transition-colors duration-200">
       <div className="max-w-6xl mx-auto">
-        <div className="border border-[var(--border)] bg-[var(--card)] rounded-3xl p-8 sm:p-12 lg:p-14 shadow-sm">
+        <div className="rounded-3xl border border-[var(--border)] bg-[var(--card)] p-10 sm:p-14 shadow-sm">
           <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-10">
             
             {/* Left Copy */}
             <div className="max-w-xl">
-              <div className="inline-flex items-center gap-2 px-3 py-1 bg-[var(--bg-subtle)] border border-[var(--border)] rounded-full text-[9px] font-bold tracking-[0.2em] uppercase mb-4 text-[var(--text)]">
-                <span className="w-2 h-2 rounded-full bg-[#71806C]" />
+              <span
+                className="block mb-2 text-[var(--chandanam)]"
+                style={{ fontFamily: "'Great Vibes', cursive", fontSize: '24px', letterSpacing: '0.02em' }}
+              >
                 Direct Studio Concierge
-              </div>
-
+              </span>
               <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-[var(--text)] leading-tight mb-4">
                 Have a Custom Gift <br />
-                <span className="italic font-normal text-[var(--accent-hover)]">
+                <span className="italic font-normal text-[var(--maroon)]">
                   Idea in Mind?
                 </span>
               </h2>
@@ -37,17 +40,17 @@ export default function WhatsAppCTA() {
             </div>
 
             {/* Right Action */}
-            <div className="flex flex-col items-start sm:items-center gap-3 w-full sm:w-auto">
+            <div className="flex flex-col items-start sm:items-center gap-3">
               <button
                 onClick={handleStartChat}
-                className="w-full sm:w-auto flex items-center justify-center gap-2.5 px-8 py-4 text-[11px] font-bold uppercase tracking-[0.2em] rounded-full bg-[#71806C] text-white hover:bg-[#5C6A57] transition-all cursor-pointer shadow-md active:scale-95"
+                className="flex items-center gap-2.5 px-8 py-4 text-[12px] font-semibold tracking-[0.05em] rounded-full bg-[var(--olive)] text-white hover:bg-[var(--olive-hover)] transition-all cursor-pointer shadow-md active:scale-95"
               >
-                <MessageCircle size={16} className="fill-current" />
+                <FontAwesomeIcon icon={faWhatsapp} className="text-base" />
                 Chat with Us on WhatsApp
               </button>
 
-              <p className="text-xs text-[var(--text-muted)] font-medium text-center">
-                Usually responds within 15 mins • {settings.phoneNumber}
+              <p className="text-xs text-[var(--text-muted)] font-medium">
+                Usually responds within 15 mins · {settings.phoneNumber}
               </p>
             </div>
 

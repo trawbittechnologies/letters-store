@@ -1,37 +1,50 @@
-@import url('https://fonts.googleapis.com/css2?family=Allura&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Allura&family=Caveat:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
 @import "tailwindcss";
 
 :root {
-  /* LETTERS Premium Gifting Brand Palette */
-  --bg: #F8F4EC;              /* Primary Background: Warm Ivory */
-  --bg-subtle: #EFE7DA;       /* Secondary Background: Soft Cream */
-  --text: #1C1C1A;            /* Primary Text: Deep Charcoal */
-  --text-muted: #766F65;      /* Secondary Text: Warm Taupe */
-  --accent: #C9A46C;          /* Brand Accent: Champagne Gold */
-  --accent-hover: #A9824D;    /* Gold Dark / Hover: Antique Gold */
-  --accent-secondary: #766F65;/* Warm Taupe */
-  --accent-rose-hover: #A9824D;
-  --border: #DDD3C4;          /* Borders: Soft Beige */
-  --border-dark: #1C1C1A;     /* Deep Charcoal */
-  --card: #FFFDF9;            /* Cards: Pure Warm White */
-  --card-hover: #FAF7F0;
-  --success: #71806C;         /* Success / Available: Muted Sage */
+  /* LETTERS Dominant Brand Palette: Olive Green & Cream (with Maroon & Chandanam Accents) */
+  --bg: #FAF6EE;              /* Primary Canvas: Rich Warm Cream */
+  --bg-subtle: #F1EAE0;       /* Secondary Background: Soft Alabaster Cream */
+  --text: #1F291C;            /* Primary Text: Deep Forest Olive Charcoal */
+  --text-muted: #576451;      /* Secondary Text: Warm Olive Taupe */
+  --olive: #3E5337;           /* Main Olive Green */
+  --olive-hover: #2D3E27;
+  --accent: #3E5337;          /* Primary Accent: Deep Regal Olive */
+  --accent-hover: #2D3E27;    /* Deep Olive Hover */
+  --accent-light: #5B744B;    /* Olive Sage */
+  --accent-secondary: #721C28;/* Regal Maroon */
+  --maroon: #721C28;          /* Regal Deep Maroon */
+  --maroon-hover: #8F2636;
+  --chandanam: #E5A04D;       /* Chandanam Light Orange Glow */
+  --chandanam-light: #F3B868;
+  --accent-rose-hover: #2D3E27;
+  --border: #E2D7C6;          /* Borders: Soft Warm Cream */
+  --border-dark: #232D20;     /* Deep Olive Charcoal */
+  --card: #FFFCF5;            /* Cards: Pure Warm Ivory Cream */
+  --card-hover: #F6EFE3;
+  --success: #5B744B;         /* Success: Olive Sage */
 }
 
 .dark {
-  --bg: #161513;              /* Warm Obsidian Charcoal */
-  --bg-subtle: #211E1B;       /* Subtle Dark Taupe */
-  --text: #F8F4EC;            /* Warm Ivory */
-  --text-muted: #A69F94;      /* Soft Taupe Neutral */
-  --accent: #C9A46C;          /* Champagne Gold */
-  --accent-hover: #D8B57E;    /* Luminous Gold Hover */
-  --accent-secondary: #A69F94;
-  --accent-rose-hover: #C9A46C;
-  --border: #332F2A;          /* Subtle Slate Border */
-  --border-dark: #F8F4EC;
-  --card: #1E1C19;            /* Dark Charcoal Card */
-  --card-hover: #26231F;
-  --success: #8A9B84;
+  --bg: #141B12;              /* Deep Forest Olive Obsidian */
+  --bg-subtle: #1C251A;       /* Dark Olive Charcoal */
+  --text: #FAF6EE;            /* Warm Cream */
+  --text-muted: #9EB097;      /* Soft Olive Sage */
+  --olive: #7E9C6F;
+  --olive-hover: #98B888;
+  --accent: #7E9C6F;          /* Luminous Olive Sage in Dark */
+  --accent-hover: #98B888;
+  --accent-light: #B4D1A6;
+  --accent-secondary: #B33D4F;/* Regal Maroon in Dark */
+  --maroon: #B33D4F;
+  --maroon-hover: #C94C5F;
+  --chandanam: #E5A04D;
+  --accent-rose-hover: #7E9C6F;
+  --border: #2C3A29;          /* Subtle Olive Slate Border */
+  --border-dark: #FAF6EE;
+  --card: #182216;            /* Dark Olive Card */
+  --card-hover: #222E1F;
+  --success: #759062;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -48,7 +61,7 @@ body {
 
 ::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
+::-webkit-scrollbar-thumb { background: var(--olive); border-radius: 4px; }
 
 .font-heading { font-family: 'Playfair Display', 'Cormorant Garamond', serif; }
 .font-serif-subtle { font-family: 'Cormorant Garamond', serif; }
@@ -62,27 +75,58 @@ body {
   transform-origin: left;
 }
 
-.gold-btn {
-  background: var(--accent);
-  color: #1C1C1A;
+/* Primary Olive Green Pill Button */
+.gold-btn, .primary-pill-btn, .olive-btn {
+  background: linear-gradient(135deg, #384C32 0%, #4D6444 50%, #2F412A 100%);
+  color: #FAF6EE;
+  font-weight: 600;
+  border-radius: 9999px;
+  border: 1px solid rgba(77, 100, 68, 0.5);
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow: 0 4px 15px rgba(47, 65, 42, 0.3);
+}
+.dark .gold-btn, .dark .primary-pill-btn, .dark .olive-btn {
+  background: linear-gradient(135deg, #5B744B 0%, #7E9C6F 50%, #4A5F3A 100%);
+  color: #141B12;
+  box-shadow: 0 4px 15px rgba(91, 116, 75, 0.4);
+}
+.gold-btn:hover, .primary-pill-btn:hover, .olive-btn:hover {
+  background: #2D3E27;
+  color: #FFFCF5;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(47, 65, 42, 0.45);
+}
+
+.chandanam-btn {
+  background: var(--chandanam);
+  color: #1F291C;
   font-weight: 600;
   border-radius: 9999px;
   transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-  box-shadow: 0 4px 15px rgba(201, 164, 108, 0.25);
+  box-shadow: 0 4px 15px rgba(229, 160, 77, 0.3);
 }
-.dark .gold-btn {
-  background: var(--accent);
-  color: #161513;
-  box-shadow: 0 4px 15px rgba(201, 164, 108, 0.3);
-}
-.gold-btn:hover {
-  background: var(--accent-hover);
-  color: #FFFDF9;
+.chandanam-btn:hover {
+  background: #CD8632;
+  color: #FFFCF5;
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(169, 130, 77, 0.35);
 }
 
-.rose-btn {
+.maroon-btn {
+  background: var(--maroon);
+  color: #FAF6EE;
+  font-weight: 600;
+  border-radius: 9999px;
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow: 0 4px 15px rgba(114, 28, 40, 0.3);
+}
+.maroon-btn:hover {
+  background: var(--maroon-hover);
+  color: #FFFCF5;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(143, 38, 54, 0.4);
+}
+
+.rose-btn, .secondary-pill-btn {
   background: var(--bg-subtle);
   color: var(--text);
   font-weight: 600;
@@ -91,8 +135,9 @@ body {
   transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
 }
-.rose-btn:hover {
-  background: #DDD3C4;
+.rose-btn:hover, .secondary-pill-btn:hover {
+  background: #E8DEC0;
+  border-color: var(--olive);
   transform: translateY(-2px);
 }
 
@@ -103,8 +148,8 @@ body {
   transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .outline-btn:hover {
-  border-color: var(--accent);
-  color: var(--accent-hover);
+  border-color: var(--olive);
+  color: var(--olive);
   background-color: var(--bg-subtle);
   transform: translateY(-2px);
 }
@@ -116,30 +161,42 @@ body {
   transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .card-minimal:hover {
-  border-color: var(--accent);
+  border-color: var(--olive);
   transform: translateY(-4px);
-  box-shadow: 0 12px 30px rgba(28, 28, 26, 0.08);
+  box-shadow: 0 12px 30px rgba(31, 41, 28, 0.08);
 }
 .dark .card-minimal:hover {
-  border-color: #C9A46C;
+  border-color: #7E9C6F;
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
 }
 
-.badge-gold {
-  background: rgba(201, 164, 108, 0.15);
-  color: #8A6730;
-  border: 1px solid rgba(201, 164, 108, 0.35);
+.badge-gold, .badge-chandanam {
+  background: rgba(229, 160, 77, 0.15);
+  color: #A36015;
+  border: 1px solid rgba(229, 160, 77, 0.4);
 }
-.dark .badge-gold {
-  color: #D8B57E;
-  border: 1px solid rgba(201, 164, 108, 0.45);
+.dark .badge-gold, .dark .badge-chandanam {
+  color: #F3B868;
+  border: 1px solid rgba(229, 160, 77, 0.45);
 }
 
-.badge-sage, .badge-green {
-  background: rgba(113, 128, 108, 0.15);
-  color: #556351;
-  border: 1px solid rgba(113, 128, 108, 0.35);
+.badge-maroon {
+  background: rgba(114, 28, 40, 0.12);
+  color: #721C28;
+  border: 1px solid rgba(114, 28, 40, 0.35);
 }
-.dark .badge-sage, .dark .badge-green {
-  color: #8A9B84;
+.dark .badge-maroon {
+  color: #E86B7E;
+  border: 1px solid rgba(179, 61, 79, 0.45);
 }
+
+.badge-sage, .badge-green, .badge-olive {
+  background: rgba(62, 83, 55, 0.14);
+  color: #3E5337;
+  border: 1px solid rgba(62, 83, 55, 0.35);
+}
+.dark .badge-sage, .dark .badge-green, .dark .badge-olive {
+  color: #98B888;
+}
+
+

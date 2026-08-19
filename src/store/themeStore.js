@@ -2,35 +2,28 @@ import { create } from 'zustand';
 
 export const useThemeStore = create((set) => ({
   theme: 'light',
-  setTheme: (theme) => {
+  setTheme: () => {
     if (typeof document !== 'undefined') {
-      document.documentElement.className = theme;
+      document.documentElement.classList.remove('dark');
       try {
-        localStorage.setItem('letters_theme', theme);
+        localStorage.removeItem('letters_theme');
       } catch (e) {}
     }
-    set({ theme });
+    set({ theme: 'light' });
   },
-  toggleTheme: () =>
-    set((state) => {
-      const nextTheme = state.theme === 'light' ? 'dark' : 'light';
-      if (typeof document !== 'undefined') {
-        document.documentElement.className = nextTheme;
-        try {
-          localStorage.setItem('letters_theme', nextTheme);
-        } catch (e) {}
-      }
-      return { theme: nextTheme };
-    }),
+  toggleTheme: () => {
+    // Light mode locked
+    if (typeof document !== 'undefined') {
+      document.documentElement.classList.remove('dark');
+    }
+  },
   initTheme: () => {
     if (typeof window !== 'undefined') {
       try {
-        const saved = localStorage.getItem('letters_theme') || 'light';
-        document.documentElement.className = saved;
-        set({ theme: saved });
-      } catch (e) {
-        set({ theme: 'light' });
-      }
+        localStorage.removeItem('letters_theme');
+        document.documentElement.classList.remove('dark');
+      } catch (e) {}
+      set({ theme: 'light' });
     }
   },
 }));

@@ -1,7 +1,15 @@
 'use client';
 
 import { useState } from 'react';
-import { Save, RefreshCw, CheckCircle2, MessageCircle, Globe, Store } from 'lucide-react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faFloppyDisk,
+  faRotate,
+  faCircleCheck,
+  faGlobe,
+  faStore,
+} from '@fortawesome/free-solid-svg-icons';
+import { faWhatsapp } from '@fortawesome/free-brands-svg-icons';
 import { useSettingsStore } from '@/src/store/settingsStore';
 
 export default function AdminSettingsPage() {
@@ -47,14 +55,14 @@ export default function AdminSettingsPage() {
             onClick={handleReset}
             className="outline-btn inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold cursor-pointer"
           >
-            <RefreshCw size={13} /> Reset Defaults
+            <FontAwesomeIcon icon={faRotate} className="text-xs" /> Reset Defaults
           </button>
         </div>
       </div>
 
       {saved && (
         <div className="p-4 rounded-2xl bg-emerald-100 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 text-xs flex items-center gap-2 font-medium">
-          <CheckCircle2 size={16} /> Settings saved and synced successfully across the application!
+          <FontAwesomeIcon icon={faCircleCheck} className="text-sm" /> Settings saved and synced successfully across the application!
         </div>
       )}
 
@@ -63,7 +71,7 @@ export default function AdminSettingsPage() {
         {/* Section 1: Business Information */}
         <div className="bg-[var(--card)] border border-[var(--border)] rounded-3xl p-6 sm:p-8 shadow-sm space-y-4">
           <div className="flex items-center gap-2 border-b border-[var(--border)] pb-3">
-            <Store size={18} className="text-[var(--accent)]" />
+            <FontAwesomeIcon icon={faStore} className="text-[var(--accent)] text-base" />
             <h2 className="font-heading text-xl font-bold text-[var(--text)]">
               Business & Brand Profile
             </h2>
@@ -168,7 +176,7 @@ export default function AdminSettingsPage() {
         {/* Section 2: WhatsApp Ordering Gateway */}
         <div className="bg-[var(--card)] border border-[var(--border)] rounded-3xl p-6 sm:p-8 shadow-sm space-y-4">
           <div className="flex items-center gap-2 border-b border-[var(--border)] pb-3">
-            <MessageCircle size={18} className="text-[#25D366]" />
+            <FontAwesomeIcon icon={faWhatsapp} className="text-[#25D366] text-base" />
             <h2 className="font-heading text-xl font-bold text-[var(--text)]">
               WhatsApp Ordering Gateway
             </h2>
@@ -211,7 +219,7 @@ export default function AdminSettingsPage() {
         {/* Section 3: Website Branding & Copy */}
         <div className="bg-[var(--card)] border border-[var(--border)] rounded-3xl p-6 sm:p-8 shadow-sm space-y-4">
           <div className="flex items-center gap-2 border-b border-[var(--border)] pb-3">
-            <Globe size={18} className="text-[var(--accent-secondary)]" />
+            <FontAwesomeIcon icon={faGlobe} className="text-[var(--accent-secondary)] text-base" />
             <h2 className="font-heading text-xl font-bold text-[var(--text)]">
               Storefront Headlines & Taglines
             </h2>
@@ -278,7 +286,7 @@ export default function AdminSettingsPage() {
             type="submit"
             className="gold-btn flex items-center gap-2 px-8 py-3.5 text-xs font-bold uppercase tracking-widest shadow-md hover:scale-102 transition-all cursor-pointer"
           >
-            <Save size={15} /> Save All Settings
+            <FontAwesomeIcon icon={faFloppyDisk} className="text-xs" /> Save All Settings
           </button>
         </div>
 

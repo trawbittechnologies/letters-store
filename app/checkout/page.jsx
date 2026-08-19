@@ -2,7 +2,14 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, MessageCircle, CheckCircle2, Copy, Check } from 'lucide-react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faArrowLeft,
+  faCircleCheck,
+  faCopy,
+  faCheck,
+} from '@fortawesome/free-solid-svg-icons';
+import { faWhatsapp } from '@fortawesome/free-brands-svg-icons';
 import { useCartStore } from '@/src/store/cartStore';
 import { useOrderStore } from '@/src/store/orderStore';
 import { useSettingsStore } from '@/src/store/settingsStore';
@@ -137,7 +144,7 @@ export default function CheckoutPage() {
             
             {/* Celebration Icon */}
             <div className="w-16 h-16 bg-[var(--bg)] border border-[var(--border-dark)] text-emerald-600 dark:text-emerald-400 flex items-center justify-center mx-auto mb-6">
-              <CheckCircle2 size={32} />
+              <FontAwesomeIcon icon={faCircleCheck} className="text-3xl" />
             </div>
 
             <span className="text-[9.5px] font-bold uppercase tracking-[0.25em] text-[var(--accent-secondary)] block mb-2">
@@ -160,19 +167,19 @@ export default function CheckoutPage() {
               </div>
               <button
                 onClick={copyOrderId}
-                className="p-2 bg-[var(--card)] border border-[var(--border)] text-xs text-[var(--text)] hover:border-[var(--border-dark)] flex items-center gap-1 transition-colors cursor-pointer"
+                className="p-2 bg-[var(--card)] border border-[var(--border)] text-xs text-[var(--text)] hover:border-[var(--border-dark)] flex items-center gap-1.5 transition-colors cursor-pointer"
                 title="Copy Order ID"
               >
-                {copied ? <Check size={13} className="text-emerald-500" /> : <Copy size={13} />}
+                {copied ? <FontAwesomeIcon icon={faCheck} className="text-emerald-500 text-xs" /> : <FontAwesomeIcon icon={faCopy} className="text-xs" />}
                 <span className="text-[9px] font-bold uppercase tracking-wider">{copied ? 'Copied' : 'Copy'}</span>
               </button>
             </div>
 
             {/* Order Summary Details */}
             <div className="bg-[var(--bg)] border border-[var(--border)] p-6 text-left max-w-xl mx-auto mb-8 space-y-3 text-xs">
-              <h3 className="font-heading font-bold text-sm text-[var(--text)] border-b border-[var(--border)] pb-2 uppercase tracking-wider">
+              <h2 className="font-heading font-bold text-sm text-[var(--text)] border-b border-[var(--border)] pb-2 uppercase tracking-wider">
                 Order Summary
-              </h3>
+              </h2>
               
               <div className="space-y-1.5">
                 {createdOrder.items.map((item, idx) => (
@@ -201,7 +208,7 @@ export default function CheckoutPage() {
                 onClick={() => window.open(getWhatsAppUrl(generateWhatsAppMessage(createdOrder)), '_blank')}
                 className="w-full sm:w-auto flex items-center justify-center gap-2 py-3.5 px-8 text-[10.5px] font-bold uppercase tracking-[0.2em] bg-[#25D366] text-white hover:bg-[#1EBE5D] border border-[#25D366] transition-colors cursor-pointer"
               >
-                <MessageCircle size={15} className="fill-current" /> Open WhatsApp Chat Again
+                <FontAwesomeIcon icon={faWhatsapp} className="text-base" /> Open WhatsApp Chat Again
               </button>
 
               <Link
@@ -229,7 +236,7 @@ export default function CheckoutPage() {
             href="/cart"
             className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--text-muted)] hover:text-[var(--text)] transition-colors mb-3"
           >
-            <ArrowLeft size={13} /> Back to Cart
+            <FontAwesomeIcon icon={faArrowLeft} className="text-xs" /> Back to Cart
           </Link>
           <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-[var(--text)]">
             Checkout & WhatsApp Ordering
@@ -253,12 +260,12 @@ export default function CheckoutPage() {
               
               {/* Section 1: Contact Info */}
               <div className="bg-[var(--card)] border border-[var(--border-dark)] p-6 sm:p-8 space-y-4">
-                <h3 className="font-heading text-base font-bold text-[var(--text)] mb-2 flex items-center gap-2 pb-3 border-b border-[var(--border)] uppercase tracking-wider">
+                <h2 className="font-heading text-base font-bold text-[var(--text)] mb-2 flex items-center gap-2 pb-3 border-b border-[var(--border)] uppercase tracking-wider">
                   <span className="w-5 h-5 bg-[var(--text)] text-[var(--bg)] text-xs font-bold flex items-center justify-center">
                     1
                   </span>
                   Your Contact Information
-                </h3>
+                </h2>
 
                 <div>
                   <label className="block text-[10px] font-bold text-[var(--text)] uppercase tracking-wider mb-1">
@@ -305,7 +312,7 @@ export default function CheckoutPage() {
                       onChange={handleChange}
                       className={`w-full px-3.5 py-2.5 border text-xs ${
                         sameAsPhone
-                          ? 'bg-[var(--bg-subtle)] border-[var(--border)] opacity-80 cursor-not-allowed'
+                           ? 'bg-[var(--bg-subtle)] border-[var(--border)] opacity-80 cursor-not-allowed'
                           : 'bg-[var(--bg)] border-[var(--border)] focus:outline-none focus:border-[var(--border-dark)]'
                       }`}
                     />
@@ -328,12 +335,12 @@ export default function CheckoutPage() {
 
               {/* Section 2: Address */}
               <div className="bg-[var(--card)] border border-[var(--border-dark)] p-6 sm:p-8 space-y-4">
-                <h3 className="font-heading text-base font-bold text-[var(--text)] mb-2 flex items-center gap-2 pb-3 border-b border-[var(--border)] uppercase tracking-wider">
+                <h2 className="font-heading text-base font-bold text-[var(--text)] mb-2 flex items-center gap-2 pb-3 border-b border-[var(--border)] uppercase tracking-wider">
                   <span className="w-5 h-5 bg-[var(--text)] text-[var(--bg)] text-xs font-bold flex items-center justify-center">
                     2
                   </span>
                   Delivery Address & Occasion
-                </h3>
+                </h2>
 
                 <div>
                   <label className="block text-[10px] font-bold text-[var(--text)] uppercase tracking-wider mb-1">
@@ -404,12 +411,12 @@ export default function CheckoutPage() {
 
               {/* Section 3: Message */}
               <div className="bg-[var(--card)] border border-[var(--border-dark)] p-6 sm:p-8 space-y-4">
-                <h3 className="font-heading text-base font-bold text-[var(--text)] mb-2 flex items-center gap-2 pb-3 border-b border-[var(--border)] uppercase tracking-wider">
+                <h2 className="font-heading text-base font-bold text-[var(--text)] mb-2 flex items-center gap-2 pb-3 border-b border-[var(--border)] uppercase tracking-wider">
                   <span className="w-5 h-5 bg-[var(--text)] text-[var(--bg)] text-xs font-bold flex items-center justify-center">
                     3
                   </span>
                   Keepsake Card & Notes
-                </h3>
+                </h2>
 
                 <div>
                   <label className="block text-[10px] font-bold text-[var(--text)] uppercase tracking-wider mb-1">
@@ -447,7 +454,7 @@ export default function CheckoutPage() {
               <div className="bg-[var(--card)] border border-[var(--border-dark)] p-6 sm:p-8 space-y-6">
                 
                 <div className="border-b border-[var(--border)] pb-3">
-                  <h3 className="font-heading text-xl font-bold text-[var(--text)] uppercase tracking-wider">Order Items ({items.length})</h3>
+                  <h2 className="font-heading text-xl font-bold text-[var(--text)] uppercase tracking-wider">Order Items ({items.length})</h2>
                   <p className="text-[9.5px] text-[var(--text-muted)] uppercase tracking-wider">LETTERS Atelier Catalog</p>
                 </div>
 
@@ -497,7 +504,7 @@ export default function CheckoutPage() {
                   disabled={submitting || items.length === 0}
                   className="w-full flex items-center justify-center gap-2 py-4 px-6 text-[11px] font-bold uppercase tracking-[0.2em] bg-[#25D366] text-white hover:bg-[#1EBE5D] border border-[#25D366] transition-colors disabled:opacity-50 cursor-pointer"
                 >
-                  <MessageCircle size={16} className="fill-current" />
+                  <FontAwesomeIcon icon={faWhatsapp} className="text-base" />
                   {submitting ? 'Saving...' : 'Place Order & Open WhatsApp'}
                 </button>
 

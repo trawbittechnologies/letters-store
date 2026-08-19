@@ -3,31 +3,32 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  LayoutDashboard,
-  ShoppingBag,
-  Package,
-  Layers,
-  Settings,
-  LogOut,
-  ExternalLink,
-  Menu,
-  X,
-  Gift,
-  Sun,
-  Moon,
-} from 'lucide-react';
+  faGauge,
+  faBagShopping,
+  faBox,
+  faLayerGroup,
+  faGear,
+  faArrowRightFromBracket,
+  faArrowUpRightFromSquare,
+  faBars,
+  faXmark,
+  faGift,
+  faSun,
+  faMoon,
+} from '@fortawesome/free-solid-svg-icons';
 import { useAuthStore } from '@/src/store/authStore';
 import { useSettingsStore } from '@/src/store/settingsStore';
 import { useThemeStore } from '@/src/store/themeStore';
 import { useOrderStore } from '@/src/store/orderStore';
 
 const adminNavLinks = [
-  { label: 'Dashboard', href: '/admin', icon: LayoutDashboard },
-  { label: 'Orders', href: '/admin/orders', icon: ShoppingBag, badge: true },
-  { label: 'Products', href: '/admin/products', icon: Package },
-  { label: 'Categories', href: '/admin/categories', icon: Layers },
-  { label: 'Settings', href: '/admin/settings', icon: Settings },
+  { label: 'Dashboard', href: '/admin', icon: faGauge },
+  { label: 'Orders', href: '/admin/orders', icon: faBagShopping, badge: true },
+  { label: 'Products', href: '/admin/products', icon: faBox },
+  { label: 'Categories', href: '/admin/categories', icon: faLayerGroup },
+  { label: 'Settings', href: '/admin/settings', icon: faGear },
 ];
 
 export default function AdminLayout({ children }) {
@@ -86,10 +87,12 @@ export default function AdminLayout({ children }) {
             className="p-1.5 rounded-lg border border-[var(--border)] text-[var(--text)] cursor-pointer"
             aria-label="Toggle admin sidebar"
           >
-            {mobileSidebarOpen ? <X size={20} /> : <Menu size={20} />}
+            {mobileSidebarOpen ? <FontAwesomeIcon icon={faXmark} className="text-base" /> : <FontAwesomeIcon icon={faBars} className="text-base" />}
           </button>
-          <div className="flex items-center gap-2">
-            <Gift size={18} className="text-[var(--accent)]" />
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-xl overflow-hidden bg-[#FAF6F0] p-0.5 border border-[var(--border)] flex items-center justify-center flex-shrink-0">
+              <img src="/logo.png" alt="Letters" className="w-full h-full object-contain" />
+            </div>
             <span className="font-heading font-bold text-lg text-[var(--text)] tracking-wider">
               {settings.brandName} <span className="text-[10px] uppercase font-bold text-[var(--accent-secondary)]">Admin</span>
             </span>
@@ -102,7 +105,7 @@ export default function AdminLayout({ children }) {
             className="p-1.5 rounded-lg border border-[var(--border)] text-[var(--text)] cursor-pointer"
             aria-label="Toggle Theme"
           >
-            {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+            {theme === 'dark' ? <FontAwesomeIcon icon={faSun} className="text-sm" /> : <FontAwesomeIcon icon={faMoon} className="text-sm" />}
           </button>
           <Link
             href="/"
@@ -111,7 +114,7 @@ export default function AdminLayout({ children }) {
             className="p-1.5 rounded-lg border border-[var(--border)] text-[var(--text)]"
             title="View Storefront"
           >
-            <ExternalLink size={16} />
+            <FontAwesomeIcon icon={faArrowUpRightFromSquare} className="text-sm" />
           </Link>
         </div>
       </div>
@@ -126,8 +129,8 @@ export default function AdminLayout({ children }) {
           {/* Brand Header */}
           <div className="flex items-center justify-between mb-8 pb-4 border-b border-[var(--border)]">
             <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-xl bg-[var(--accent)]/15 border border-[var(--accent)]/30 flex items-center justify-center text-[var(--accent-hover)] font-bold">
-                <Gift size={18} />
+              <div className="w-10 h-10 rounded-xl overflow-hidden bg-[#FAF6F0] p-1 border border-[var(--border)] flex items-center justify-center flex-shrink-0 shadow-sm">
+                <img src="/logo.png" alt="Letters" className="w-full h-full object-contain" />
               </div>
               <div>
                 <h2 className="font-heading font-bold text-lg text-[var(--text)] tracking-wider">
@@ -143,14 +146,13 @@ export default function AdminLayout({ children }) {
               onClick={() => setMobileSidebarOpen(false)}
               className="md:hidden text-[var(--text-muted)] hover:text-[var(--text)] cursor-pointer"
             >
-              <X size={18} />
+              <FontAwesomeIcon icon={faXmark} className="text-base" />
             </button>
           </div>
 
           {/* Navigation Links */}
           <nav className="space-y-1.5">
             {adminNavLinks.map((link) => {
-              const Icon = link.icon;
               const isActive = pathname === link.href;
 
               return (
@@ -165,7 +167,7 @@ export default function AdminLayout({ children }) {
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <Icon size={16} />
+                    <FontAwesomeIcon icon={link.icon} className="text-sm" />
                     <span>{link.label}</span>
                   </div>
 
@@ -196,14 +198,14 @@ export default function AdminLayout({ children }) {
               rel="noopener noreferrer"
               className="flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl border border-[var(--border)] text-[11px] font-semibold text-[var(--text)] hover:bg-[var(--bg)] transition-colors"
             >
-              <ExternalLink size={13} /> Storefront
+              <FontAwesomeIcon icon={faArrowUpRightFromSquare} className="text-xs" /> Storefront
             </Link>
 
             <button
               onClick={toggleTheme}
               className="flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl border border-[var(--border)] text-[11px] font-semibold text-[var(--text)] hover:bg-[var(--bg)] transition-colors cursor-pointer"
             >
-              {theme === 'dark' ? <Sun size={13} /> : <Moon size={13} />} Theme
+              {theme === 'dark' ? <FontAwesomeIcon icon={faSun} className="text-xs" /> : <FontAwesomeIcon icon={faMoon} className="text-xs" />} Theme
             </button>
           </div>
 
@@ -211,7 +213,7 @@ export default function AdminLayout({ children }) {
             onClick={handleLogout}
             className="w-full flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 hover:bg-rose-100 text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer"
           >
-            <LogOut size={14} /> Logout
+            <FontAwesomeIcon icon={faArrowRightFromBracket} className="text-xs" /> Logout
           </button>
         </div>
       </aside>

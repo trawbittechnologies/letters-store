@@ -2,7 +2,15 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Trash2, ShoppingBag, ArrowRight, ArrowLeft, MessageCircle, Gift } from 'lucide-react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faTrashCan,
+  faBagShopping,
+  faArrowRight,
+  faArrowLeft,
+  faGift,
+} from '@fortawesome/free-solid-svg-icons';
+import { faWhatsapp } from '@fortawesome/free-brands-svg-icons';
 import { useCartStore } from '@/src/store/cartStore';
 import { useSettingsStore } from '@/src/store/settingsStore';
 
@@ -39,14 +47,14 @@ Hello LETTERS team, I have prepared my cart and would like to proceed with order
   if (items.length === 0) {
     return (
       <div className="min-h-[70vh] flex flex-col items-center justify-center px-6 text-center bg-[var(--bg)]">
-        <div className="w-16 h-16 bg-[var(--card)] border border-[var(--border-dark)] flex items-center justify-center mb-6">
-          <ShoppingBag size={28} className="text-[var(--accent)]" />
+        <div className="w-16 h-16 bg-[var(--card)] rounded-2xl border border-[var(--border)] flex items-center justify-center mb-6 shadow-xs">
+          <FontAwesomeIcon icon={faBagShopping} className="text-2xl text-[var(--olive)]" />
         </div>
-        <h2 className="font-heading text-3xl font-bold text-[var(--text)] mb-2 uppercase tracking-wider">Your Cart is Empty</h2>
+        <h2 className="font-heading text-2xl sm:text-3xl font-bold text-[var(--text)] mb-2">Your Cart is Empty</h2>
         <p className="text-xs text-[var(--text-muted)] max-w-sm mb-8 leading-relaxed">
           Looks like you haven't added any luxury hampers or gifts to your cart yet.
         </p>
-        <Link href="/shop" className="gold-btn px-8 py-3.5 text-xs font-bold uppercase tracking-[0.2em]">
+        <Link href="/shop" className="gold-btn px-8 py-3.5 text-xs font-semibold">
           Explore Gifts Collection
         </Link>
       </div>
@@ -60,12 +68,12 @@ Hello LETTERS team, I have prepared my cart and would like to proceed with order
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 pb-6 border-b border-[var(--border)]">
           <div>
-            <div className="flex items-center gap-2 mb-1.5">
-              <Gift size={12} className="text-[var(--accent)]" />
-              <p className="text-[9.5px] tracking-[0.3em] text-[var(--accent-secondary)] uppercase font-bold">
-                Your Selection
-              </p>
-            </div>
+            <span
+              className="block mb-1 text-[var(--chandanam)]"
+              style={{ fontFamily: "'Great Vibes', cursive", fontSize: '24px' }}
+            >
+              Your Selection
+            </span>
             <h1 className="font-heading text-3xl sm:text-4xl font-bold text-[var(--text)]">
               Shopping Cart ({items.length} {items.length === 1 ? 'item' : 'items'})
             </h1>
@@ -73,41 +81,44 @@ Hello LETTERS team, I have prepared my cart and would like to proceed with order
 
           <button
             onClick={clearCart}
-            className="text-xs text-[var(--text-muted)] hover:text-rose-500 transition-colors flex items-center gap-1 font-bold uppercase tracking-wider cursor-pointer"
+            className="text-xs text-[var(--text-muted)] hover:text-rose-600 transition-colors flex items-center gap-1.5 font-medium cursor-pointer"
           >
-            <Trash2 size={13} /> Clear Cart
+            <FontAwesomeIcon icon={faTrashCan} className="text-xs" /> Clear Cart
           </button>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
           
-          {/* Left / Center: Items Table / List - Square Flat */}
+          {/* Left / Center: Items Table / List */}
           <div className="lg:col-span-8 space-y-3">
             {items.map((item) => (
               <div
                 key={item.cartItemId}
-                className="bg-[var(--card)] border border-[var(--border)] p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
+                className="bg-[var(--card)] rounded-2xl border border-[var(--border)] p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xs"
               >
                 {/* Product Thumbnail & Basic Info */}
                 <div className="flex items-center gap-4 w-full sm:w-auto">
-                  <div className="w-16 h-16 bg-[var(--bg-subtle)] border border-[var(--border)] flex-shrink-0 overflow-hidden">
+                  <div className="w-16 h-16 rounded-xl bg-[var(--bg-subtle)] border border-[var(--border)] flex-shrink-0 overflow-hidden">
                     <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
                   </div>
                   <div>
-                    <span className="text-[8.5px] font-bold uppercase tracking-wider text-[var(--accent-secondary)]">
+                    <span
+                      className="block text-[var(--chandanam)] leading-tight"
+                      style={{ fontFamily: "'Great Vibes', cursive", fontSize: '15px' }}
+                    >
                       {item.category}
                     </span>
                     <h3 className="font-heading font-bold text-sm text-[var(--text)] line-clamp-1">
                       {item.name}
                     </h3>
-                    <p className="text-xs font-bold text-[var(--accent-hover)] font-heading">
+                    <p className="text-xs font-bold text-[var(--olive)] font-heading">
                       ₹{item.price.toLocaleString()} each
                     </p>
 
                     {/* Customization Preview */}
                     {(item.customization?.recipientName || item.customization?.personalizedMessage) && (
-                      <div className="mt-1 text-[9.5px] text-[var(--text-muted)] bg-[var(--bg)] px-2 py-0.5 border border-[var(--border)] inline-block">
-                        <span className="font-bold text-[var(--text)]">For: </span>
+                      <div className="mt-1 text-[10px] text-[var(--text-muted)] bg-[var(--bg)] px-2 py-0.5 rounded-lg border border-[var(--border)] inline-block">
+                        <span className="font-semibold text-[var(--text)]">For: </span>
                         {item.customization.recipientName || 'Not specified'}
                         {item.customization.personalizedMessage && (
                           <span className="italic"> • "{item.customization.personalizedMessage}"</span>
@@ -117,24 +128,24 @@ Hello LETTERS team, I have prepared my cart and would like to proceed with order
                   </div>
                 </div>
 
-                {/* Quantity Modifiers & Total - Square Steppers */}
+                {/* Quantity Modifiers & Total */}
                 <div className="flex items-center justify-between sm:justify-end gap-6 w-full sm:w-auto pt-3 sm:pt-0 border-t sm:border-t-0 border-[var(--border)]">
                   
                   {/* Quantity Counter */}
-                  <div className="flex items-center border border-[var(--border-dark)] bg-[var(--bg)]">
+                  <div className="flex items-center rounded-xl border border-[var(--border)] bg-[var(--card)] overflow-hidden">
                     <button
                       onClick={() => updateQuantity(item.cartItemId, item.quantity - 1)}
-                      className="w-7 h-7 flex items-center justify-center text-xs font-bold hover:bg-[var(--card)] text-[var(--text)] transition-colors cursor-pointer"
+                      className="w-7 h-7 flex items-center justify-center text-xs font-bold hover:bg-[var(--bg)] text-[var(--text)] transition-colors cursor-pointer"
                       aria-label="Decrease quantity"
                     >
                       -
                     </button>
-                    <span className="w-8 text-center text-xs font-bold font-mono text-[var(--text)] border-x border-[var(--border)]">
+                    <span className="w-8 text-center text-xs font-semibold text-[var(--text)]">
                       {item.quantity}
                     </span>
                     <button
                       onClick={() => updateQuantity(item.cartItemId, item.quantity + 1)}
-                      className="w-7 h-7 flex items-center justify-center text-xs font-bold hover:bg-[var(--card)] text-[var(--text)] transition-colors cursor-pointer"
+                      className="w-7 h-7 flex items-center justify-center text-xs font-bold hover:bg-[var(--bg)] text-[var(--text)] transition-colors cursor-pointer"
                       aria-label="Increase quantity"
                     >
                       +
@@ -154,7 +165,7 @@ Hello LETTERS team, I have prepared my cart and would like to proceed with order
                     className="text-[var(--text-muted)] hover:text-rose-500 p-1.5 transition-colors cursor-pointer"
                     title="Remove item"
                   >
-                    <Trash2 size={14} />
+                    <FontAwesomeIcon icon={faTrashCan} className="text-xs" />
                   </button>
                 </div>
               </div>
@@ -163,59 +174,60 @@ Hello LETTERS team, I have prepared my cart and would like to proceed with order
             <div className="pt-4">
               <Link
                 href="/shop"
-                className="inline-flex items-center gap-2 text-[10.5px] font-bold uppercase tracking-[0.2em] text-[var(--text-muted)] hover:text-[var(--text)] transition-colors"
+                className="inline-flex items-center gap-2 text-xs font-semibold text-[var(--olive)] hover:text-[var(--olive-hover)] transition-colors"
               >
-                <ArrowLeft size={13} /> Continue Exploring Gifts
+                <FontAwesomeIcon icon={faArrowLeft} className="text-xs" /> Continue Exploring Gifts
               </Link>
             </div>
           </div>
 
-          {/* Right: Order Summary - Square Sticky Flat */}
+          {/* Right: Order Summary */}
           <div className="lg:col-span-4 sticky top-24">
-            <div className="bg-[var(--card)] border border-[var(--border-dark)] p-6 space-y-6">
+            <div className="bg-[var(--card)] rounded-2xl border border-[var(--border)] p-6 space-y-6 shadow-xs">
               
               <div className="border-b border-[var(--border)] pb-3">
-                <h3 className="font-heading text-xl font-bold text-[var(--text)] uppercase tracking-wider">Order Summary</h3>
-                <p className="text-[9.5px] text-[var(--text-muted)] uppercase tracking-wider">Verified price calculation</p>
+                <h2 className="font-heading text-lg font-bold text-[var(--text)]">Order Summary</h2>
+                <p className="text-[10.5px] text-[var(--text-muted)] mt-0.5">Verified price calculation</p>
               </div>
 
               <div className="space-y-2.5 text-xs">
                 <div className="flex justify-between items-center text-[var(--text-muted)]">
                   <span>Subtotal</span>
-                  <span className="font-bold text-[var(--text)]">₹{subtotal.toLocaleString()}</span>
+                  <span className="font-semibold text-[var(--text)]">₹{subtotal.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between items-center text-[var(--text-muted)]">
                   <span>Shipping</span>
-                  <span className="text-emerald-600 dark:text-emerald-400 font-semibold uppercase text-[10px] tracking-wider">Calculated at Checkout</span>
+                  <span className="text-[var(--olive)] font-medium text-[11px]">Calculated at Checkout</span>
                 </div>
               </div>
 
               <div className="pt-4 border-t border-[var(--border)] flex justify-between items-baseline">
-                <span className="text-xs font-bold uppercase tracking-wider text-[var(--text)]">Total</span>
+                <span className="text-xs font-semibold text-[var(--text)]">Total</span>
                 <span className="font-heading text-2xl font-bold text-[var(--text)]">
                   ₹{subtotal.toLocaleString()}
                 </span>
               </div>
 
-              {/* CTAs - Square Buttons */}
+              {/* CTAs */}
               <div className="space-y-2.5 pt-2">
                 <button
                   onClick={() => router.push('/checkout')}
-                  className="w-full gold-btn py-3.5 px-6 text-[10.5px] font-bold uppercase tracking-[0.2em]"
+                  className="w-full gold-btn py-3.5 px-6 text-xs font-semibold flex items-center justify-center gap-2"
                 >
-                  Proceed to Checkout <ArrowRight size={14} className="ml-2" />
+                  <span>Proceed to Checkout</span>
+                  <FontAwesomeIcon icon={faArrowRight} className="text-xs" />
                 </button>
 
                 <button
                   onClick={handleWhatsAppQuickCart}
-                  className="w-full flex items-center justify-center gap-2 py-3 px-6 text-[10.5px] font-bold uppercase tracking-[0.2em] bg-[#25D366] text-white hover:bg-[#1EBE5D] border border-[#25D366] transition-colors cursor-pointer"
+                  className="w-full flex items-center justify-center gap-2 py-3 px-6 text-xs font-semibold rounded-full bg-[#25D366] text-white hover:bg-[#1EBE5D] transition-colors cursor-pointer"
                 >
-                  <MessageCircle size={15} className="fill-current" /> Order on WhatsApp
+                  <FontAwesomeIcon icon={faWhatsapp} className="text-base" /> Order on WhatsApp
                 </button>
               </div>
 
-              <div className="text-[9.5px] text-center text-[var(--text-muted)] pt-2 border-t border-[var(--border)] space-y-1 uppercase tracking-wider">
-                <p>🔒 Secure order registration & WhatsApp dispatch</p>
+              <div className="text-[10px] text-center text-[var(--text-muted)] pt-2 border-t border-[var(--border)]">
+                <p>🔒 Secure order registration & WhatsApp concierge dispatch</p>
               </div>
 
             </div>

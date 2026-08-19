@@ -1,7 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import { ShoppingBag, MessageCircle, Eye, Check, Sparkles } from 'lucide-react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faBagShopping,
+  faEye,
+  faCheck,
+  faWandMagicSparkles,
+} from '@fortawesome/free-solid-svg-icons';
+import { faWhatsapp } from '@fortawesome/free-brands-svg-icons';
 import Link from 'next/link';
 import { useCartStore } from '../store/cartStore';
 import { useSettingsStore } from '../store/settingsStore';
@@ -24,51 +31,48 @@ export default function ProductCard({ product }) {
     e.stopPropagation();
 
     const origin = typeof window !== 'undefined' ? window.location.origin : '';
-    const message = `*New Order Inquiry — LETTERS*
-Item: ${product.name}
-Category: ${product.category}
-Price: ₹${product.price}
-Product Link: ${origin}/product/${product.slug}
-
-Hello LETTERS team, I would like to order this item directly via WhatsApp. Please guide me with delivery and payment details.`;
+    const message = `*New Order Inquiry — LETTERS*\nItem: ${product.name}\nCategory: ${product.category}\nPrice: ₹${product.price}\nProduct Link: ${origin}/product/${product.slug}\n\nHello LETTERS team, I would like to order this item directly via WhatsApp. Please guide me with delivery and payment details.`;
 
     window.open(getWhatsAppUrl(message), '_blank');
   };
 
   return (
     <article className="card-minimal flex flex-col justify-between h-full group bg-[var(--card)] overflow-hidden">
-      {/* Product Image Box */}
-      <div className="relative aspect-square overflow-hidden bg-[var(--bg-subtle)] border-b border-[var(--border)]">
+      {/* Product Image */}
+      <div className="relative aspect-square overflow-hidden bg-[var(--bg-subtle)]">
         <Link href={`/product/${product.slug}`} className="block w-full h-full">
           <img
             src={product.images?.[0] || product.image}
             alt={product.name}
             loading="lazy"
-            className="w-full h-full object-cover group-hover:scale-104 transition-transform duration-500 ease-out"
+            className="w-full h-full object-cover group-hover:scale-106 transition-transform duration-700 ease-out"
           />
         </Link>
 
-        {/* Soft Pill Tag */}
+        {/* Gradient overlay on hover */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400" />
+
+        {/* Tag Pill */}
         {product.tag && (
-          <span className="absolute top-3 left-3 text-[11px] font-medium tracking-normal bg-[#FFFDF9]/90 dark:bg-[#161513]/90 backdrop-blur-md text-[var(--text)] px-3 py-1 rounded-full border border-[#DDD3C4]/60 dark:border-[#332F2A] pointer-events-none shadow-sm capitalize">
+          <span className="absolute top-3 left-3 text-[10px] font-semibold bg-white/90 backdrop-blur-md text-[var(--text)] px-3 py-1 rounded-full border border-[var(--border)] pointer-events-none shadow-xs capitalize">
             {product.tag.toLowerCase()}
           </span>
         )}
 
         {product.customizable && (
-          <span className="absolute top-3 right-3 text-[11px] font-medium tracking-normal bg-[#FFFDF9]/90 dark:bg-[#161513]/90 backdrop-blur-md text-[var(--text)] px-2.5 py-1 rounded-full border border-[#DDD3C4]/60 dark:border-[#332F2A] flex items-center gap-1 pointer-events-none shadow-sm">
-            <Sparkles size={11} className="text-[var(--accent)]" />
+          <span className="absolute top-3 right-3 text-[10px] font-semibold bg-white/90 backdrop-blur-md text-[var(--olive)] px-2.5 py-1 rounded-full border border-[var(--border)] flex items-center gap-1.5 pointer-events-none shadow-xs">
+            <FontAwesomeIcon icon={faWandMagicSparkles} className="text-[var(--chandanam)] text-[9px]" />
             <span>Custom</span>
           </span>
         )}
 
-        {/* Quick View Overlay Button */}
+        {/* Quick View Overlay */}
         <Link
           href={`/product/${product.slug}`}
-          className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/25 backdrop-blur-[2px]"
+          className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 bg-black/20 backdrop-blur-[2px]"
         >
-          <span className="bg-[#FFFDF9] text-[#1C1C1A] dark:bg-[#161513] dark:text-[#F8F4EC] px-4 py-2 rounded-full text-xs font-medium tracking-wide shadow-md flex items-center gap-1.5 transform translate-y-2 group-hover:translate-y-0 transition-transform">
-            <Eye size={13} /> View Details
+          <span className="bg-white/95 backdrop-blur-md text-[var(--text)] px-4 py-2 rounded-full text-[11px] font-semibold tracking-wide shadow-md flex items-center gap-2 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+            <FontAwesomeIcon icon={faEye} className="text-[10px] text-[var(--olive)]" /> View Details
           </span>
         </Link>
       </div>
@@ -77,23 +81,26 @@ Hello LETTERS team, I would like to order this item directly via WhatsApp. Pleas
       <div className="p-5 flex flex-col flex-grow justify-between gap-4">
         <div>
           <div className="flex items-center justify-between gap-2 mb-1.5">
-            <span className="text-[11px] font-medium text-[var(--text-muted)] tracking-wide">
+            <span
+              className="text-[var(--chandanam)]"
+              style={{ fontFamily: "'Great Vibes', cursive", fontSize: '15px' }}
+            >
               {product.category}
             </span>
             {product.stock > 0 ? (
-              <span className="text-[11px] font-semibold text-[#71806C]">In Stock</span>
+              <span className="text-[9.5px] font-medium text-[var(--olive)]">In Stock</span>
             ) : (
-              <span className="text-[11px] font-medium text-[var(--text-muted)]">Made to order</span>
+              <span className="text-[9.5px] font-medium text-[var(--text-muted)]">Made to order</span>
             )}
           </div>
 
-          <Link href={`/product/${product.slug}`} className="block group-hover:text-[var(--accent-hover)] transition-colors">
-            <h3 className="font-heading text-base font-semibold text-[var(--text)] leading-snug line-clamp-1 mb-1.5">
+          <Link href={`/product/${product.slug}`} className="block group-hover:text-[var(--accent)] transition-colors duration-200">
+            <h3 className="font-heading text-[0.95rem] font-bold text-[var(--text)] leading-snug line-clamp-1 mb-1.5">
               {product.name}
             </h3>
           </Link>
 
-          <p className="text-[var(--text-muted)] text-xs leading-relaxed line-clamp-2 mb-3">
+          <p className="text-[var(--text-muted)] text-[11.5px] leading-relaxed line-clamp-2 mb-3">
             {product.description}
           </p>
 
@@ -102,40 +109,40 @@ Hello LETTERS team, I would like to order this item directly via WhatsApp. Pleas
               ₹{product.price.toLocaleString()}
             </span>
             {product.originalPrice && product.originalPrice > product.price && (
-              <span className="text-xs text-[var(--text-muted)] line-through">
+              <span className="text-[11px] text-[var(--text-muted)] line-through">
                 ₹{product.originalPrice.toLocaleString()}
               </span>
             )}
           </div>
         </div>
 
-        {/* Dual Actions - Pill Buttons */}
-        <div className="grid grid-cols-2 gap-2 pt-3 border-t border-[var(--border)]">
+        {/* Actions */}
+        <div className="grid grid-cols-2 gap-2 pt-3 border-t border-[var(--border)]/60">
           <button
             onClick={handleAddToCart}
-            className={`flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-full text-xs font-medium tracking-wide active:scale-95 transition-all duration-300 cursor-pointer ${
+            className={`flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-full text-[11px] font-semibold active:scale-95 transition-all duration-300 cursor-pointer ${
               added
-                ? 'bg-[#71806C] text-white border border-[#71806C]'
-                : 'bg-[#1C1C1A] text-[#FFFDF9] dark:bg-[#F8F4EC] dark:text-[#1C1C1A] hover:bg-[#C9A46C] hover:text-[#1C1C1A] dark:hover:bg-[#C9A46C]'
+                ? 'bg-[var(--olive)] text-white shadow-sm'
+                : 'bg-[var(--olive)] text-white hover:bg-[var(--olive-hover)] shadow-xs'
             }`}
           >
             {added ? (
               <>
-                <Check size={13} strokeWidth={2.5} /> Added
+                <FontAwesomeIcon icon={faCheck} className="text-[9px]" /> Added
               </>
             ) : (
               <>
-                <ShoppingBag size={13} /> Add to Cart
+                <FontAwesomeIcon icon={faBagShopping} className="text-[9px]" /> Add to Cart
               </>
             )}
           </button>
 
           <button
             onClick={handleWhatsAppOrder}
-            className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-full text-xs font-medium tracking-wide bg-[var(--bg-subtle)] text-[var(--text)] border border-[var(--border)] hover:bg-[#DDD3C4] active:scale-95 transition-all duration-300 cursor-pointer"
+            className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-full text-[11px] font-medium bg-[var(--card)] text-[var(--text)] border border-[var(--border)] hover:border-[var(--olive)]/50 active:scale-95 transition-all duration-300 cursor-pointer"
             title="Order directly on WhatsApp"
           >
-            <MessageCircle size={13} className="text-[#71806C]" /> WhatsApp
+            <FontAwesomeIcon icon={faWhatsapp} className="text-[#25D366] text-sm" /> WhatsApp
           </button>
         </div>
       </div>

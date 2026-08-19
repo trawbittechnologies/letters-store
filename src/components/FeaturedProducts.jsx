@@ -2,9 +2,11 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { ArrowRight, Sparkles } from 'lucide-react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { useProductStore } from '../store/productStore';
 import ProductCard from './ProductCard';
+import { DoodleStarburst } from './Doodles';
 
 export default function FeaturedProducts() {
   const { products } = useProductStore();
@@ -27,33 +29,39 @@ export default function FeaturedProducts() {
     .slice(0, 8);
 
   return (
-    <section id="featured" className="py-24 px-4 sm:px-6 lg:px-12 bg-[var(--bg)] border-t border-[var(--border)] transition-colors duration-200">
-      <div className="max-w-7xl mx-auto">
-        
+    <section id="featured" className="py-20 lg:py-28 px-4 sm:px-6 lg:px-12 bg-[var(--bg-subtle)] border-t border-[var(--border)]/40 transition-colors duration-300 relative overflow-hidden">
+
+      {/* Background starburst */}
+      <div className="absolute -bottom-4 right-8 text-[var(--chandanam)]/10 pointer-events-none hidden lg:block">
+        <DoodleStarburst className="w-24 h-24" />
+      </div>
+
+      <div className="max-w-7xl mx-auto relative z-10">
+
         {/* Header */}
-        <div className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-[var(--border)]">
+        <div className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div>
-            <div className="flex items-center gap-2 mb-2">
-              <Sparkles size={12} className="text-[var(--accent)]" />
-              <p className="text-[10px] tracking-[0.3em] text-[var(--accent-secondary)] uppercase font-bold">
-                Most Cherished Curations
-              </p>
-            </div>
-            <h2 className="font-heading text-3xl sm:text-4xl md:text-5xl font-bold text-[var(--text)] leading-tight tracking-tight">
+            <span
+              className="block mb-1 text-[var(--chandanam)]"
+              style={{ fontFamily: "'Great Vibes', cursive", fontSize: '26px', letterSpacing: '0.02em' }}
+            >
+              Most Cherished Curations
+            </span>
+            <h2 className="font-heading text-3xl sm:text-4xl font-bold text-[var(--text)] leading-tight tracking-tight">
               Curated with Care
             </h2>
           </div>
 
-          {/* Square Filter Tabs */}
+          {/* Filter Tabs */}
           <div className="flex flex-wrap items-center gap-1.5">
             {filterTabs.map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`text-[10px] uppercase tracking-[0.18em] px-4 py-2.5 border transition-colors font-bold cursor-pointer ${
+                className={`text-[10.5px] px-4 py-2 rounded-full transition-all duration-200 font-semibold cursor-pointer ${
                   activeTab === tab
-                    ? 'bg-[var(--text)] text-[var(--bg)] border-[var(--text)]'
-                    : 'border-[var(--border)] text-[var(--text-muted)] hover:border-[var(--text)] hover:text-[var(--text)] bg-[var(--card)]'
+                    ? 'bg-[var(--text)] text-[var(--bg)]'
+                    : 'text-[var(--text-muted)] bg-[var(--card)] border border-[var(--border)] hover:text-[var(--text)]'
                 }`}
               >
                 {tab}
@@ -62,20 +70,21 @@ export default function FeaturedProducts() {
           </div>
         </div>
 
-        {/* Product Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        {/* Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-14">
           {filteredProducts.map((product, i) => (
             <ProductCard key={product.id} product={product} index={i} />
           ))}
         </div>
 
-        {/* Bottom CTA to Shop */}
+        {/* CTA */}
         <div className="text-center">
           <Link
             href="/shop"
-            className="gold-btn px-8 py-4 text-[11px] font-bold uppercase tracking-[0.2em]"
+            className="gold-btn px-9 py-4 text-[11px] font-semibold tracking-[0.06em] inline-flex items-center gap-3 shadow-md"
           >
-            Explore Complete Gifting Catalog <ArrowRight size={14} className="ml-2" />
+            <span>Explore Full Catalog</span>
+            <FontAwesomeIcon icon={faArrowRight} className="text-[10px]" />
           </Link>
         </div>
 

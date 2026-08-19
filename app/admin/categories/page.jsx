@@ -1,7 +1,16 @@
 'use client';
 
 import { useState } from 'react';
-import { Plus, Edit2, Trash2, Eye, EyeOff, X, RefreshCw } from 'lucide-react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faPlus,
+  faPenToSquare,
+  faTrashCan,
+  faEye,
+  faEyeSlash,
+  faXmark,
+  faRotate,
+} from '@fortawesome/free-solid-svg-icons';
 import { useCategoryStore } from '@/src/store/categoryStore';
 
 export default function AdminCategoriesPage() {
@@ -91,13 +100,13 @@ export default function AdminCategoriesPage() {
             className="outline-btn inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold cursor-pointer"
             title="Reset to 12 Default Categories"
           >
-            <RefreshCw size={13} /> Reset Defaults
+            <FontAwesomeIcon icon={faRotate} className="text-xs" /> Reset Defaults
           </button>
           <button
             onClick={openAddModal}
             className="gold-btn inline-flex items-center gap-2 px-4 py-2 text-xs font-bold uppercase tracking-wider shadow-sm cursor-pointer"
           >
-            <Plus size={15} /> Add Category
+            <FontAwesomeIcon icon={faPlus} className="text-xs" /> Add Category
           </button>
         </div>
       </div>
@@ -141,9 +150,9 @@ export default function AdminCategoriesPage() {
               <div className="pt-3 border-t border-[var(--border)] flex items-center justify-between">
                 <button
                   onClick={() => toggleCategoryStatus(cat.id)}
-                  className="text-xs text-[var(--text-muted)] hover:text-[var(--text)] flex items-center gap-1 font-semibold cursor-pointer"
+                  className="text-xs text-[var(--text-muted)] hover:text-[var(--text)] flex items-center gap-1.5 font-semibold cursor-pointer"
                 >
-                  {cat.enabled ? <Eye size={14} /> : <EyeOff size={14} />}
+                  <FontAwesomeIcon icon={cat.enabled ? faEye : faEyeSlash} className="text-xs" />
                   {cat.enabled ? 'Visible' : 'Hidden'}
                 </button>
 
@@ -153,14 +162,14 @@ export default function AdminCategoriesPage() {
                     className="p-1.5 rounded-lg border border-[var(--border)] hover:bg-[var(--accent)]/15 text-[var(--text)] transition-colors cursor-pointer"
                     title="Edit Category"
                   >
-                    <Edit2 size={14} />
+                    <FontAwesomeIcon icon={faPenToSquare} className="text-xs" />
                   </button>
                   <button
                     onClick={() => handleDelete(cat.id, cat.name)}
                     className="p-1.5 rounded-lg border border-[var(--border)] hover:bg-rose-100 text-rose-600 transition-colors cursor-pointer"
                     title="Delete Category"
                   >
-                    <Trash2 size={14} />
+                    <FontAwesomeIcon icon={faTrashCan} className="text-xs" />
                   </button>
                 </div>
               </div>
@@ -183,7 +192,7 @@ export default function AdminCategoriesPage() {
                 onClick={() => setIsModalOpen(false)}
                 className="p-2 rounded-full hover:bg-[var(--bg)] text-[var(--text-muted)] hover:text-[var(--text)] cursor-pointer"
               >
-                <X size={20} />
+                <FontAwesomeIcon icon={faXmark} className="text-base" />
               </button>
             </div>
 

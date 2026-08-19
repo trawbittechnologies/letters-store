@@ -1,18 +1,19 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  Search,
-  Filter,
-  Eye,
-  MessageCircle,
-  Trash2,
-  X,
-  MapPin,
-  User,
-  ShoppingBag,
-  Sparkles,
-} from 'lucide-react';
+  faSearch,
+  faFilter,
+  faEye,
+  faTrashCan,
+  faXmark,
+  faLocationDot,
+  faUser,
+  faBagShopping,
+  faWandMagicSparkles,
+} from '@fortawesome/free-solid-svg-icons';
+import { faWhatsapp } from '@fortawesome/free-brands-svg-icons';
 import { useOrderStore } from '@/src/store/orderStore';
 import { useSettingsStore } from '@/src/store/settingsStore';
 
@@ -98,7 +99,7 @@ export default function AdminOrdersPage() {
           
           {/* Search */}
           <div className="w-full sm:flex-1 relative">
-            <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
+            <FontAwesomeIcon icon={faSearch} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--text-muted)] text-xs" />
             <input
               type="text"
               placeholder="Search by Order ID (LET-2026-...), Customer Name, or Phone..."
@@ -121,7 +122,7 @@ export default function AdminOrdersPage() {
         {/* Status Filter Tabs */}
         <div className="flex items-center gap-2 overflow-x-auto pb-1">
           <span className="text-[10px] uppercase font-bold tracking-widest text-[var(--text-muted)] mr-1 flex items-center gap-1 flex-shrink-0">
-            <Filter size={12} /> Status:
+            <FontAwesomeIcon icon={faFilter} className="text-[10px]" /> Status:
           </span>
           {statusFilters.map((st) => (
             <button
@@ -214,7 +215,7 @@ export default function AdminOrdersPage() {
                           className="p-1.5 rounded-lg border border-[var(--border)] hover:bg-[var(--accent)]/15 text-[var(--text)] transition-colors cursor-pointer"
                           title="View Complete Order"
                         >
-                          <Eye size={15} />
+                          <FontAwesomeIcon icon={faEye} className="text-xs" />
                         </button>
 
                         <button
@@ -222,7 +223,7 @@ export default function AdminOrdersPage() {
                           className="p-1.5 rounded-lg bg-[#25D366]/15 text-[#128C7E] dark:text-[#25D366] hover:bg-[#25D366] hover:text-white transition-colors cursor-pointer"
                           title="Open WhatsApp Chat"
                         >
-                          <MessageCircle size={15} />
+                          <FontAwesomeIcon icon={faWhatsapp} className="text-sm" />
                         </button>
 
                         <button
@@ -230,7 +231,7 @@ export default function AdminOrdersPage() {
                           className="p-1.5 rounded-lg border border-[var(--border)] hover:bg-rose-100 text-rose-600 transition-colors cursor-pointer"
                           title="Delete Order"
                         >
-                          <Trash2 size={15} />
+                          <FontAwesomeIcon icon={faTrashCan} className="text-xs" />
                         </button>
                       </div>
                     </td>
@@ -242,7 +243,7 @@ export default function AdminOrdersPage() {
           </div>
         ) : (
           <div className="text-center py-12">
-            <ShoppingBag size={36} className="mx-auto text-[var(--text-muted)] mb-3 opacity-40" />
+            <FontAwesomeIcon icon={faBagShopping} className="mx-auto text-[var(--text-muted)] mb-3 text-3xl opacity-40 block" />
             <p className="text-sm font-semibold text-[var(--text)]">No orders found</p>
             <p className="text-xs text-[var(--text-muted)] mt-1">Try resetting the status filter or search query.</p>
           </div>
@@ -268,7 +269,7 @@ export default function AdminOrdersPage() {
                 onClick={() => setActiveOrderModal(null)}
                 className="p-2 rounded-full hover:bg-[var(--bg)] text-[var(--text-muted)] hover:text-[var(--text)] cursor-pointer"
               >
-                <X size={20} />
+                <FontAwesomeIcon icon={faXmark} className="text-base" />
               </button>
             </div>
 
@@ -301,7 +302,7 @@ export default function AdminOrdersPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
               <div className="p-4 rounded-2xl bg-[var(--bg)] border border-[var(--border)] space-y-2">
                 <h4 className="font-bold text-[var(--text)] uppercase tracking-wider text-[11px] flex items-center gap-1.5">
-                  <User size={13} className="text-[var(--accent)]" /> Customer Info
+                  <FontAwesomeIcon icon={faUser} className="text-[var(--accent)] text-xs" /> Customer Info
                 </h4>
                 <p><strong>Name:</strong> {activeOrderModal.customerName}</p>
                 <p><strong>Mobile:</strong> {activeOrderModal.phone}</p>
@@ -310,7 +311,7 @@ export default function AdminOrdersPage() {
 
               <div className="p-4 rounded-2xl bg-[var(--bg)] border border-[var(--border)] space-y-2">
                 <h4 className="font-bold text-[var(--text)] uppercase tracking-wider text-[11px] flex items-center gap-1.5">
-                  <MapPin size={13} className="text-[var(--accent-secondary)]" /> Delivery & Occasion
+                  <FontAwesomeIcon icon={faLocationDot} className="text-[var(--accent-secondary)] text-xs" /> Delivery & Occasion
                 </h4>
                 <p><strong>Address:</strong> {activeOrderModal.address}</p>
                 <p><strong>Pincode:</strong> {activeOrderModal.pincode}</p>
@@ -361,7 +362,7 @@ export default function AdminOrdersPage() {
             <div className="space-y-3 text-xs">
               <div className="p-4 rounded-2xl bg-[var(--bg)] border border-[var(--border)]">
                 <p className="font-bold text-[var(--text)] uppercase mb-1 flex items-center gap-1.5">
-                  <Sparkles size={13} className="text-[var(--accent)]" /> Customization & Greeting Card
+                  <FontAwesomeIcon icon={faWandMagicSparkles} className="text-[var(--accent)] text-xs" /> Customization & Greeting Card
                 </p>
                 <p className="text-[var(--text-muted)] whitespace-pre-line leading-relaxed">
                   {activeOrderModal.customization || 'None requested'}
@@ -382,7 +383,7 @@ export default function AdminOrdersPage() {
                 onClick={() => handleContactCustomer(activeOrderModal)}
                 className="w-full sm:w-auto flex items-center justify-center gap-2 py-3 px-6 rounded-full text-xs font-bold uppercase tracking-wider bg-[#25D366] text-white hover:bg-[#1EBE5D] shadow-md transition-all cursor-pointer"
               >
-                <MessageCircle size={15} className="fill-current" /> Contact on WhatsApp
+                <FontAwesomeIcon icon={faWhatsapp} className="text-base" /> Contact on WhatsApp
               </button>
 
               <button

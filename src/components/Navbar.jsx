@@ -2,19 +2,17 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  Menu,
-  X,
-  Sun,
-  Moon,
-  ShoppingBag,
-  ArrowRight,
-  ChevronDown,
-  Sparkles,
-  Gift,
-  MessageCircle,
-} from 'lucide-react';
-import { useThemeStore } from '../store/themeStore';
+  faBars,
+  faXmark,
+  faBagShopping,
+  faArrowRight,
+  faChevronDown,
+  faGift,
+  faWandMagicSparkles,
+} from '@fortawesome/free-solid-svg-icons';
+import { faWhatsapp } from '@fortawesome/free-brands-svg-icons';
 import { useCartStore } from '../store/cartStore';
 import { useSettingsStore } from '../store/settingsStore';
 import { useCategoryStore } from '../store/categoryStore';
@@ -27,7 +25,6 @@ export default function Navbar() {
   const [collectionsOpen, setCollectionsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  const { theme, toggleTheme } = useThemeStore();
   const { settings, getWhatsAppUrl } = useSettingsStore();
   const { categories } = useCategoryStore();
   const itemCount = useCartStore((state) => state.getItemCount());
@@ -41,7 +38,6 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Close dropdown on outside click
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
@@ -52,21 +48,16 @@ export default function Navbar() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Lock body scroll when mobile menu is open
   useEffect(() => {
     if (menuOpen) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = '';
     }
-    return () => {
-      document.body.style.overflow = '';
-    };
+    return () => { document.body.style.overflow = ''; };
   }, [menuOpen]);
 
-  if (isAdminRoute) {
-    return null;
-  }
+  if (isAdminRoute) return null;
 
   const handleWhatsAppQuickInquiry = () => {
     const message = `Hello ${settings.brandName || 'LETTERS'}, I would like to inquire about your bespoke gift hampers!`;
@@ -82,104 +73,118 @@ export default function Navbar() {
 
   return (
     <>
-      {/* Top Editorial Announcement Strip - Soft Cream Light Aesthetic */}
-      <div className="bg-[#EFE7DA] text-[#1C1C1A] text-[11px] py-2 px-4 sm:px-8 tracking-[0.2em] uppercase font-medium flex items-center justify-between border-b border-[#DDD3C4] select-none relative z-50 transition-colors">
-        <div className="hidden sm:flex items-center gap-2 text-[10px] text-[#A9824D] font-semibold">
-          <Sparkles size={12} className="text-[#C9A46C]" />
+      {/* Top Announcement Strip */}
+      <div className="bg-gradient-to-r from-[var(--bg-subtle)] via-[var(--bg)] to-[var(--bg-subtle)] text-[var(--text)] text-[11px] py-2 px-4 sm:px-8 tracking-[0.2em] uppercase font-medium flex items-center justify-between border-b border-[var(--border)] select-none relative z-50 transition-colors">
+        <div className="hidden sm:flex items-center gap-2 text-[10px] text-[var(--accent-hover)] font-semibold">
+          <div className="w-4 h-4 rounded-full bg-gradient-to-br from-[var(--accent)] to-[var(--accent-hover)] flex items-center justify-center shadow-xs">
+            <FontAwesomeIcon icon={faWandMagicSparkles} className="text-white text-[7px]" />
+          </div>
           <span>Atelier Handcrafted</span>
         </div>
 
         <div className="flex-1 text-center truncate px-2 sm:px-4">
-          <span className="text-[#1C1C1A] font-medium tracking-[0.22em]">
+          <span className="text-[var(--text)] font-medium tracking-[0.22em]">
             {settings.announcementText || 'Complimentary Handwritten Keepsake Note on All Orders'}
           </span>
         </div>
 
-        <div className="hidden sm:flex items-center gap-4 text-[10px] text-[#766F65]">
+        <div className="hidden sm:flex items-center gap-4 text-[10px] text-[var(--text-muted)]">
           <span>Est. {settings.establishedYear || '2020'}</span>
-          <span className="opacity-40">•</span>
+          <span className="opacity-30">•</span>
           <button
             onClick={handleWhatsAppQuickInquiry}
-            className="hover:text-[#A9824D] transition-colors flex items-center gap-1.5 cursor-pointer font-semibold text-[#1C1C1A]"
+            className="hover:text-[var(--accent-hover)] transition-colors flex items-center gap-1.5 cursor-pointer font-semibold text-[var(--text)]"
           >
-            <MessageCircle size={12} className="text-[#71806C]" />
+            <FontAwesomeIcon icon={faWhatsapp} className="text-[var(--olive)] text-xs" />
             <span>WhatsApp Care</span>
           </button>
         </div>
       </div>
 
-      {/* Main Luxury Light Theme Header */}
+      {/* Main Header */}
       <header
-        className={`sticky top-0 left-0 right-0 z-40 transition-all duration-300 ${
+        className={`sticky top-0 left-0 right-0 z-40 transition-all duration-500 ${
           scrolled
-            ? 'bg-[#FFFDF9]/95 backdrop-blur-md border-b border-[#DDD3C4] shadow-[0_4px_20px_-4px_rgba(28,28,26,0.05)]'
-            : 'bg-[#F8F4EC]/90 backdrop-blur-sm border-b border-[#DDD3C4]/70'
+            ? 'glass-nav border-b border-[var(--border)]/70 shadow-[0_4px_30px_-4px_rgba(35,45,32,0.06)]'
+            : 'bg-[var(--bg)]/80 backdrop-blur-sm border-b border-[var(--border)]/40'
         }`}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 h-20 sm:h-[86px] flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 h-18 sm:h-[78px] flex items-center justify-between">
           
-          {/* Brand Identity / Logo */}
+          {/* Brand Logo */}
           <Link href="/" className="flex items-center gap-3 group py-1 select-none">
-            <div className="w-10 h-10 rounded-full bg-[#EFE7DA] border border-[#DDD3C4] flex items-center justify-center text-[#C9A46C] group-hover:bg-[#C9A46C] group-hover:text-[#FFFDF9] transition-all duration-300 shadow-xs">
-              <Gift size={18} />
+            <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl overflow-hidden bg-[var(--bg-subtle)] p-1 border border-[var(--border)] group-hover:border-[var(--accent)] flex items-center justify-center shadow-sm group-hover:shadow-md transition-all duration-300 flex-shrink-0">
+              <img
+                src="/logo.png"
+                alt={settings.brandName || 'LETTERS'}
+                className="w-full h-full object-contain"
+              />
             </div>
             <div className="flex flex-col">
-              <span className="font-heading text-xl sm:text-2xl lg:text-[25px] font-bold tracking-[0.22em] text-[#1C1C1A] uppercase leading-none transition-opacity group-hover:opacity-80">
-                {settings.brandName || 'LETTERS'}
+              <span
+                style={{
+                  fontFamily: "'Great Vibes', cursive",
+                  fontSize: '30px',
+                  fontWeight: 400,
+                  letterSpacing: '0.02em',
+                  color: 'var(--text)',
+                  lineHeight: 1,
+                }}
+              >
+                {settings.brandName || 'Letters'}
               </span>
-              <span className="text-[8.5px] uppercase tracking-[0.38em] text-[#766F65] font-medium mt-1">
-                Luxury Atelier • Est. {settings.establishedYear || '2020'}
+              <span className="text-[7.5px] tracking-[0.3em] text-[var(--text-muted)] font-medium uppercase" style={{ marginTop: '1px' }}>
+                Est. {settings.establishedYear || '2020'}
               </span>
             </div>
           </Link>
 
-          {/* Desktop Navigation Links */}
+          {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8 lg:gap-10" aria-label="Main Navigation">
-            {/* Collections Dropdown Trigger */}
+            {/* Collections Dropdown */}
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setCollectionsOpen(!collectionsOpen)}
                 onMouseEnter={() => setCollectionsOpen(true)}
-                className={`flex items-center gap-1.5 text-[12px] uppercase tracking-[0.2em] font-medium transition-colors py-2 cursor-pointer ${
+                className={`flex items-center gap-1.5 text-[11px] uppercase tracking-[0.2em] font-medium transition-colors py-2 cursor-pointer ${
                   collectionsOpen || pathname.startsWith('/category')
                     ? 'text-[#A9824D] font-semibold'
-                    : 'text-[#766F65] hover:text-[#1C1C1A]'
+                    : 'text-[var(--text-muted)] hover:text-[var(--text)]'
                 }`}
                 aria-expanded={collectionsOpen}
               >
                 <span>Collections</span>
-                <ChevronDown
-                  size={14}
-                  className={`transition-transform duration-200 ${collectionsOpen ? 'rotate-180 text-[#C9A46C]' : 'opacity-60'}`}
+                <FontAwesomeIcon
+                  icon={faChevronDown}
+                  className={`text-[9px] transition-transform duration-300 ${collectionsOpen ? 'rotate-180 text-[var(--accent)]' : 'opacity-50'}`}
                 />
               </button>
 
-              {/* Collections Mega Menu Dropdown */}
               <AnimatePresence>
                 {collectionsOpen && (
                   <motion.div
-                    initial={{ opacity: 0, y: 8, scale: 0.98 }}
+                    initial={{ opacity: 0, y: 10, scale: 0.97 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: 6, scale: 0.98 }}
-                    transition={{ duration: 0.18, ease: 'easeOut' }}
+                    exit={{ opacity: 0, y: 8, scale: 0.97 }}
+                    transition={{ duration: 0.2, ease: 'easeOut' }}
                     onMouseLeave={() => setCollectionsOpen(false)}
-                    className="absolute top-[calc(100%+4px)] left-1/2 -translate-x-1/2 w-[480px] p-5 rounded-2xl bg-[#FFFDF9] border border-[#DDD3C4] shadow-xl z-50"
+                    className="absolute top-[calc(100%+8px)] left-1/2 -translate-x-1/2 w-[480px] p-5 rounded-2xl glass-card border border-[var(--border)]/60 shadow-2xl shadow-black/8 z-50"
                   >
-                    <div className="flex items-center justify-between pb-3 mb-3 border-b border-[#DDD3C4]/70">
-                      <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#A9824D]">
+                    <div className="flex items-center justify-between pb-3 mb-3 border-b border-[var(--border)]/60">
+                      <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[var(--accent-hover)]">
                         Curated Collections
                       </span>
                       <Link
                         href="/shop"
                         onClick={() => setCollectionsOpen(false)}
-                        className="text-[10.5px] font-medium text-[#766F65] hover:text-[#1C1C1A] transition-colors flex items-center gap-1"
+                        className="text-[10px] font-medium text-[var(--text-muted)] hover:text-[var(--text)] transition-colors flex items-center gap-1"
                       >
                         <span>View All</span>
-                        <ArrowRight size={12} />
+                        <FontAwesomeIcon icon={faArrowRight} className="text-[9px]" />
                       </Link>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-2.5">
+                    <div className="grid grid-cols-2 gap-2">
                       {categories
                         .filter((c) => c.enabled)
                         .slice(0, 6)
@@ -188,20 +193,20 @@ export default function Navbar() {
                             key={cat.id}
                             href={`/category/${cat.slug}`}
                             onClick={() => setCollectionsOpen(false)}
-                            className="p-2.5 rounded-xl hover:bg-[#EFE7DA]/70 border border-transparent hover:border-[#DDD3C4] transition-all flex items-center gap-3 group"
+                            className="p-2.5 rounded-xl hover:bg-[var(--bg-subtle)]/80 border border-transparent hover:border-[var(--border)] transition-all flex items-center gap-3 group/item"
                           >
-                            <div className="w-10 h-10 rounded-lg overflow-hidden bg-[#EFE7DA] flex-shrink-0 border border-[#DDD3C4]/70">
+                            <div className="w-10 h-10 rounded-xl overflow-hidden bg-[var(--bg-subtle)] flex-shrink-0 border border-[var(--border)]/60">
                               <img
                                 src={cat.image}
                                 alt={cat.name}
-                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                className="w-full h-full object-cover group-hover/item:scale-110 transition-transform duration-400"
                               />
                             </div>
                             <div className="flex flex-col min-w-0">
-                              <span className="text-xs font-semibold text-[#1C1C1A] truncate group-hover:text-[#A9824D] transition-colors">
+                              <span className="text-[11px] font-semibold text-[var(--text)] truncate group-hover/item:text-[var(--accent-hover)] transition-colors">
                                 {cat.name}
                               </span>
-                              <span className="text-[10px] text-[#766F65] truncate">
+                              <span className="text-[9px] text-[var(--text-muted)] truncate">
                                 {cat.group || 'Atelier Series'}
                               </span>
                             </div>
@@ -209,18 +214,18 @@ export default function Navbar() {
                         ))}
                     </div>
 
-                    <div className="mt-4 pt-3 border-t border-[#DDD3C4]/70 flex items-center justify-between bg-[#EFE7DA]/40 p-3 rounded-xl">
+                    <div className="mt-4 pt-3 border-t border-[var(--border)]/60 flex items-center justify-between bg-gradient-to-r from-[var(--bg-subtle)]/50 to-transparent p-3 rounded-xl">
                       <div className="flex items-center gap-2">
-                        <Sparkles size={14} className="text-[#C9A46C]" />
-                        <span className="text-xs font-medium text-[#1C1C1A]">Need a Custom Creation?</span>
+                        <FontAwesomeIcon icon={faWandMagicSparkles} className="text-[var(--accent)] text-xs" />
+                        <span className="text-[11px] font-medium text-[var(--text)]">Need a Custom Creation?</span>
                       </div>
                       <Link
                         href="/custom-gift"
                         onClick={() => setCollectionsOpen(false)}
-                        className="text-[11px] font-bold text-[#A9824D] hover:underline flex items-center gap-1"
+                        className="text-[10px] font-bold text-[var(--accent-hover)] hover:underline flex items-center gap-1"
                       >
                         <span>Build Hamper</span>
-                        <ArrowRight size={12} />
+                        <FontAwesomeIcon icon={faArrowRight} className="text-[9px]" />
                       </Link>
                     </div>
                   </motion.div>
@@ -235,150 +240,133 @@ export default function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`text-[12px] uppercase tracking-[0.2em] font-medium transition-colors relative py-2 flex items-center gap-1.5 ${
+                  className={`text-[11px] uppercase tracking-[0.2em] font-medium transition-all relative py-2 flex items-center gap-1.5 group/nav ${
                     isActive
-                      ? 'text-[#1C1C1A] font-semibold'
-                      : 'text-[#766F65] hover:text-[#1C1C1A]'
+                      ? 'text-[var(--text)] font-bold'
+                      : 'text-[var(--text-muted)] hover:text-[var(--text)]'
                   }`}
                 >
                   <span>{link.label}</span>
                   {link.badge && (
-                    <span className="text-[9px] font-bold tracking-wider uppercase px-1.5 py-0.5 rounded-full bg-[#C9A46C]/15 text-[#A9824D] border border-[#C9A46C]/30">
+                    <span className="text-[8px] font-bold tracking-wider uppercase px-1.5 py-0.5 rounded-full bg-[var(--maroon-light)] text-[var(--maroon)] border border-[var(--maroon)]/25">
                       {link.badge}
                     </span>
                   )}
                   {isActive && (
                     <motion.div
                       layoutId="activeNavLine"
-                      className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#C9A46C] rounded-full"
+                      className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[var(--accent)] to-[var(--maroon)] rounded-full"
                       transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                     />
+                  )}
+                  {/* Hover underline */}
+                  {!isActive && (
+                    <span className="absolute bottom-0 left-0 right-0 h-[1.5px] bg-[var(--accent)] rounded-full scale-x-0 group-hover/nav:scale-x-100 transition-transform origin-left" />
                   )}
                 </Link>
               );
             })}
           </nav>
 
-          {/* Right Action Icons & Buttons */}
-          <div className="flex items-center gap-2.5 sm:gap-3">
-            {/* Direct WhatsApp Concierge Button (Desktop) */}
+          {/* Right Actions */}
+          <div className="flex items-center gap-2 sm:gap-2.5">
+            {/* WhatsApp Concierge (Desktop) */}
             <button
               onClick={handleWhatsAppQuickInquiry}
-              className="hidden lg:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-medium tracking-wide bg-[#EFE7DA] text-[#1C1C1A] border border-[#DDD3C4] hover:border-[#C9A46C] hover:text-[#A9824D] transition-all cursor-pointer shadow-xs active:scale-95"
+              className="hidden lg:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-medium tracking-wide bg-gradient-to-r from-[var(--bg-subtle)] to-[var(--card)] text-[var(--text)] border border-[var(--border)] hover:border-[var(--olive)] hover:text-[var(--olive)] transition-all cursor-pointer shadow-sm active:scale-95"
               title="Chat directly on WhatsApp"
             >
-              <MessageCircle size={14} className="text-[#71806C]" />
-              <span className="text-[11px] font-semibold uppercase tracking-wider">Concierge</span>
+              <FontAwesomeIcon icon={faWhatsapp} className="text-[var(--olive)] text-sm" />
+              <span className="text-[10px] font-bold uppercase tracking-wider">Concierge</span>
             </button>
 
-            {/* Theme Toggle (Light / Dark) */}
-            <button
-              onClick={toggleTheme}
-              className="w-10 h-10 rounded-full flex items-center justify-center text-[#766F65] hover:text-[#1C1C1A] bg-[#EFE7DA]/70 hover:bg-[#EFE7DA] border border-[#DDD3C4] active:scale-95 transition-all duration-200 cursor-pointer shadow-xs"
-              aria-label="Toggle theme mode"
-              title={theme === 'dark' ? 'Switch to Light Theme' : 'Switch to Dark Theme'}
-            >
-              {theme === 'dark' ? (
-                <Sun size={17} strokeWidth={1.8} className="text-[#C9A46C]" />
-              ) : (
-                <Moon size={17} strokeWidth={1.8} />
-              )}
-            </button>
-
-            {/* Shopping Cart Button */}
+            {/* Cart */}
             <Link
               href="/cart"
-              className="relative w-10 h-10 rounded-full flex items-center justify-center text-[#1C1C1A] bg-[#EFE7DA]/70 hover:bg-[#EFE7DA] border border-[#DDD3C4] active:scale-95 transition-all duration-200 cursor-pointer shadow-xs"
+              className="relative w-10 h-10 rounded-2xl flex items-center justify-center text-[var(--text)] bg-gradient-to-br from-[var(--bg-subtle)]/80 to-[var(--card)]/80 hover:from-[var(--bg-subtle)] hover:to-[var(--card)] border border-[var(--border)] active:scale-90 transition-all duration-300 cursor-pointer shadow-sm hover:shadow-md"
               aria-label={`Shopping bag with ${itemCount} items`}
             >
-              <ShoppingBag size={18} strokeWidth={1.8} />
+              <FontAwesomeIcon icon={faBagShopping} className="text-[15px]" />
               {itemCount > 0 && (
                 <motion.span
-                  initial={{ scale: 0.6 }}
+                  initial={{ scale: 0.5 }}
                   animate={{ scale: 1 }}
-                  className="absolute -top-1 -right-1 min-w-[17px] h-[17px] px-1 bg-[#C9A46C] text-[#1C1C1A] font-bold rounded-full text-[9px] flex items-center justify-center shadow-xs"
+                  className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 bg-gradient-to-br from-[var(--maroon)] to-[var(--maroon-hover)] text-white font-bold rounded-full text-[9px] flex items-center justify-center shadow-sm shadow-[var(--maroon)]/30"
                 >
                   {itemCount}
                 </motion.span>
               )}
             </Link>
 
-            {/* Mobile Hamburger Menu Toggle */}
+            {/* Mobile Hamburger */}
             <button
-              className="md:hidden w-10 h-10 rounded-full flex items-center justify-center text-[#1C1C1A] bg-[#EFE7DA]/70 hover:bg-[#EFE7DA] border border-[#DDD3C4] active:scale-95 transition-all duration-200 cursor-pointer"
+              className="md:hidden w-10 h-10 rounded-2xl flex items-center justify-center text-[var(--text)] bg-gradient-to-br from-[var(--bg-subtle)]/80 to-[var(--card)]/80 hover:from-[var(--bg-subtle)] hover:to-[var(--card)] border border-[var(--border)] active:scale-90 transition-all duration-300 cursor-pointer"
               onClick={() => setMenuOpen(!menuOpen)}
               aria-label={menuOpen ? 'Close Navigation Menu' : 'Open Navigation Menu'}
               aria-expanded={menuOpen}
             >
-              {menuOpen ? <X size={20} strokeWidth={1.8} /> : <Menu size={20} strokeWidth={1.8} />}
+              {menuOpen ? (
+                <FontAwesomeIcon icon={faXmark} className="text-lg" />
+              ) : (
+                <FontAwesomeIcon icon={faBars} className="text-lg" />
+              )}
             </button>
           </div>
         </div>
 
-        {/* Mobile Slide-down Drawer */}
+        {/* Mobile Drawer */}
         <AnimatePresence>
           {menuOpen && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-              className="md:hidden overflow-hidden bg-[#FFFDF9] border-b border-[#DDD3C4] shadow-xl"
+              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+              className="md:hidden overflow-hidden glass-nav border-b border-[var(--border)] shadow-2xl"
             >
               <div className="px-6 py-8 flex flex-col gap-6 max-h-[80vh] overflow-y-auto">
                 
-                {/* Main Navigation Links */}
+                {/* Main Navigation */}
                 <div className="flex flex-col gap-1">
-                  <span className="text-[10px] uppercase tracking-[0.3em] text-[#766F65] font-bold mb-2">
+                  <span className="text-[9px] uppercase tracking-[0.35em] text-[var(--text-muted)] font-bold mb-3">
                     Menu
                   </span>
                   
-                  <Link
-                    href="/shop"
-                    onClick={() => setMenuOpen(false)}
-                    className="text-lg font-heading font-medium tracking-wide text-[#1C1C1A] hover:text-[#A9824D] py-2.5 flex items-center justify-between border-b border-[#DDD3C4]/60"
-                  >
-                    <span>Shop All Gifts</span>
-                    <ArrowRight size={16} className="text-[#766F65]" />
-                  </Link>
+                  {[
+                    { label: 'Shop All Gifts', href: '/shop' },
+                    { label: 'Our Story & Craft', href: '/about' },
+                    { label: 'Contact & Studio', href: '/contact' },
+                  ].map((link) => (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      onClick={() => setMenuOpen(false)}
+                      className="text-lg font-heading font-medium tracking-wide text-[var(--text)] hover:text-[var(--accent-hover)] py-3 flex items-center justify-between border-b border-[var(--border)]/50 transition-colors"
+                    >
+                      <span>{link.label}</span>
+                      <FontAwesomeIcon icon={faArrowRight} className="text-xs text-[var(--text-muted)]" />
+                    </Link>
+                  ))}
 
                   <Link
                     href="/custom-gift"
                     onClick={() => setMenuOpen(false)}
-                    className="text-lg font-heading font-medium tracking-wide text-[#1C1C1A] hover:text-[#A9824D] py-2.5 flex items-center justify-between border-b border-[#DDD3C4]/60"
+                    className="text-lg font-heading font-medium tracking-wide text-[var(--text)] hover:text-[var(--accent-hover)] py-3 flex items-center justify-between border-b border-[var(--border)]/50 transition-colors"
                   >
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2.5">
                       <span>Custom Hamper Studio</span>
-                      <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-[#C9A46C]/15 text-[#A9824D] border border-[#C9A46C]/30 uppercase tracking-wider">
+                      <span className="text-[8px] font-bold px-2 py-0.5 rounded-full bg-[var(--maroon-light)] text-[var(--maroon)] border border-[var(--maroon)]/25 uppercase tracking-wider">
                         Bespoke
                       </span>
                     </div>
-                    <ArrowRight size={16} className="text-[#766F65]" />
-                  </Link>
-
-                  <Link
-                    href="/about"
-                    onClick={() => setMenuOpen(false)}
-                    className="text-lg font-heading font-medium tracking-wide text-[#1C1C1A] hover:text-[#A9824D] py-2.5 flex items-center justify-between border-b border-[#DDD3C4]/60"
-                  >
-                    <span>Our Story & Craft</span>
-                    <ArrowRight size={16} className="text-[#766F65]" />
-                  </Link>
-
-                  <Link
-                    href="/contact"
-                    onClick={() => setMenuOpen(false)}
-                    className="text-lg font-heading font-medium tracking-wide text-[#1C1C1A] hover:text-[#A9824D] py-2.5 flex items-center justify-between border-b border-[#DDD3C4]/60"
-                  >
-                    <span>Contact & Studio</span>
-                    <ArrowRight size={16} className="text-[#766F65]" />
+                    <FontAwesomeIcon icon={faArrowRight} className="text-xs text-[var(--text-muted)]" />
                   </Link>
                 </div>
 
-                {/* Popular Categories Grid */}
+                {/* Categories Grid */}
                 {categories && categories.length > 0 && (
                   <div className="pt-2">
-                    <span className="text-[10px] uppercase tracking-[0.3em] text-[#766F65] font-bold mb-3 block">
+                    <span className="text-[9px] uppercase tracking-[0.35em] text-[var(--text-muted)] font-bold mb-3 block">
                       Curated Collections
                     </span>
                     <div className="grid grid-cols-2 gap-2">
@@ -390,7 +378,7 @@ export default function Navbar() {
                             key={cat.id}
                             href={`/category/${cat.slug}`}
                             onClick={() => setMenuOpen(false)}
-                            className="p-3 rounded-xl bg-[#EFE7DA] border border-[#DDD3C4] text-xs font-medium text-[#1C1C1A] hover:bg-[#DDD3C4] transition-colors flex items-center justify-between"
+                            className="p-3 rounded-xl bg-gradient-to-br from-[var(--bg-subtle)] to-[var(--card)] border border-[var(--border)] text-[11px] font-medium text-[var(--text)] hover:border-[var(--accent)] transition-all flex items-center justify-between"
                           >
                             <span className="truncate">{cat.name}</span>
                           </Link>
@@ -399,22 +387,22 @@ export default function Navbar() {
                   </div>
                 )}
 
-                {/* Direct WhatsApp Ordering Assistance */}
+                {/* WhatsApp Button */}
                 <div className="pt-2">
                   <button
                     onClick={() => {
                       setMenuOpen(false);
                       handleWhatsAppQuickInquiry();
                     }}
-                    className="w-full py-3.5 px-4 rounded-full bg-[#71806C] text-white text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 shadow-xs hover:bg-[#5C6A57] active:scale-95 transition-all"
+                    className="w-full py-3.5 px-4 rounded-full bg-gradient-to-r from-[var(--olive)] to-[var(--olive-hover)] text-white text-[11px] font-bold uppercase tracking-wider flex items-center justify-center gap-2 shadow-md hover:shadow-lg active:scale-95 transition-all cursor-pointer"
                   >
-                    <MessageCircle size={16} />
+                    <FontAwesomeIcon icon={faWhatsapp} className="text-base" />
                     <span>WhatsApp Concierge</span>
                   </button>
                 </div>
 
-                {/* Footer Brand Info */}
-                <div className="pt-4 border-t border-[#DDD3C4] flex items-center justify-between text-[11px] text-[#766F65]">
+                {/* Footer Info */}
+                <div className="pt-4 border-t border-[var(--border)]/50 flex items-center justify-between text-[10px] text-[var(--text-muted)]">
                   <span>{settings.brandName || 'LETTERS'} Atelier</span>
                   <span>Est. {settings.establishedYear || '2020'}</span>
                 </div>

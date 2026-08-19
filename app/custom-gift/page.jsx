@@ -1,13 +1,19 @@
 'use client';
 
 import { useState } from 'react';
-import { Sparkles, Check, MessageCircle, ShoppingBag } from 'lucide-react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faWandMagicSparkles,
+  faCheck,
+  faBagShopping,
+} from '@fortawesome/free-solid-svg-icons';
+import { faWhatsapp } from '@fortawesome/free-brands-svg-icons';
 import { useRouter } from 'next/navigation';
 import { useCartStore } from '@/src/store/cartStore';
 import { useSettingsStore } from '@/src/store/settingsStore';
 
 const hamperBases = [
-  { id: 'box-1', name: 'Handcrafted Wooden Partition Trunk', price: 599, desc: 'Polished pinewood box with brass latch', image: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=600&q=80' },
+  { id: 'box-1', name: 'Handcrafted Wooden Trunk', price: 599, desc: 'Polished pinewood box with brass latch', image: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=600&q=80' },
   { id: 'box-2', name: 'Royal Velvet Keepsake Box', price: 699, desc: 'Luxe emerald & gold embossed keepsake box', image: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=600&q=80' },
   { id: 'box-3', name: 'Classic Ivory Hamper Basket', price: 399, desc: 'Eco-friendly handwoven willow basket', image: 'https://images.unsplash.com/photo-1512909006721-3d6018887383?auto=format&fit=crop&w=600&q=80' },
 ];
@@ -24,6 +30,14 @@ const availableItems = [
   { id: 'item-9', name: 'Concentrated Non-Alcoholic Oud Attar', price: 400, category: 'Spiritual' },
   { id: 'item-10', name: 'Crystal Tasbeeh Prayer Beads', price: 350, category: 'Spiritual' },
 ];
+
+function StepNumber({ n }) {
+  return (
+    <span className="w-7 h-7 rounded-full bg-[var(--olive)] text-white text-xs font-bold flex items-center justify-center flex-shrink-0">
+      {n}
+    </span>
+  );
+}
 
 export default function CustomGiftPage() {
   const router = useRouter();
@@ -45,12 +59,7 @@ export default function CustomGiftPage() {
     }
   };
 
-  const calculateTotal = () => {
-    const itemsTotal = selectedItems.reduce((sum, item) => sum + item.price, 0);
-    return (selectedBase?.price || 0) + itemsTotal;
-  };
-
-  const totalAmount = calculateTotal();
+  const totalAmount = (selectedBase?.price || 0) + selectedItems.reduce((sum, item) => sum + item.price, 0);
 
   const handleAddToCart = () => {
     const customProduct = {
@@ -61,22 +70,17 @@ export default function CustomGiftPage() {
       image: selectedBase.image,
       category: 'Customized Gift',
     };
-
-    const itemsSummary = selectedItems.map((i) => i.name).join(', ');
-    const customization = {
+    addToCart(customProduct, 1, {
       recipientName,
       occasion,
       personalizedMessage: messageCard,
-      specialInstructions: `Base: ${selectedBase.name} | Items: ${itemsSummary} | Notes: ${specialNotes}`,
-    };
-
-    addToCart(customProduct, 1, customization);
+      specialInstructions: `Base: ${selectedBase.name} | Items: ${selectedItems.map((i) => i.name).join(', ')} | Notes: ${specialNotes}`,
+    });
     router.push('/cart');
   };
 
   const handleWhatsAppOrder = () => {
     const itemsList = selectedItems.map((i, idx) => `  ${idx + 1}. ${i.name} (₹${i.price})`).join('\n');
-
     const message = `*${settings.orderMessagePrefix || 'New Order — LETTERS'}*
 ✦ *CUSTOM GIFT HAMPER INQUIRY* ✦
 
@@ -103,15 +107,17 @@ Please review my custom configuration and confirm delivery timeline.`;
   };
 
   return (
-    <div className="min-h-screen pt-8 pb-24 px-4 sm:px-6 lg:px-12 bg-[var(--bg)] transition-colors duration-200">
+    <div className="min-h-screen pt-10 pb-28 px-4 sm:px-6 lg:px-12 bg-[var(--bg)] transition-colors duration-200">
       <div className="max-w-7xl mx-auto">
         
         {/* Header */}
-        <div className="text-left max-w-3xl mb-12 pb-6 border-b border-[var(--border)]">
-          <div className="inline-flex items-center gap-2 px-2.5 py-1 bg-[var(--card)] border border-[var(--border-dark)] text-[9px] font-bold tracking-[0.25em] uppercase mb-3 text-[var(--text)]">
-            <Sparkles size={11} className="text-[var(--accent)]" />
+        <div className="max-w-3xl mb-12 pb-7 border-b border-[var(--border)]">
+          <span
+            className="block mb-2 text-[var(--chandanam)]"
+            style={{ fontFamily: "'Great Vibes', cursive", fontSize: '26px', letterSpacing: '0.02em' }}
+          >
             Bespoke Custom Studio
-          </div>
+          </span>
           <h1 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold text-[var(--text)] leading-tight tracking-tight mb-3">
             Build Your Custom Gift
           </h1>
@@ -122,18 +128,16 @@ Please review my custom configuration and confirm delivery timeline.`;
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
           
-          {/* Configurator Steps - Square Flat Boxes */}
-          <div className="lg:col-span-8 space-y-8">
+          {/* Configurator Steps */}
+          <div className="lg:col-span-8 space-y-6">
             
-            {/* Step 1: Base Selection */}
-            <div className="bg-[var(--card)] border border-[var(--border-dark)] p-6 sm:p-8">
-              <div className="flex items-center gap-3 mb-6 pb-4 border-b border-[var(--border)]">
-                <span className="w-6 h-6 bg-[var(--text)] text-[var(--bg)] text-xs font-bold flex items-center justify-center">
-                  1
-                </span>
-                <h2 className="font-heading text-xl font-bold text-[var(--text)] uppercase tracking-wider">
-                  Select Hamper Packaging
-                </h2>
+            {/* Step 1: Base */}
+            <div className="bg-[var(--card)] rounded-2xl border border-[var(--border)] p-7">
+              <div className="flex items-center gap-3 mb-6">
+                <StepNumber n={1} />
+                <div>
+                  <h2 className="font-heading text-lg font-bold text-[var(--text)]">Select Hamper Packaging</h2>
+                </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -141,34 +145,40 @@ Please review my custom configuration and confirm delivery timeline.`;
                   <div
                     key={base.id}
                     onClick={() => setSelectedBase(base)}
-                    className={`cursor-pointer p-4 border transition-colors flex flex-col justify-between ${
+                    className={`cursor-pointer rounded-xl border-2 p-1.5 transition-all ${
                       selectedBase.id === base.id
-                        ? 'border-[var(--text)] bg-[var(--bg-subtle)]'
-                        : 'border-[var(--border)] hover:border-[var(--border-dark)] bg-[var(--card)]'
+                        ? 'border-[var(--olive)] bg-[var(--bg-subtle)]'
+                        : 'border-[var(--border)] hover:border-[var(--border-dark)]/50 bg-[var(--card)]'
                     }`}
                   >
-                    <div className="aspect-[4/3] overflow-hidden mb-3 bg-[var(--bg)] border border-[var(--border)]">
+                    <div className="aspect-[4/3] overflow-hidden rounded-lg mb-3 bg-[var(--bg)]">
                       <img src={base.image} alt={base.name} className="w-full h-full object-cover" />
                     </div>
-                    <div>
-                      <h4 className="font-heading font-bold text-sm text-[var(--text)] mb-1">{base.name}</h4>
-                      <p className="text-[10px] text-[var(--text-muted)] leading-relaxed mb-3">{base.desc}</p>
-                      <span className="text-xs font-bold text-[var(--accent-hover)] font-heading">₹{base.price}</span>
+                    <div className="px-1 pb-1">
+                      <h3 className="font-semibold text-sm text-[var(--text)] mb-0.5">{base.name}</h3>
+                      <p className="text-[10.5px] text-[var(--text-muted)] mb-2">{base.desc}</p>
+                      <span className="text-sm font-bold text-[var(--olive)] font-heading">₹{base.price}</span>
                     </div>
+                    {selectedBase.id === base.id && (
+                      <div className="mt-1.5 flex items-center gap-1 text-[10px] font-semibold text-[var(--olive)] px-1">
+                        <FontAwesomeIcon icon={faCheck} className="text-[9px]" /> Selected
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* Step 2: Curate Items */}
-            <div className="bg-[var(--card)] border border-[var(--border-dark)] p-6 sm:p-8">
-              <div className="flex items-center gap-3 mb-6 pb-4 border-b border-[var(--border)]">
-                <span className="w-6 h-6 bg-[var(--text)] text-[var(--bg)] text-xs font-bold flex items-center justify-center">
-                  2
-                </span>
-                <h2 className="font-heading text-xl font-bold text-[var(--text)] uppercase tracking-wider">
-                  Curate Items & Keepsakes ({selectedItems.length} Selected)
-                </h2>
+            {/* Step 2: Items */}
+            <div className="bg-[var(--card)] rounded-2xl border border-[var(--border)] p-7">
+              <div className="flex items-center gap-3 mb-6">
+                <StepNumber n={2} />
+                <div>
+                  <h2 className="font-heading text-lg font-bold text-[var(--text)]">
+                    Curate Items & Keepsakes
+                    <span className="ml-2 text-xs font-medium text-[var(--text-muted)]">({selectedItems.length} selected)</span>
+                  </h2>
+                </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -178,27 +188,23 @@ Please review my custom configuration and confirm delivery timeline.`;
                     <div
                       key={item.id}
                       onClick={() => toggleItem(item)}
-                      className={`cursor-pointer p-3.5 border transition-colors flex items-center justify-between gap-3 ${
+                      className={`cursor-pointer rounded-xl border px-4 py-3 transition-all flex items-center justify-between gap-3 ${
                         isSelected
-                          ? 'border-[var(--text)] bg-[var(--bg-subtle)]'
-                          : 'border-[var(--border)] hover:border-[var(--border-dark)] bg-[var(--card)]'
+                          ? 'border-[var(--olive)] bg-[var(--bg-subtle)]'
+                          : 'border-[var(--border)] hover:border-[var(--border-dark)]/40 bg-[var(--card)]'
                       }`}
                     >
                       <div className="flex items-center gap-3">
                         <div
-                          className={`w-4 h-4 flex items-center justify-center border transition-colors ${
-                            isSelected
-                              ? 'bg-[var(--text)] border-[var(--text)] text-[var(--bg)]'
-                              : 'border-[var(--border-dark)]'
+                          className={`w-4 h-4 rounded flex items-center justify-center border-2 transition-colors flex-shrink-0 ${
+                            isSelected ? 'bg-[var(--olive)] border-[var(--olive)] text-white' : 'border-[var(--border-dark)]/40'
                           }`}
                         >
-                          {isSelected && <Check size={11} strokeWidth={3} />}
+                          {isSelected && <FontAwesomeIcon icon={faCheck} className="text-[8px]" />}
                         </div>
                         <div>
-                          <p className="text-xs font-bold text-[var(--text)]">{item.name}</p>
-                          <span className="text-[9px] text-[var(--accent-secondary)] uppercase tracking-wider font-bold">
-                            {item.category}
-                          </span>
+                          <p className="text-xs font-semibold text-[var(--text)]">{item.name}</p>
+                          <span className="text-[9px] text-[var(--chandanam)] font-semibold">{item.category}</span>
                         </div>
                       </div>
                       <span className="text-xs font-bold text-[var(--text)] whitespace-nowrap">₹{item.price}</span>
@@ -209,38 +215,29 @@ Please review my custom configuration and confirm delivery timeline.`;
             </div>
 
             {/* Step 3: Personalization */}
-            <div className="bg-[var(--card)] border border-[var(--border-dark)] p-6 sm:p-8 space-y-4">
-              <div className="flex items-center gap-3 mb-2 pb-4 border-b border-[var(--border)]">
-                <span className="w-6 h-6 bg-[var(--text)] text-[var(--bg)] text-xs font-bold flex items-center justify-center">
-                  3
-                </span>
-                <h2 className="font-heading text-xl font-bold text-[var(--text)] uppercase tracking-wider">
-                  Personalization Details
-                </h2>
+            <div className="bg-[var(--card)] rounded-2xl border border-[var(--border)] p-7 space-y-4">
+              <div className="flex items-center gap-3 mb-2">
+                <StepNumber n={3} />
+                <h2 className="font-heading text-lg font-bold text-[var(--text)]">Personalization Details</h2>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-[10px] font-bold text-[var(--text)] uppercase tracking-wider mb-1">
-                    Recipient Name
-                  </label>
+                  <label className="block text-xs font-semibold text-[var(--text)] mb-1.5">Recipient Name</label>
                   <input
                     type="text"
                     placeholder="e.g. Maria / Sister / Dr. John"
                     value={recipientName}
                     onChange={(e) => setRecipientName(e.target.value)}
-                    className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--border)] text-xs text-[var(--text)] focus:outline-none focus:border-[var(--border-dark)]"
+                    className="input-warm"
                   />
                 </div>
-
                 <div>
-                  <label className="block text-[10px] font-bold text-[var(--text)] uppercase tracking-wider mb-1">
-                    Occasion
-                  </label>
+                  <label className="block text-xs font-semibold text-[var(--text)] mb-1.5">Occasion</label>
                   <select
                     value={occasion}
                     onChange={(e) => setOccasion(e.target.value)}
-                    className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--border)] text-xs text-[var(--text)] focus:outline-none focus:border-[var(--border-dark)] cursor-pointer"
+                    className="input-warm cursor-pointer"
                   >
                     <option value="Birthday">Birthday Celebration</option>
                     <option value="Anniversary">Anniversary</option>
@@ -255,41 +252,37 @@ Please review my custom configuration and confirm delivery timeline.`;
               </div>
 
               <div>
-                <label className="block text-[10px] font-bold text-[var(--text)] uppercase tracking-wider mb-1">
-                  Heartfelt Card Message
-                </label>
+                <label className="block text-xs font-semibold text-[var(--text)] mb-1.5">Heartfelt Card Message</label>
                 <textarea
                   rows={3}
                   placeholder="Write the message you want us to handwrite on the gold-foil greeting card..."
                   value={messageCard}
                   onChange={(e) => setMessageCard(e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--border)] text-xs text-[var(--text)] focus:outline-none focus:border-[var(--border-dark)]"
+                  className="input-warm resize-none"
                 />
               </div>
 
               <div>
-                <label className="block text-[10px] font-bold text-[var(--text)] uppercase tracking-wider mb-1">
-                  Special Notes / Custom Requirements
-                </label>
+                <label className="block text-xs font-semibold text-[var(--text)] mb-1.5">Special Notes / Custom Requirements</label>
                 <input
                   type="text"
                   placeholder="Any specific requests? (e.g. ribbon color preference, eggless items)"
                   value={specialNotes}
                   onChange={(e) => setSpecialNotes(e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--border)] text-xs text-[var(--text)] focus:outline-none focus:border-[var(--border-dark)]"
+                  className="input-warm"
                 />
               </div>
             </div>
 
           </div>
 
-          {/* Right: Live Summary Sticky Box - Square Flat */}
+          {/* Right: Live Summary */}
           <div className="lg:col-span-4 sticky top-24">
-            <div className="bg-[var(--card)] border border-[var(--border-dark)] p-6 space-y-6">
+            <div className="bg-[var(--card)] rounded-2xl border border-[var(--border)] p-6 space-y-5 shadow-sm">
               
-              <div className="border-b border-[var(--border)] pb-3">
-                <h3 className="font-heading text-lg font-bold text-[var(--text)] uppercase tracking-wider">Hamper Summary</h3>
-                <p className="text-[10px] text-[var(--text-muted)] uppercase tracking-wider">Live pricing breakdown</p>
+              <div className="pb-3 border-b border-[var(--border)]">
+                <h2 className="font-heading text-lg font-bold text-[var(--text)]">Hamper Summary</h2>
+                <p className="text-[10.5px] text-[var(--text-muted)] mt-0.5">Live pricing breakdown</p>
               </div>
 
               {/* Breakdown */}
@@ -298,46 +291,42 @@ Please review my custom configuration and confirm delivery timeline.`;
                   <span className="font-semibold truncate max-w-[180px]">{selectedBase.name}</span>
                   <span className="font-bold">₹{selectedBase.price}</span>
                 </div>
-
                 {selectedItems.map((item) => (
                   <div key={item.id} className="flex justify-between items-center text-[var(--text-muted)] text-[11px]">
-                    <span className="truncate max-w-[180px]">/ {item.name}</span>
+                    <span className="truncate max-w-[180px]">· {item.name}</span>
                     <span>₹{item.price}</span>
                   </div>
                 ))}
-
                 {selectedItems.length === 0 && (
-                  <p className="text-[10px] text-amber-600 uppercase tracking-wider font-bold">No items selected yet</p>
+                  <p className="text-[10.5px] text-[var(--chandanam)] font-semibold">No items selected yet</p>
                 )}
               </div>
 
-              {/* Total Calculation */}
+              {/* Total */}
               <div className="pt-4 border-t border-[var(--border)] flex justify-between items-baseline">
-                <span className="text-xs font-bold uppercase tracking-wider text-[var(--text)]">Total</span>
-                <span className="font-heading text-2xl font-bold text-[var(--text)]">
-                  ₹{totalAmount.toLocaleString()}
-                </span>
+                <span className="text-xs font-semibold text-[var(--text)]">Total</span>
+                <span className="font-heading text-2xl font-bold text-[var(--text)]">₹{totalAmount.toLocaleString()}</span>
               </div>
 
               {/* Actions */}
-              <div className="space-y-2.5 pt-2">
+              <div className="space-y-2.5">
                 <button
                   onClick={handleWhatsAppOrder}
-                  className="w-full flex items-center justify-center gap-2 py-3.5 px-4 text-[10.5px] font-bold uppercase tracking-[0.2em] bg-[#25D366] text-white hover:bg-[#1EBE5D] border border-[#25D366] transition-colors cursor-pointer"
+                  className="w-full flex items-center justify-center gap-2.5 py-3.5 px-4 text-[11px] font-semibold tracking-[0.05em] rounded-xl bg-[#25D366] text-white hover:bg-[#1EBE5D] transition-colors cursor-pointer"
                 >
-                  <MessageCircle size={15} className="fill-current" /> Order on WhatsApp
+                  <FontAwesomeIcon icon={faWhatsapp} className="text-base" /> Order on WhatsApp
                 </button>
-
                 <button
                   onClick={handleAddToCart}
-                  className="w-full gold-btn py-3.5 px-4 text-[10.5px] font-bold uppercase tracking-[0.2em]"
+                  className="w-full gold-btn py-3.5 px-4 text-[11px] font-semibold tracking-[0.05em] flex items-center justify-center gap-2"
                 >
-                  <ShoppingBag size={14} className="mr-2" /> Add to Cart
+                  <FontAwesomeIcon icon={faBagShopping} className="text-xs" />
+                  <span>Add to Cart</span>
                 </button>
               </div>
 
-              <p className="text-[9.5px] text-center text-[var(--text-muted)] uppercase tracking-wider pt-2 border-t border-[var(--border)]">
-                Our curator will confirm final dispatch details over WhatsApp.
+              <p className="text-[9.5px] text-center text-[var(--text-muted)] pt-2 border-t border-[var(--border)]">
+                Our curator will confirm dispatch details over WhatsApp.
               </p>
 
             </div>

@@ -3,7 +3,15 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Gift, Lock, User, ArrowRight, ShieldCheck, AlertCircle } from 'lucide-react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faGift,
+  faLock,
+  faUser,
+  faArrowRight,
+  faShieldHalved,
+  faCircleExclamation,
+} from '@fortawesome/free-solid-svg-icons';
 import { useAuthStore } from '@/src/store/authStore';
 import { useSettingsStore } from '@/src/store/settingsStore';
 
@@ -38,8 +46,8 @@ export default function AdminLoginPage() {
         
         {/* Brand Header */}
         <div className="text-center mb-8">
-          <div className="w-14 h-14 rounded-2xl bg-[var(--accent)]/15 border border-[var(--accent)]/30 text-[var(--accent-hover)] flex items-center justify-center mx-auto mb-4 shadow-sm">
-            <Gift size={28} />
+          <div className="w-16 h-16 rounded-2xl bg-[#FAF6F0] border border-[var(--border)] overflow-hidden p-1.5 flex items-center justify-center mx-auto mb-4 shadow-md">
+            <img src="/logo.png" alt="Letters" className="w-full h-full object-contain" />
           </div>
           <h1 className="font-heading text-3xl font-bold text-[var(--text)] tracking-wider">
             {settings.brandName}
@@ -51,7 +59,7 @@ export default function AdminLoginPage() {
 
         {error && (
           <div className="mb-6 p-3.5 rounded-xl bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300 text-xs flex items-center gap-2">
-            <AlertCircle size={16} className="flex-shrink-0" />
+            <FontAwesomeIcon icon={faCircleExclamation} className="text-sm flex-shrink-0" />
             <span>{error}</span>
           </div>
         )}
@@ -62,7 +70,7 @@ export default function AdminLoginPage() {
               Username or Admin Email
             </label>
             <div className="relative">
-              <User size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
+              <FontAwesomeIcon icon={faUser} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--text-muted)] text-xs" />
               <input
                 type="text"
                 required
@@ -79,7 +87,7 @@ export default function AdminLoginPage() {
               Password
             </label>
             <div className="relative">
-              <Lock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
+              <FontAwesomeIcon icon={faLock} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--text-muted)] text-xs" />
               <input
                 type="password"
                 required
@@ -97,14 +105,15 @@ export default function AdminLoginPage() {
               disabled={loading}
               className="w-full gold-btn py-3.5 px-4 text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2 shadow-md hover:scale-102 transition-all disabled:opacity-50 cursor-pointer"
             >
-              {loading ? 'Authenticating...' : 'Sign In to Dashboard'} <ArrowRight size={14} />
+              <span>{loading ? 'Authenticating...' : 'Sign In to Dashboard'}</span>
+              <FontAwesomeIcon icon={faArrowRight} className="text-xs" />
             </button>
           </div>
         </form>
 
         <div className="mt-8 pt-6 border-t border-[var(--border)] text-center text-xs text-[var(--text-muted)] space-y-2">
           <p className="flex items-center justify-center gap-1.5 text-[11px]">
-            <ShieldCheck size={14} className="text-[var(--accent)]" /> Protected store owner access
+            <FontAwesomeIcon icon={faShieldHalved} className="text-[var(--accent)] text-xs" /> Protected store owner access
           </p>
           <div>
             <Link href="/" className="text-[11px] font-semibold text-[var(--accent-secondary)] hover:underline">
