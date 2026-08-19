@@ -1,0 +1,195 @@
+@import url('https://fonts.googleapis.com/css2?family=Allura&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Italiana&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+:root {
+  /* LETTERS Square Minimalist Modern Brand Palette */
+  --bg: #FBF9F5;              /* Pure Warm Alabaster */
+  --bg-subtle: #F2EDE4;       /* Geometric Linen */
+  --text: #111312;            /* Deep Stark Charcoal */
+  --text-muted: #5E635F;      /* Muted Architectural Slate */
+  --accent: #C29F62;          /* Champagne Ochre */
+  --accent-hover: #A8864B;    /* Deep Bronze Ochre */
+  --accent-secondary: #B05D5D;/* Muted Terracotta Rose */
+  --accent-rose-hover: #964A4A;
+  --border: #E5DCD0;          /* Crisp Hairline Border */
+  --border-dark: #111312;     /* Stark Contrast Border */
+  --card: #FFFFFF;            /* Pure Clean Card */
+  --card-hover: #FAF7F2;
+}
+
+.dark {
+  --bg: #0D0F0E;              /* Stark Obsidian */
+  --bg-subtle: #141816;       /* Dark Olive Onyx */
+  --text: #FBF9F5;            /* Pure Warm Alabaster */
+  --text-muted: #8E948F;      /* Slate Mist */
+  --accent: #D4AF37;          /* Luminous Champagne Gold */
+  --accent-hover: #E5C358;
+  --accent-secondary: #D47B78;/* Terracotta Rose */
+  --accent-rose-hover: #E2908D;
+  --border: #222724;          /* Dark Hairline Border */
+  --border-dark: #FBF9F5;     /* Stark Contrast Border */
+  --card: #131615;            /* Stark Charcoal Card */
+  --card-hover: #181C1A;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  border-radius: 0 !important; /* Force true square geometric minimalism */
+}
+
+/* Allow select exceptions only if explicitly needed */
+.allow-round {
+  border-radius: 9999px !important;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+/* Minimal Square Scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--accent);
+}
+
+/* Typography Classes */
+.font-heading {
+  font-family: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+}
+.font-serif-subtle {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+}
+.font-editorial {
+  font-family: 'Italiana', 'Playfair Display', serif;
+}
+.font-mono-clean {
+  font-family: 'Space Grotesk', monospace, sans-serif;
+}
+
+/* Square Non-Shadow Clean Buttons */
+.gold-btn {
+  background: var(--accent);
+  color: #111312;
+  font-weight: 700;
+  border: 1px solid var(--accent);
+  box-shadow: none !important;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.dark .gold-btn {
+  background: var(--accent);
+  color: #0D0F0E;
+  border-color: var(--accent);
+}
+.gold-btn:hover {
+  background: var(--text);
+  color: var(--bg);
+  border-color: var(--text);
+}
+
+.rose-btn {
+  background: var(--accent-secondary);
+  color: #FFFFFF;
+  font-weight: 700;
+  border: 1px solid var(--accent-secondary);
+  box-shadow: none !important;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.rose-btn:hover {
+  background: var(--text);
+  color: var(--bg);
+  border-color: var(--text);
+}
+
+.outline-btn {
+  background: transparent;
+  border: 1px solid var(--border-dark);
+  color: var(--text);
+  font-weight: 700;
+  box-shadow: none !important;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.outline-btn:hover {
+  background: var(--text);
+  color: var(--bg);
+  border-color: var(--text);
+}
+
+/* Square Non-Shadow Card Minimal */
+.card-minimal {
+  background: var(--card);
+  border: 1px solid var(--border);
+  box-shadow: none !important;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+.card-minimal:hover {
+  border-color: var(--accent);
+}
+
+/* Square Minimal Badge */
+.badge-minimal {
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+}
+
+.badge-gold {
+  border: 1px solid var(--accent);
+  background: transparent;
+  color: var(--accent-hover);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+}
+.dark .badge-gold {
+  color: var(--accent);
+}
+
+/* Infinite Marquee */
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 24s linear infinite;
+}
+.animate-marquee:hover {
+  animation-play-state: paused;
+}

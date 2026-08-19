@@ -1,124 +1,158 @@
-import { motion } from "framer-motion";
-import { ShoppingBag } from "lucide-react";
-import { InstagramIcon } from "./icons/InstagramIcon";
-import { Link } from "react-router-dom";
+'use client';
 
-const fadeUp = (delay) => ({
-  initial: { opacity: 0, y: 30 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 1, delay, ease: [0.22, 1, 0.36, 1] },
-});
+import { Gift, Sparkles, ArrowRight, MessageCircle } from 'lucide-react';
+import Link from 'next/link';
+import { useSettingsStore } from '../store/settingsStore';
 
 export default function Hero() {
+  const { settings, getWhatsAppUrl } = useSettingsStore();
+
+  const handleQuickWhatsAppChat = () => {
+    const message = `Hello LETTERS Gifting, I would like to inquire about your bespoke luxury hampers and personalized gifts.`;
+    window.open(getWhatsAppUrl(message), '_blank');
+  };
+
   return (
-    <section
-      id="hero"
-      className="relative min-h-screen pt-24 pb-12 flex flex-col justify-center overflow-hidden bg-[var(--bg)]"
-    >
-      {/* Soft Floating Yarn / Organic Decorative Background Curves */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-20 dark:opacity-10">
-        <svg
-          className="absolute top-10 left-10 w-96 h-96 text-[var(--accent)] animate-pulse"
-          viewBox="0 0 200 200"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            d="M 0,100 C 50,150 150,50 200,100"
-          />
-          <path
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1"
-            d="M 20,20 C 80,180 120,20 180,180"
-          />
-        </svg>
-        <svg
-          className="absolute bottom-10 right-10 w-96 h-96 text-[var(--accent-secondary)] animate-pulse"
-          viewBox="0 0 200 200"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            d="M 0,50 C 100,150 100,50 200,150"
-          />
-        </svg>
-      </div>
+    <section className="relative min-h-[88vh] flex flex-col justify-center bg-[var(--bg)] pt-12 pb-20 border-b border-[var(--border)] transition-colors duration-200">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+          
+          {/* Left Column: Editorial Headline & Actions */}
+          <div className="lg:col-span-7 flex flex-col justify-center text-left">
+            
+            {/* Tagline Box - Square Tag */}
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 border border-[var(--border-dark)] bg-[var(--card)] mb-6 w-fit select-none">
+              <Sparkles size={12} className="text-[var(--accent)]" />
+              <span className="text-[10px] font-bold tracking-[0.25em] uppercase text-[var(--text)]">
+                {settings.tagline} • EST. {settings.establishedYear}
+              </span>
+            </div>
 
-      <div className="max-w-7xl mx-auto px-6 md:px-12 w-full flex flex-col lg:flex-row items-center gap-12 lg:gap-20 relative z-10">
-        {/* Left Content */}
-        <div className="w-full lg:w-1/2 flex flex-col justify-center z-10 pt-10 lg:pt-0">
-          <motion.div {...fadeUp(0.1)} className="flex items-center gap-4 mb-6">
-            <span className="block w-8 h-[2px] bg-[var(--accent)] rounded-full" />
-            <span className="text-xs tracking-[0.4em] text-[var(--text-muted)] uppercase font-bold">
-              Premium Minimal Elegant
-            </span>
-          </motion.div>
+            {/* Main Editorial Headline */}
+            <h1 className="font-heading font-bold text-4xl sm:text-5xl lg:text-6xl text-[var(--text)] leading-[1.1] tracking-tight mb-6">
+              Making Moments <br />
+              <span className="italic font-normal text-[var(--accent-secondary)]">
+                Exquisitely Memorable.
+              </span>
+            </h1>
 
-          <motion.h1
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.2, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-            className="font-heading font-bold text-[var(--text)] leading-[1.05] mb-6 tracking-tight"
-            style={{ fontSize: "clamp(3rem, 7vw, 5.5rem)" }}
-          >
-            Handcrafted <br />
-            <span className="italic text-[var(--accent-secondary)] font-normal">
-              Soft Luxury
-            </span>
-          </motion.h1>
+            {/* Description */}
+            <p className="text-[var(--text-muted)] text-sm sm:text-base leading-relaxed max-w-xl font-normal mb-8 border-l-2 border-[var(--accent)] pl-4">
+              Thoughtfully curated hampers, bespoke floral arrangements, and personalized keepsakes for life's most precious celebrations. Handcrafted with precision in our studio.
+            </p>
 
-          <motion.p
-            {...fadeUp(0.4)}
-            className="text-[var(--text-muted)] text-sm md:text-base leading-relaxed max-w-md font-medium mb-10"
-          >
-            Explore our organic crochet lifestyle collection. Every piece is
-            meticulously handcrafted with warm, sustainable yarn to bring calm
-            and luxury into your everyday life.
-          </motion.p>
+            {/* CTAs - Square Geometric Buttons */}
+            <div className="flex flex-wrap items-center gap-3 mb-12">
+              <Link
+                href="/shop"
+                className="gold-btn px-7 py-3.5 text-[11px] font-bold tracking-[0.2em] uppercase"
+              >
+                <Gift size={15} className="mr-2" />
+                Explore Catalog
+              </Link>
 
-          <motion.div
-            {...fadeUp(0.6)}
-            className="flex flex-wrap items-center gap-4"
-          >
-            <Link
-              to="/shop"
-              className="gold-btn flex items-center gap-3 px-8 py-4 text-xs tracking-widest uppercase font-bold"
-            >
-              <ShoppingBag size={16} />
-              Shop Now
-            </Link>
+              <Link
+                href="/custom-gift"
+                className="rose-btn px-7 py-3.5 text-[11px] font-bold tracking-[0.2em] uppercase"
+              >
+                <Sparkles size={15} className="mr-2" />
+                Custom Hamper
+              </Link>
 
-            <a
-              href="https://instagram.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="secondary-btn flex items-center gap-3 px-8 py-4 text-xs tracking-widest uppercase font-bold"
-            >
-              <InstagramIcon size={16} />
-              Instagram
-            </a>
-          </motion.div>
+              <button
+                onClick={handleQuickWhatsAppChat}
+                className="outline-btn px-6 py-3.5 text-[11px] font-bold tracking-[0.2em] uppercase cursor-pointer"
+                title="Direct WhatsApp Inquiry"
+              >
+                <MessageCircle size={15} className="text-[#25D366] mr-2" />
+                WhatsApp Desk
+              </button>
+            </div>
+
+            {/* Trust Badges - Geometric Grid */}
+            <div className="grid grid-cols-3 gap-0 border border-[var(--border)] max-w-xl divide-x divide-[var(--border)] bg-[var(--card)]">
+              <div className="p-3.5 flex flex-col justify-between">
+                <span className="text-[9px] font-bold text-[var(--accent-hover)] uppercase tracking-widest block mb-1">
+                  01 / Craft
+                </span>
+                <h4 className="text-xs font-bold text-[var(--text)] uppercase tracking-wider">Artisan Curated</h4>
+                <p className="text-[9px] text-[var(--text-muted)] mt-0.5">Since {settings.establishedYear}</p>
+              </div>
+
+              <div className="p-3.5 flex flex-col justify-between">
+                <span className="text-[9px] font-bold text-[var(--accent-secondary)] uppercase tracking-widest block mb-1">
+                  02 / Logistics
+                </span>
+                <h4 className="text-xs font-bold text-[var(--text)] uppercase tracking-wider">Padded Dispatch</h4>
+                <p className="text-[9px] text-[var(--text-muted)] mt-0.5">Secure transit</p>
+              </div>
+
+              <div className="p-3.5 flex flex-col justify-between">
+                <span className="text-[9px] font-bold text-emerald-600 uppercase tracking-widest block mb-1">
+                  03 / Care
+                </span>
+                <h4 className="text-xs font-bold text-[var(--text)] uppercase tracking-wider">Direct WhatsApp</h4>
+                <p className="text-[9px] text-[var(--text-muted)] mt-0.5">Live photo preview</p>
+              </div>
+            </div>
+
+          </div>
+
+          {/* Right Column: Square Geometric Visual Showcase */}
+          <div className="lg:col-span-5 relative">
+            <div className="relative border border-[var(--border-dark)] bg-[var(--card)] p-2">
+              {/* Main Visual Image Box */}
+              <div className="relative aspect-[4/5] overflow-hidden bg-[var(--bg-subtle)] border border-[var(--border)] group">
+                <img
+                  src="https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=1000&q=80"
+                  alt="LETTERS Luxury Gifting Showcase"
+                  className="w-full h-full object-cover grayscale-[15%] group-hover:grayscale-0 group-hover:scale-103 transition-all duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                
+                {/* Flat Square Bottom Pill */}
+                <div className="absolute bottom-4 left-4 right-4 p-4 bg-[var(--card)] border border-[var(--border-dark)] flex items-center justify-between">
+                  <div>
+                    <span className="text-[9px] font-bold uppercase tracking-[0.25em] text-[var(--accent-secondary)] block">
+                      Featured Series
+                    </span>
+                    <h3 className="font-heading font-bold text-sm text-[var(--text)]">
+                      Bespoke Hampers & Bouquets
+                    </h3>
+                  </div>
+                  <Link
+                    href="/shop"
+                    className="w-8 h-8 bg-[var(--text)] text-[var(--bg)] flex items-center justify-center hover:bg-[var(--accent)] hover:text-[#111312] transition-colors"
+                    aria-label="View shop"
+                  >
+                    <ArrowRight size={14} />
+                  </Link>
+                </div>
+              </div>
+
+              {/* Square Rating Box Top-Left */}
+              <div className="absolute -top-3 -left-3 p-3 bg-[var(--card)] border border-[var(--border-dark)] flex items-center gap-2.5">
+                <div className="w-7 h-7 bg-[var(--text)] text-[var(--bg)] flex items-center justify-center font-bold text-xs">
+                  5★
+                </div>
+                <div>
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-[var(--text)]">2,500+ Hampers</p>
+                  <p className="text-[8.5px] text-[var(--text-muted)] uppercase tracking-wider">Handcrafted</p>
+                </div>
+              </div>
+
+              {/* Square Customization Box Bottom-Right */}
+              <div className="absolute -bottom-3 -right-3 px-3.5 py-2 bg-[var(--card)] border border-[var(--border-dark)] flex items-center gap-2">
+                <Sparkles size={13} className="text-[var(--accent)]" />
+                <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-[var(--text)]">
+                  Name Engraved
+                </span>
+              </div>
+
+            </div>
+          </div>
+
         </div>
-
-        {/* Right Image: Crochet Lifestyle Showcase */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.5, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
-          className="w-full lg:w-1/2 h-[50vh] lg:h-[70vh] relative group cursor-pointer overflow-hidden rounded-3xl bg-[var(--card)] shadow-2xl border border-[var(--border)] hover:border-[var(--accent)] transition-all duration-500"
-        >
-          <img
-            src="/crochet_ig1.png"
-            alt="Crochet Lifestyle Showcase"
-            className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-110"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-[var(--card)]/30 via-transparent to-transparent opacity-50 group-hover:opacity-20 transition-opacity duration-500" />
-        </motion.div>
       </div>
     </section>
   );

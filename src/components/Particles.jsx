@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect, useRef } from 'react';
 
 const PARTICLE_COUNT = 22;
@@ -21,7 +23,6 @@ export default function Particles() {
       const left = randomBetween(0, 100);
       const delay = randomBetween(0, 12);
       const duration = randomBetween(10, 22);
-      const opacity = randomBetween(0.3, 0.8);
 
       el.style.cssText = `
         position: absolute;

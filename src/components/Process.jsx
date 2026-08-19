@@ -1,3 +1,5 @@
+'use client';
+
 import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 
@@ -5,17 +7,17 @@ const steps = [
   {
     num: '01',
     title: 'Ethical Sourcing',
-    desc: 'Finest sustainable premium yarns.',
+    desc: 'Finest sustainable premium artisanal gifts & ingredients.',
   },
   {
     num: '02',
     title: 'Bespoke Artistry',
-    desc: 'Meticulous hand-stitching by master artisans.',
+    desc: 'Meticulous curation and custom engraving by master artisans.',
   },
   {
     num: '03',
     title: 'Luxury Unboxing',
-    desc: 'Eco-friendly, memorable packaging.',
+    desc: 'Eco-friendly, unforgettable keepsake packaging with wax seals.',
   },
 ];
 
@@ -37,14 +39,14 @@ export default function Process() {
         >
           <div>
             <p className="text-xs tracking-[0.4em] text-[var(--accent)] uppercase mb-3 font-bold">
-              Slow Fashion
+              Artisanal Craft
             </p>
             <h2 className="font-heading text-3xl md:text-5xl font-bold text-[var(--text)] leading-tight tracking-tight">
-              The Production Cycle
+              The Curation Cycle
             </h2>
           </div>
           <div className="max-w-md text-xs text-[var(--text-muted)] font-medium leading-relaxed">
-            True luxury cannot be rushed. Our commitment to slow fashion ensures each heirloom creation holds genuine, lasting value.
+            True luxury cannot be rushed. Our commitment to artisanal craftsmanship ensures each hamper holds genuine, lasting value.
           </div>
         </motion.div>
 

@@ -1,17 +1,21 @@
+'use client';
+
 import { useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { Gift } from 'lucide-react';
+import { useSettingsStore } from '../store/settingsStore';
 
 export default function LoadingScreen({ onComplete }) {
+  const { settings } = useSettingsStore();
+
   useEffect(() => {
-    // Trigger smooth exit transition at 2.5 seconds
     const timer = setTimeout(() => {
       onComplete();
-    }, 2500);
+    }, 1800);
 
     return () => clearTimeout(timer);
   }, [onComplete]);
 
-  // Premium curtain lift exit animation
   const curtainExit = {
     initial: { opacity: 1 },
     exit: { 
@@ -33,9 +37,8 @@ export default function LoadingScreen({ onComplete }) {
       <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-radial from-[var(--accent)]/15 via-transparent to-transparent pointer-events-none animate-pulse blur-3xl rounded-full" />
       <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-radial from-[var(--accent-secondary)]/10 via-transparent to-transparent pointer-events-none animate-pulse blur-3xl rounded-full" />
 
-      {/* Centerpiece: Spinning Dashed Gold Ring + Beautiful Logo Image */}
+      {/* Centerpiece */}
       <div className="relative flex items-center justify-center mb-8">
-        {/* Spinning SVG Ring */}
         <motion.svg 
           className="absolute w-40 h-40 md:w-48 md:h-48 text-[var(--accent)] pointer-events-none"
           viewBox="0 0 100 100"
@@ -59,18 +62,13 @@ export default function LoadingScreen({ onComplete }) {
           />
         </motion.svg>
 
-        {/* Pulsating Logo Image */}
         <motion.div 
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-          className="w-32 h-32 md:w-36 md:h-36 rounded-full overflow-hidden border-2 border-[var(--border)] shadow-2xl p-1 bg-[var(--card)] flex items-center justify-center z-10"
+          className="w-28 h-28 md:w-32 md:h-32 rounded-full overflow-hidden border-2 border-[var(--border)] shadow-2xl p-4 bg-[var(--card)] flex items-center justify-center z-10"
         >
-          <img 
-            src="/logo.jpg" 
-            alt="Veloura Handmade Premium Logo" 
-            className="w-full h-full object-cover rounded-full"
-          />
+          <Gift size={48} className="text-[var(--accent)]" />
         </motion.div>
       </div>
 
@@ -81,11 +79,11 @@ export default function LoadingScreen({ onComplete }) {
         transition={{ duration: 1, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
         className="flex flex-col items-center text-center z-10"
       >
-        <h2 className="font-logo text-4xl md:text-5xl font-normal text-[var(--accent)] tracking-normal mb-1">
-          Veloura
+        <h2 className="font-heading text-4xl md:text-5xl font-bold text-[var(--text)] tracking-wider mb-2">
+          {settings.brandName || 'LETTERS'}
         </h2>
-        <p className="text-[10px] tracking-[0.5em] text-[var(--text-muted)] uppercase font-bold">
-          Handmade Crochet Creations
+        <p className="text-[10px] tracking-[0.5em] text-[var(--accent-secondary)] uppercase font-bold">
+          Bespoke Gifting Atelier • Est. {settings.establishedYear || '2020'}
         </p>
       </motion.div>
 

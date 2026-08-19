@@ -1,27 +1,33 @@
-@import url('https://fonts.googleapis.com/css2?family=Allura&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Montserrat:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Allura&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
 @import "tailwindcss";
 
 :root {
-  /* Veloura Handmade JSON Specification Palette */
-  --bg: #F5EFE6; /* Soft Ivory */
-  --text: #4B4F3D; /* Deep Olive */
-  --text-muted: #6B705C; /* Sage Olive */
-  --accent: #6B705C; /* Sage Olive as primary button/accent */
-  --accent-secondary: #D08C74; /* Dusty Terracotta */
-  --accent-hover: #5A5E4D; /* Darker Sage Olive */
-  --border: #DCC5B2; /* Warm Beige */
-  --card: #FFFDF9; /* Cream White */
+  /* LETTERS Premium Gifting Brand Palette */
+  --bg: #FAF7F2;              /* Warm Ivory */
+  --bg-subtle: #F3ECE2;       /* Soft Sand */
+  --text: #1F2421;            /* Deep Charcoal */
+  --text-muted: #5C6255;      /* Muted Warm Slate */
+  --accent: #C8A870;          /* Subtle Champagne / Warm Gold */
+  --accent-hover: #B59359;    /* Rich Golden Ochre */
+  --accent-secondary: #C47B7B;/* Muted Rose / Dusty Pink */
+  --accent-rose-hover: #B36868;
+  --border: #E8DCCF;          /* Warm Cream Border */
+  --card: #FFFDFB;            /* Soft Cream Card */
+  --card-hover: #FFFFFF;
 }
 
 .dark {
-  --bg: #22251C; /* Deep Organic Olive-Black */
-  --text: #FFFDF9; /* Cream White */
-  --text-muted: #DCC5B2; /* Warm Beige */
-  --accent: #D08C74; /* Dusty Terracotta */
-  --accent-secondary: #6B705C; /* Sage Olive */
-  --accent-hover: #E29D85;
-  --border: #4B4F3D; /* Deep Olive */
-  --card: #2D3125; /* Organic Olive Grey */
+  --bg: #141716;              /* Deep Midnight Charcoal */
+  --bg-subtle: #1C201E;       /* Dark Olive Slate */
+  --text: #FAF7F2;            /* Warm Ivory */
+  --text-muted: #B8BAAE;      /* Soft Ash Sage */
+  --accent: #D4AF37;          /* Luminous Champagne Gold */
+  --accent-hover: #E2C255;
+  --accent-secondary: #D48B88;/* Warm Muted Rose */
+  --accent-rose-hover: #E29B98;
+  --border: #2C332F;          /* Subtle Slate Border */
+  --card: #1C201E;            /* Dark Charcoal Card */
+  --card-hover: #242927;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -33,15 +39,17 @@ body {
   font-family: 'Montserrat', sans-serif;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
-  transition: background-color 0.4s ease, color 0.4s ease;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 2px; }
+::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
 
-.font-heading { font-family: 'Cormorant Garamond', serif; }
-.font-logo { font-family: 'Allura', cursive; }
+.font-heading { font-family: 'Playfair Display', 'Cormorant Garamond', serif; }
+.font-serif-subtle { font-family: 'Cormorant Garamond', serif; }
+.font-logo { font-family: 'Playfair Display', serif; letter-spacing: 0.15em; font-weight: 700; }
+.font-script { font-family: 'Allura', cursive; }
 
 .gold-line {
   display: block;
@@ -52,70 +60,94 @@ body {
 
 .gold-btn {
   background: var(--accent);
-  color: #FFFDF9;
+  color: #1F2421;
+  font-weight: 600;
   border-radius: 9999px;
-  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-  box-shadow: 0 4px 20px rgba(107, 112, 92, 0.15);
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow: 0 4px 15px rgba(200, 168, 112, 0.2);
 }
 .dark .gold-btn {
-  color: #FFFDF9;
-  box-shadow: 0 4px 20px rgba(208, 140, 116, 0.2);
+  background: var(--accent);
+  color: #141716;
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.25);
 }
 .gold-btn:hover {
   background: var(--accent-hover);
-  transform: translateY(-2px) scale(1.03);
-  box-shadow: 0 8px 25px rgba(107, 112, 92, 0.25);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(200, 168, 112, 0.3);
 }
 
-.secondary-btn {
+.rose-btn {
   background: var(--accent-secondary);
-  color: #FFFDF9;
+  color: #FFFFFF;
+  font-weight: 600;
   border-radius: 9999px;
-  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-  box-shadow: 0 4px 20px rgba(208, 140, 116, 0.15);
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow: 0 4px 15px rgba(196, 123, 123, 0.2);
 }
-.secondary-btn:hover {
-  opacity: 0.9;
-  transform: translateY(-2px) scale(1.03);
-  box-shadow: 0 8px 25px rgba(208, 140, 116, 0.25);
+.rose-btn:hover {
+  background: var(--accent-rose-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(196, 123, 123, 0.3);
 }
 
 .outline-btn {
   border: 1px solid var(--border);
   color: var(--text);
   border-radius: 9999px;
-  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .outline-btn:hover {
   border-color: var(--accent);
-  color: var(--accent);
-  transform: translateY(-2px) scale(1.03);
-  box-shadow: 0 8px 25px rgba(107, 112, 92, 0.08);
+  color: var(--accent-hover);
+  background-color: var(--bg-subtle);
+  transform: translateY(-2px);
 }
 
 .card-minimal {
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 24px;
-  transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  border-radius: 20px;
+  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .card-minimal:hover {
   border-color: var(--accent);
-  transform: translateY(-6px);
-  box-shadow: 0 15px 35px rgba(107, 112, 92, 0.08);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
 }
 .dark .card-minimal:hover {
-  box-shadow: 0 15px 35px rgba(208, 140, 116, 0.08);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
 }
 
-.dark .grain::after {
-  content: '';
-  position: fixed;
-  inset: -50%;
-  width: 200%;
-  height: 200%;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-  opacity: 0.035;
-  pointer-events: none;
-  z-index: 9999;
+.badge-gold {
+  background: rgba(200, 168, 112, 0.15);
+  color: #9D7B38;
+  border: 1px solid rgba(200, 168, 112, 0.3);
+}
+.dark .badge-gold {
+  background: rgba(212, 175, 55, 0.2);
+  color: #E2C255;
+  border: 1px solid rgba(212, 175, 55, 0.4);
+}
+
+.badge-rose {
+  background: rgba(196, 123, 123, 0.15);
+  color: #A35050;
+  border: 1px solid rgba(196, 123, 123, 0.3);
+}
+.dark .badge-rose {
+  background: rgba(212, 139, 136, 0.2);
+  color: #EFA6A4;
+  border: 1px solid rgba(212, 139, 136, 0.4);
+}
+
+.badge-green {
+  background: rgba(37, 211, 102, 0.12);
+  color: #128C7E;
+  border: 1px solid rgba(37, 211, 102, 0.25);
+}
+.dark .badge-green {
+  background: rgba(37, 211, 102, 0.2);
+  color: #25D366;
+  border: 1px solid rgba(37, 211, 102, 0.4);
 }

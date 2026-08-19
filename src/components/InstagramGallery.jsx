@@ -1,68 +1,61 @@
-import { useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
+'use client';
+
 import { InstagramIcon } from './icons/InstagramIcon';
+import { useSettingsStore } from '../store/settingsStore';
 
 const igPosts = [
-  { id: 1, image: '/crochet_ig1.png', span: 'md:col-span-2 md:row-span-2', likes: '1.2k' },
-  { id: 2, image: '/crochet_bag_beige.png', span: 'md:col-span-1 md:row-span-1', likes: '842' },
-  { id: 3, image: '/crochet_bouquet.png', span: 'md:col-span-1 md:row-span-1', likes: '956' },
-  { id: 4, image: '/crochet_gift.png', span: 'md:col-span-1 md:row-span-1', likes: '624' },
-  { id: 5, image: '/crochet_keychain.png', span: 'md:col-span-1 md:row-span-1', likes: '731' },
+  { id: 1, image: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=800&q=80', span: 'md:col-span-2 md:row-span-2', likes: '1.8k' },
+  { id: 2, image: 'https://images.unsplash.com/photo-1549007994-cb92caebd54b?auto=format&fit=crop&w=800&q=80', span: 'md:col-span-1 md:row-span-1', likes: '940' },
+  { id: 3, image: 'https://images.unsplash.com/photo-1561181286-d3fee7d55364?auto=format&fit=crop&w=800&q=80', span: 'md:col-span-1 md:row-span-1', likes: '1.2k' },
+  { id: 4, image: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=800&q=80', span: 'md:col-span-1 md:row-span-1', likes: '820' },
+  { id: 5, image: 'https://images.unsplash.com/photo-1582293041079-7814c2f12063?auto=format&fit=crop&w=800&q=80', span: 'md:col-span-1 md:row-span-1', likes: '1.1k' },
 ];
 
 export default function InstagramGallery() {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-60px' });
+  const { settings } = useSettingsStore();
 
   return (
-    <section id="instagram" className="py-28 px-6 md:px-12 bg-[var(--bg)] transition-colors duration-300 border-t border-[var(--border)]">
+    <section id="instagram" className="py-24 px-4 sm:px-6 lg:px-12 bg-[var(--bg)] border-t border-[var(--border)] transition-colors duration-200">
       <div className="max-w-7xl mx-auto">
         
         {/* Header */}
-        <motion.div
-          ref={ref}
-          initial={{ opacity: 0, y: 24 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8 }}
-          className="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-6"
-        >
+        <div className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-[var(--border)]">
           <div>
-            <p className="text-xs tracking-[0.4em] text-[var(--accent-secondary)] uppercase mb-3 font-bold">
-              @VelouraHandmade
+            <p className="text-[10px] tracking-[0.3em] text-[var(--accent-secondary)] uppercase mb-2 font-bold">
+              @LettersGifting
             </p>
-            <h2 className="font-heading text-3xl md:text-5xl font-bold text-[var(--text)] leading-tight tracking-tight">
-              Instagram Gallery
+            <h2 className="font-heading text-3xl sm:text-4xl md:text-5xl font-bold text-[var(--text)] leading-tight tracking-tight">
+              Moments from Our Atelier
             </h2>
           </div>
           <a
-            href="https://instagram.com"
+            href={settings.instagram}
             target="_blank"
             rel="noopener noreferrer"
-            className="group flex items-center gap-3 text-xs font-bold tracking-widest uppercase text-[var(--text)] hover:text-[var(--accent)] transition-colors"
+            className="inline-flex items-center gap-2 text-[11px] font-bold tracking-[0.2em] uppercase text-[var(--text)] hover:text-[var(--accent-hover)] transition-colors"
           >
-            <InstagramIcon size={16} className="text-[var(--accent-secondary)]" /> Follow Our Journey
+            <InstagramIcon size={15} className="text-[var(--accent-secondary)]" />
+            Follow On Instagram
           </a>
-        </motion.div>
+        </div>
 
-        {/* Grid Masonry Layout */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 auto-rows-[240px]">
-          {igPosts.map((post, i) => (
-            <motion.div
+        {/* Masonry / Grid - Square Flat Images */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 auto-rows-[220px]">
+          {igPosts.map((post) => (
+            <div
               key={post.id}
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={inView ? { opacity: 1, scale: 1 } : {}}
-              transition={{ duration: 0.7, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
-              className={`group relative overflow-hidden rounded-3xl bg-[var(--card)] shadow-sm border border-[var(--border)] hover:border-[var(--accent)] transition-all duration-500 ${post.span}`}
+              className={`group relative overflow-hidden bg-[var(--card)] border border-[var(--border)] ${post.span}`}
             >
-              <img 
-                src={post.image} 
-                alt="Instagram Feed Preview" 
-                className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+              <img
+                src={post.image}
+                alt="LETTERS Atelier Creation"
+                className="w-full h-full object-cover grayscale-[15%] group-hover:grayscale-0 group-hover:scale-104 transition-all duration-400"
+                loading="lazy"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[var(--text)]/70 via-[var(--text)]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center gap-2 text-white font-bold text-sm">
-                <InstagramIcon size={18} /> {post.likes}
+              <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center gap-2 text-white font-bold text-xs uppercase tracking-wider">
+                <InstagramIcon size={16} /> {post.likes}
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
 

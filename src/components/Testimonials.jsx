@@ -1,161 +1,94 @@
-import { useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
-import { Star, ArrowRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
+'use client';
+
+import { Star, Sparkles, Check } from 'lucide-react';
+import { useSettingsStore } from '../store/settingsStore';
 
 const reviews = [
   {
     id: 1,
-    name: 'Aparna R.',
-    loc: 'Kerala',
-    comment: 'Absolutely premium craftsmanship. The beige tote feels truly luxurious and elegant.',
-    init: 'A',
-    product: {
-      id: 1,
-      name: 'Luxury Beige Tote',
-      price: '₹1,599',
-      image: '/crochet_bag_beige.png',
-      category: 'Bags',
-    },
+    name: 'Dr. Zoya K.',
+    location: 'Calicut, Kerala',
+    occasion: 'Engagement Hamper',
+    comment: 'The engagement hamper for my sister was magnificent! The custom engraved keepsake glasses and botanical fragrance stole everyone\'s attention. Thank you LETTERS!',
+    rating: 5,
   },
   {
     id: 2,
-    name: 'Meera S.',
-    loc: 'Bangalore',
-    comment: 'The pearl accent pouch is a masterpiece. I get compliments from everyone!',
-    init: 'M',
-    product: {
-      id: 3,
-      name: 'Pearl Accent Pouch',
-      price: '₹799',
-      image: '/crochet_pouch_pearl.png',
-      category: 'Pouches',
-    },
+    name: 'Anand & Reshma',
+    location: 'Kochi, Kerala',
+    occasion: 'Anniversary Gift',
+    comment: 'Ordering through WhatsApp was so effortless. They accommodated all my custom message card requests and delivered right on time.',
+    rating: 5,
   },
   {
     id: 3,
-    name: 'Divya K.',
-    loc: 'Chennai',
-    comment: 'Ordered the bouquet for my mother. The packaging itself was beautiful. Veloura is extraordinary.',
-    init: 'D',
-    product: {
-      id: 2,
-      name: 'Handmade Flower Bouquet',
-      price: '₹999',
-      image: '/crochet_bouquet.png',
-      category: 'Flowers',
-    },
+    name: 'Nikhil Varghese',
+    location: 'Bangalore',
+    occasion: 'Chocolate Bouquet',
+    comment: 'The Ferrero Rocher bouquet was breathtaking. Far exceeded my expectations in terms of beauty, finish, and ribbon detailing.',
+    rating: 5,
   },
 ];
 
 export default function Testimonials() {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-60px' });
+  const { settings } = useSettingsStore();
 
   return (
-    <section id="testimonials" className="py-28 px-6 md:px-12 bg-[var(--card)] transition-colors duration-300 border-t border-[var(--border)]">
+    <section className="py-24 px-4 sm:px-6 lg:px-12 bg-[var(--card)] border-t border-[var(--border)] transition-colors duration-200">
       <div className="max-w-7xl mx-auto">
-
+        
         {/* Header */}
-        <motion.div
-          ref={ref}
-          initial={{ opacity: 0, y: 24 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8 }}
-          className="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-6"
-        >
-          <div>
-            <p className="text-xs tracking-[0.4em] text-[var(--accent)] uppercase mb-3 font-bold">
-              Customer Reviews
+        <div className="text-center max-w-2xl mx-auto mb-16">
+          <div className="inline-flex items-center gap-2 mb-2">
+            <Sparkles size={12} className="text-[var(--accent)]" />
+            <p className="text-[10px] tracking-[0.3em] text-[var(--accent-secondary)] uppercase font-bold">
+              Heartfelt Patron Stories
             </p>
-            <h2 className="font-heading text-3xl md:text-5xl font-bold text-[var(--text)] leading-tight tracking-tight">
-              Loved by Patrons
-            </h2>
           </div>
-          <div className="max-w-md text-xs text-[var(--text-muted)] font-medium leading-relaxed">
-            Real feedback from verified patrons across India who have experienced the warmth and bespoke quality of Veloura Handmade.
-          </div>
-        </motion.div>
+          <h2 className="font-heading text-3xl sm:text-4xl md:text-5xl font-bold text-[var(--text)] leading-tight tracking-tight mb-3">
+            Loved Across India
+          </h2>
+          <p className="text-[var(--text-muted)] text-sm sm:text-base leading-relaxed">
+            Real stories from patrons who entrusted their celebrations to {settings.brandName} since {settings.establishedYear}.
+          </p>
+        </div>
 
-        {/* Reviews grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {reviews.map((r, i) => (
-            <motion.div
+        {/* Reviews Grid - Square Flat Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {reviews.map((r) => (
+            <div
               key={r.id}
-              initial={{ opacity: 0, y: 30 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.7, delay: i * 0.12, ease: [0.22, 1, 0.36, 1] }}
-              className="card-minimal p-8 flex flex-col justify-between border border-[var(--border)] hover:border-[var(--accent)] transition-all duration-500 group shadow-sm bg-[var(--bg)]"
+              className="p-6 sm:p-8 flex flex-col justify-between bg-[var(--bg)] border border-[var(--border)] hover:border-[var(--border-dark)] transition-colors"
             >
               <div>
                 {/* Stars */}
-                <div className="flex gap-1 mb-6">
-                  {[...Array(5)].map((_, j) => (
-                    <Star key={j} size={14} fill="currentColor" className="text-[var(--accent-secondary)]" />
+                <div className="flex gap-1 mb-4 text-amber-500">
+                  {[...Array(r.rating)].map((_, idx) => (
+                    <Star key={idx} size={13} fill="currentColor" />
                   ))}
                 </div>
 
-                {/* Elegant Quote Typography */}
-                <p className="font-heading text-[var(--text)] text-lg md:text-xl leading-relaxed italic mb-8">
+                <p className="font-heading text-base text-[var(--text)] italic leading-relaxed mb-6">
                   "{r.comment}"
                 </p>
               </div>
 
-              <div>
-                {/* Customer Info */}
-                <div className="flex items-center gap-4 pb-6 border-b border-[var(--border)] mb-6">
-                  <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold text-[var(--bg)] bg-[var(--accent)] font-heading flex-shrink-0 shadow-md">
-                    {r.init}
+              <div className="pt-4 border-t border-[var(--border)] flex items-center justify-between">
+                <div>
+                  <div className="flex items-center gap-1.5">
+                    <h4 className="font-bold text-xs uppercase tracking-wider text-[var(--text)]">{r.name}</h4>
+                    <Check size={11} className="text-emerald-500" />
                   </div>
-                  <div>
-                    <p className="text-[var(--text)] text-sm font-bold group-hover:text-[var(--accent)] transition-colors">{r.name}</p>
-                    <p className="text-[var(--text-muted)] text-xs font-medium">{r.loc} • Verified Buyer</p>
-                  </div>
+                  <p className="text-[10.5px] text-[var(--text-muted)]">{r.location}</p>
                 </div>
-
-                {/* Praised Product Cross-Sell Thumbnail & Link */}
-                <div className="flex items-center justify-between gap-4 bg-[var(--card)] p-3 rounded-2xl border border-[var(--border)] group/item hover:border-[var(--accent)] transition-all shadow-sm">
-                  <div className="flex items-center gap-3 overflow-hidden">
-                    <img 
-                      src={r.product.image} 
-                      alt={r.product.name} 
-                      className="w-10 h-10 rounded-xl object-cover flex-shrink-0 border border-[var(--border)]"
-                    />
-                    <div className="overflow-hidden">
-                      <p className="text-[10px] tracking-widest uppercase text-[var(--text-muted)] font-bold">Praised Item</p>
-                      <p className="text-xs font-bold text-[var(--text)] truncate group-hover/item:text-[var(--accent)] transition-colors">{r.product.name}</p>
-                    </div>
-                  </div>
-
-                  <Link
-                    to="/checkout"
-                    state={{ product: r.product }}
-                    className="flex items-center justify-center w-8 h-8 rounded-xl bg-[var(--accent)] text-[var(--card)] hover:scale-105 transition-transform flex-shrink-0 shadow-md"
-                    title="Buy This Item"
-                  >
-                    <ArrowRight size={14} />
-                  </Link>
-                </div>
+                <span className="text-[8.5px] font-bold uppercase tracking-wider border border-[var(--border-dark)] px-2 py-1 bg-[var(--card)] text-[var(--text)]">
+                  {r.occasion}
+                </span>
               </div>
-
-            </motion.div>
+            </div>
           ))}
         </div>
 
-        {/* Trust strip */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.5 }}
-          className="mt-16 flex items-center justify-center gap-6"
-        >
-          <span className="block w-12 h-[1px] bg-[var(--accent)] opacity-30" />
-          <span className="text-[10px] tracking-[0.4em] uppercase text-[var(--text-muted)] font-bold">
-            4.9 / 5 Star Rating from 500+ Patrons Across India
-          </span>
-          <span className="block w-12 h-[1px] bg-[var(--accent)] opacity-30" />
-        </motion.div>
       </div>
     </section>
   );

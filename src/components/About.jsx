@@ -1,77 +1,104 @@
-import { useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
-import { Heart, Sparkles, Scissors } from 'lucide-react';
+'use client';
+
+import { Heart, Sparkles, Award, ShieldCheck } from 'lucide-react';
+import { useSettingsStore } from '../store/settingsStore';
 
 export default function About() {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-80px' });
+  const { settings } = useSettingsStore();
+
+  const values = [
+    {
+      num: '01',
+      icon: Heart,
+      title: 'Emotive Artistry',
+      desc: 'We believe gifts are tangible expressions of affection, gratitude, and lasting remembrance.',
+    },
+    {
+      num: '02',
+      icon: Sparkles,
+      title: 'Artisanal Quality',
+      desc: 'Hand-selected gourmet confections, fresh preserved blooms, and bespoke keepsakes.',
+    },
+    {
+      num: '03',
+      icon: Award,
+      title: 'Established 2020',
+      desc: 'Over half a decade of trusted gifting experience for weddings, festivals & milestones.',
+    },
+    {
+      num: '04',
+      icon: ShieldCheck,
+      title: 'Personalized Touch',
+      desc: 'Every order is customized with handwritten notes, wax seals, and direct WhatsApp care.',
+    },
+  ];
 
   return (
-    <section id="about" className="py-28 px-6 md:px-12 bg-[var(--card)] transition-colors duration-300 border-t border-[var(--border)]">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-20 items-center">
-        
-        {/* Left Image: Handmade Process Visuals */}
-        <motion.div 
-          ref={ref}
-          initial={{ opacity: 0, y: 40 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-          className="relative h-[55vh] group cursor-pointer overflow-hidden rounded-3xl shadow-2xl border border-[var(--border)] hover:border-[var(--accent)] transition-all duration-500 bg-[var(--bg)]"
-        >
-          <img 
-            src="/crochet_pouch_blush.png" 
-            alt="Handmade Process Visuals" 
-            className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-[var(--card)]/30 via-transparent to-transparent opacity-50 group-hover:opacity-20 transition-opacity duration-500" />
-        </motion.div>
-
-        {/* Right Content: Storytelling & Minimal Icons */}
-        <div className="flex flex-col justify-center">
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 1, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <p className="text-xs tracking-[0.4em] text-[var(--accent-secondary)] uppercase mb-4 font-bold">
-              About Brand
-            </p>
-
-            <h2 className="font-heading text-3xl md:text-5xl font-bold text-[var(--text)] leading-tight mb-6 tracking-tight">
-              Crafted with calm, <br/>
-              <span className="italic text-[var(--text-muted)] font-normal">designed for luxury.</span>
-            </h2>
-
-            <div className="w-12 h-[2px] bg-[var(--accent)] mb-6 rounded-full" />
-
-            <p className="text-[var(--text-muted)] text-sm md:text-base font-medium leading-relaxed mb-10 max-w-lg">
-              Veloura Handmade is an organic exploration of traditional crochet artistry. We create premium, soft luxury creations that celebrate the warmth of slow fashion and heirloom craftsmanship.
-            </p>
-
-            {/* Minimal Icon Illustrations */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 border-t border-[var(--border)]">
-              <div className="flex flex-col gap-2">
-                <Heart size={20} className="text-[var(--accent-secondary)] stroke-[1.5]" />
-                <h4 className="font-heading font-bold text-sm text-[var(--text)]">100% Handcrafted</h4>
-                <p className="text-[10px] text-[var(--text-muted)] font-medium">Stitched with love & dedication.</p>
-              </div>
-
-              <div className="flex flex-col gap-2">
-                <Sparkles size={20} className="text-[var(--accent)] stroke-[1.5]" />
-                <h4 className="font-heading font-bold text-sm text-[var(--text)]">Premium Yarn</h4>
-                <p className="text-[10px] text-[var(--text-muted)] font-medium">Sustainable & ultra-soft materials.</p>
-              </div>
-
-              <div className="flex flex-col gap-2">
-                <Scissors size={20} className="text-[var(--accent-secondary)] stroke-[1.5]" />
-                <h4 className="font-heading font-bold text-sm text-[var(--text)]">Bespoke Design</h4>
-                <p className="text-[10px] text-[var(--text-muted)] font-medium">Tailored for elegant living.</p>
+    <section id="about" className="py-24 px-4 sm:px-6 lg:px-12 bg-[var(--bg)] border-t border-[var(--border)] transition-colors duration-200">
+      <div className="max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+          
+          {/* Left Image Showcase - Square */}
+          <div className="lg:col-span-5 relative">
+            <div className="border border-[var(--border-dark)] bg-[var(--card)] p-2">
+              <div className="relative aspect-[4/5] overflow-hidden bg-[var(--bg-subtle)] border border-[var(--border)] group">
+                <img
+                  src="https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=800&q=80"
+                  alt="LETTERS Gifting Atelier"
+                  className="w-full h-full object-cover grayscale-[15%] group-hover:grayscale-0 group-hover:scale-104 transition-all duration-400"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent pointer-events-none" />
+                
+                <div className="absolute bottom-4 left-4 right-4 p-4 bg-[var(--card)] border border-[var(--border-dark)]">
+                  <p className="font-heading text-base font-bold text-[var(--text)] uppercase tracking-wider">{settings.brandName} Gifting</p>
+                  <p className="text-xs text-[var(--text-muted)] italic">"Making your special moments a lot more memorable"</p>
+                </div>
               </div>
             </div>
+          </div>
 
-          </motion.div>
+          {/* Right Content */}
+          <div className="lg:col-span-7 flex flex-col justify-center">
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-[10px] tracking-[0.3em] text-[var(--accent-secondary)] uppercase font-bold">
+                  Our Story / EST. {settings.establishedYear}
+                </span>
+              </div>
+
+              <h2 className="font-heading text-3xl sm:text-4xl md:text-5xl font-bold text-[var(--text)] leading-tight tracking-tight mb-6">
+                Thoughtful Gifts Designed to <br />
+                <span className="italic font-normal text-[var(--accent-secondary)]">
+                  Touch the Heart.
+                </span>
+              </h2>
+
+              <p className="text-[var(--text-muted)] text-sm sm:text-base leading-relaxed mb-6">
+                Founded in <strong>{settings.establishedYear}</strong>, <strong>{settings.brandName}</strong> was born from a simple belief: the most precious gifts are not merely items, but emotional letters of affection. Whether welcoming a new milestone or expressing gratitude, our bespoke hampers turn fleeting occasions into lifelong keepsakes.
+              </p>
+
+              <p className="text-[var(--text-muted)] text-sm sm:text-base leading-relaxed mb-8">
+                Each collection is curated by hand in our studio with unwavering attention to aesthetic balance, premium ingredients, and refined packaging with direct WhatsApp assistance.
+              </p>
+
+              {/* 4 Brand Pillars Grid - Square Flat Blocks */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6 border-t border-[var(--border)]">
+                {values.map((v) => (
+                  <div key={v.num} className="p-4 border border-[var(--border)] bg-[var(--card)]">
+                    <span className="text-[9px] font-bold text-[var(--accent-hover)] uppercase tracking-[0.2em] block mb-1">
+                      {v.num} / {v.title}
+                    </span>
+                    <p className="text-xs text-[var(--text-muted)] leading-relaxed mt-1">
+                      {v.desc}
+                    </p>
+                  </div>
+                ))}
+              </div>
+
+            </div>
+          </div>
+
         </div>
-
       </div>
     </section>
   );

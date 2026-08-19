@@ -1,0 +1,226 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
+import {
+  LayoutDashboard,
+  ShoppingBag,
+  Package,
+  Layers,
+  Settings,
+  LogOut,
+  ExternalLink,
+  Menu,
+  X,
+  Gift,
+  Sun,
+  Moon,
+} from 'lucide-react';
+import { useAuthStore } from '@/src/store/authStore';
+import { useSettingsStore } from '@/src/store/settingsStore';
+import { useThemeStore } from '@/src/store/themeStore';
+import { useOrderStore } from '@/src/store/orderStore';
+
+const adminNavLinks = [
+  { label: 'Dashboard', href: '/admin', icon: LayoutDashboard },
+  { label: 'Orders', href: '/admin/orders', icon: ShoppingBag, badge: true },
+  { label: 'Products', href: '/admin/products', icon: Package },
+  { label: 'Categories', href: '/admin/categories', icon: Layers },
+  { label: 'Settings', href: '/admin/settings', icon: Settings },
+];
+
+export default function AdminLayout({ children }) {
+  const pathname = usePathname();
+  const router = useRouter();
+  const { isAuthenticated, isInitialized, logout, adminUser, initAuth } = useAuthStore();
+  const { settings, fetchSettings } = useSettingsStore();
+  const { theme, toggleTheme } = useThemeStore();
+  const { orders, fetchOrders } = useOrderStore();
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+
+  const isLoginPage = pathname === '/admin/login';
+
+  useEffect(() => {
+    initAuth();
+    fetchSettings();
+    fetchOrders();
+  }, [initAuth, fetchSettings, fetchOrders]);
+
+  useEffect(() => {
+    if (isInitialized && !isAuthenticated && !isLoginPage) {
+      router.replace('/admin/login');
+    }
+  }, [isInitialized, isAuthenticated, isLoginPage, router]);
+
+  if (isLoginPage) {
+    return <>{children}</>;
+  }
+
+  if (!isInitialized || (!isAuthenticated && !isLoginPage)) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[var(--bg)]">
+        <div className="flex flex-col items-center gap-3 text-center">
+          <div className="w-10 h-10 rounded-full border-2 border-[var(--accent)] border-t-transparent animate-spin" />
+          <p className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">Verifying Store Access...</p>
+        </div>
+      </div>
+    );
+  }
+
+  const pendingOrdersCount = orders.filter((o) => o.status === 'Pending').length;
+
+  const handleLogout = async () => {
+    await logout();
+    router.replace('/admin/login');
+  };
+
+  return (
+    <div className="min-h-screen bg-[var(--bg)] text-[var(--text)] flex flex-col md:flex-row transition-colors duration-200">
+      
+      {/* Mobile Topbar */}
+      <div className="md:hidden bg-[var(--card)] border-b border-[var(--border)] px-4 py-3 flex items-center justify-between sticky top-0 z-40">
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
+            className="p-1.5 rounded-lg border border-[var(--border)] text-[var(--text)] cursor-pointer"
+            aria-label="Toggle admin sidebar"
+          >
+            {mobileSidebarOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
+          <div className="flex items-center gap-2">
+            <Gift size={18} className="text-[var(--accent)]" />
+            <span className="font-heading font-bold text-lg text-[var(--text)] tracking-wider">
+              {settings.brandName} <span className="text-[10px] uppercase font-bold text-[var(--accent-secondary)]">Admin</span>
+            </span>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <button
+            onClick={toggleTheme}
+            className="p-1.5 rounded-lg border border-[var(--border)] text-[var(--text)] cursor-pointer"
+            aria-label="Toggle Theme"
+          >
+            {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+          </button>
+          <Link
+            href="/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="p-1.5 rounded-lg border border-[var(--border)] text-[var(--text)]"
+            title="View Storefront"
+          >
+            <ExternalLink size={16} />
+          </Link>
+        </div>
+      </div>
+
+      {/* Sidebar Navigation */}
+      <aside
+        className={`fixed md:sticky top-0 left-0 bottom-0 z-50 w-64 bg-[var(--card)] border-r border-[var(--border)] flex flex-col justify-between p-5 transition-transform duration-300 md:translate-x-0 ${
+          mobileSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
+      >
+        <div>
+          {/* Brand Header */}
+          <div className="flex items-center justify-between mb-8 pb-4 border-b border-[var(--border)]">
+            <div className="flex items-center gap-2.5">
+              <div className="w-9 h-9 rounded-xl bg-[var(--accent)]/15 border border-[var(--accent)]/30 flex items-center justify-center text-[var(--accent-hover)] font-bold">
+                <Gift size={18} />
+              </div>
+              <div>
+                <h2 className="font-heading font-bold text-lg text-[var(--text)] tracking-wider">
+                  {settings.brandName}
+                </h2>
+                <p className="text-[9px] uppercase tracking-widest text-[var(--accent-secondary)] font-bold">
+                  Admin Panel
+                </p>
+              </div>
+            </div>
+
+            <button
+              onClick={() => setMobileSidebarOpen(false)}
+              className="md:hidden text-[var(--text-muted)] hover:text-[var(--text)] cursor-pointer"
+            >
+              <X size={18} />
+            </button>
+          </div>
+
+          {/* Navigation Links */}
+          <nav className="space-y-1.5">
+            {adminNavLinks.map((link) => {
+              const Icon = link.icon;
+              const isActive = pathname === link.href;
+
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMobileSidebarOpen(false)}
+                  className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold tracking-wide transition-all ${
+                    isActive
+                      ? 'bg-[var(--accent)] text-[var(--text)] font-bold shadow-sm'
+                      : 'text-[var(--text-muted)] hover:bg-[var(--bg)] hover:text-[var(--text)]'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <Icon size={16} />
+                    <span>{link.label}</span>
+                  </div>
+
+                  {link.badge && pendingOrdersCount > 0 && (
+                    <span className="w-5 h-5 rounded-full bg-amber-500 text-white text-[10px] font-extrabold flex items-center justify-center">
+                      {pendingOrdersCount}
+                    </span>
+                  )}
+                </Link>
+              );
+            })}
+          </nav>
+        </div>
+
+        {/* User Info & Footer Actions */}
+        <div className="pt-4 border-t border-[var(--border)] space-y-3">
+          <div className="flex items-center justify-between text-xs text-[var(--text-muted)] px-1">
+            <span className="font-semibold">{adminUser?.username || 'Store Admin'}</span>
+            <span className="text-[9px] uppercase bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 font-bold px-2 py-0.5 rounded-full">
+              Live
+            </span>
+          </div>
+
+          <div className="grid grid-cols-2 gap-2">
+            <Link
+              href="/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl border border-[var(--border)] text-[11px] font-semibold text-[var(--text)] hover:bg-[var(--bg)] transition-colors"
+            >
+              <ExternalLink size={13} /> Storefront
+            </Link>
+
+            <button
+              onClick={toggleTheme}
+              className="flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl border border-[var(--border)] text-[11px] font-semibold text-[var(--text)] hover:bg-[var(--bg)] transition-colors cursor-pointer"
+            >
+              {theme === 'dark' ? <Sun size={13} /> : <Moon size={13} />} Theme
+            </button>
+          </div>
+
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 hover:bg-rose-100 text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer"
+          >
+            <LogOut size={14} /> Logout
+          </button>
+        </div>
+      </aside>
+
+      {/* Main Admin Content View */}
+      <main className="flex-1 overflow-y-auto min-h-screen p-4 sm:p-6 lg:p-10">
+        {children}
+      </main>
+
+    </div>
+  );
+}
