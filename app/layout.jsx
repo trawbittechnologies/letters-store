@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import './globals.css';
 import '@fortawesome/fontawesome-svg-core/styles.css';
 import { config } from '@fortawesome/fontawesome-svg-core';
@@ -58,13 +59,18 @@ export const metadata = {
   },
 };
 
-export default async function RootLayout({ children }) {
-  const initialCategories = await getCachedCategories();
+async function CategoryDataFetcher() {
+  const categories = await getCachedCategories();
+  return <StoreInitializer categories={categories} />;
+}
 
+export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="min-h-screen transition-colors duration-300">
-        <StoreInitializer categories={initialCategories} />
+        <Suspense fallback={null}>
+          <CategoryDataFetcher />
+        </Suspense>
         <ThemeInitializer />
         <Preloader />
         <Navbar />
