@@ -4,14 +4,13 @@ import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 /**
- * Lottie-Powered Preloader
- * 
- * Uses Airbnb's lottie-web engine to render high-performance, crisp vector & frame animation
- * from `/hupng-mp4-to-lottie-1787214446255.json` with 100% native transparency across all devices (iOS/Safari/Android/Desktop).
+ * Ultra-Fast Lottie Preloader
+ *
+ * Uses lottie-web's hardware-accelerated Canvas engine to stream and render
+ * the optimized 3.4MB transparent animation instantly with zero delay.
  */
 export default function Preloader() {
   const [loading, setLoading] = useState(true);
-  const [isLoaded, setIsLoaded] = useState(false);
   const containerRef = useRef(null);
   const animationRef = useRef(null);
 
@@ -22,14 +21,14 @@ export default function Preloader() {
     let anim = null;
     let isMounted = true;
 
-    // Dynamically load lottie-web on client
+    // Load lottie-web dynamically on client
     import('lottie-web').then((lottieModule) => {
       const lottie = lottieModule.default || lottieModule;
       if (!isMounted || !containerRef.current) return;
 
       anim = lottie.loadAnimation({
         container: containerRef.current,
-        renderer: 'svg',
+        renderer: 'canvas',
         loop: false,
         autoplay: true,
         path: '/hupng-mp4-to-lottie-1787214446255.json',
@@ -37,37 +36,32 @@ export default function Preloader() {
           preserveAspectRatio: 'xMidYMid meet',
           clearCanvas: true,
           progressiveLoad: true,
-          hideOnTransparent: true,
         },
       });
 
       animationRef.current = anim;
 
-      anim.addEventListener('DOMLoaded', () => {
-        if (isMounted) setIsLoaded(true);
-      });
-
-      // Auto dismiss when the animation completes
+      // Auto dismiss when the animation finishes playing
       anim.addEventListener('complete', () => {
         if (isMounted) {
           setTimeout(() => {
             setLoading(false);
-          }, 300);
+          }, 200);
         }
       });
     });
 
-    // Safety fallback timeout in case animation fails or finishes
-    const safetyTimeout = setTimeout(() => {
+    // Fallback timer (~10s max) so user is never permanently blocked
+    const fallbackTimer = setTimeout(() => {
       if (isMounted) {
         setLoading(false);
       }
-    }, 10500);
+    }, 10200);
 
     return () => {
       isMounted = false;
       document.body.style.overflow = '';
-      clearTimeout(safetyTimeout);
+      clearTimeout(fallbackTimer);
       if (animationRef.current) {
         animationRef.current.destroy();
         animationRef.current = null;
@@ -89,16 +83,14 @@ export default function Preloader() {
           key="letters-lottie-preloader"
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
           style={{ background: '#FAF7F0' }}
           className="fixed inset-0 z-[999999] w-screen h-screen flex items-center justify-center select-none pointer-events-auto"
         >
-          <div className="relative flex items-center justify-center w-[min(580px,min(92vw,82vh))] h-[min(580px,min(92vw,82vh))]">
+          <div className="relative flex items-center justify-center w-[min(560px,min(90vw,80vh))] h-[min(560px,min(90vw,80vh))]">
             <div
               ref={containerRef}
-              className={`w-full h-full object-contain pointer-events-none transition-opacity duration-300 ${
-                isLoaded ? 'opacity-100' : 'opacity-0'
-              }`}
+              className="w-full h-full object-contain pointer-events-none"
               style={{
                 background: 'transparent',
               }}
