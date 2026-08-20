@@ -1,10 +1,11 @@
 /**
  * Automatically converts WebM transparent animations into formats supported
- * by Apple devices (iPhone, iPad, Safari) preserving full alpha transparency.
+ * across all devices, specifically optimized for Apple (iPhone, iPad, Safari).
  *
  * Generated formats:
- * - loading.webp (Animated WebP with alpha transparency - Universal Apple/iOS/iPad/Safari/Chrome/Firefox/Android support)
- * - loading.mov  (Apple ProRes / HEVC for QuickTime / Safari)
+ * 1. loading.webp         - Lightweight 540px 20fps Animated WebP (Full Alpha)
+ * 2. loading-stacked.mp4  - Hardware-accelerated Stacked RGB+Alpha H.264 MP4 (Apple/Universal WebGL/Canvas)
+ * 3. loading.mov          - Apple ProRes 4444 with Alpha
  *
  * Run with: npm run convert:video OR node scripts/convert-loading-video.mjs
  */
@@ -20,6 +21,7 @@ const __dirname = dirname(__filename);
 
 const inputPath = join(__dirname, '../public/loading.webm');
 const outputWebp = join(__dirname, '../public/loading.webp');
+const outputStackedMp4 = join(__dirname, '../public/loading-stacked.mp4');
 const outputMov = join(__dirname, '../public/loading.mov');
 
 function runFfmpeg(args) {
@@ -41,31 +43,55 @@ async function main() {
     process.exit(1);
   }
 
-  // 1. Generate Animated WebP with transparent alpha channel
-  console.log('\n✨ Step 1: Generating transparent Animated WebP (Apple iOS/iPadOS/Safari compatible)...');
+  // 1. Generate Lightweight Optimized Animated WebP (<800KB, perfect for fast mobile decoding on iPad/iPhone)
+  console.log('\n✨ Step 1: Generating optimized transparent Animated WebP...');
   await runFfmpeg([
     '-y',
+    '-c:v', 'libvpx-vp9',
     '-i', inputPath,
+    '-vf', 'scale=540:-1:flags=lanczos,fps=20',
     '-vcodec', 'libwebp',
-    '-filter:v', 'fps=24',
     '-lossless', '0',
     '-compression_level', '6',
-    '-q:v', '80',
+    '-q:v', '75',
     '-loop', '0',
     '-an',
     outputWebp
   ]);
 
   if (fs.existsSync(outputWebp)) {
-    const sizeMb = (fs.statSync(outputWebp).size / (1024 * 1024)).toFixed(2);
-    console.log(`✅ Created public/loading.webp (${sizeMb} MB) with alpha transparency`);
+    const sizeKb = (fs.statSync(outputWebp).size / 1024).toFixed(0);
+    console.log(`✅ Created public/loading.webp (${sizeKb} KB)`);
   }
 
-  // 2. Generate Apple MOV container
-  console.log('\n✨ Step 2: Generating Apple MOV container...');
+  // 2. Generate Stacked RGB + Alpha MP4 (Standard H.264, 100% hardware accelerated on Apple iOS/iPadOS/Safari)
+  console.log('\n✨ Step 2: Generating Stacked RGB+Alpha MP4...');
+  await runFfmpeg([
+    '-y',
+    '-c:v', 'libvpx-vp9',
+    '-i', inputPath,
+    '-filter_complex', '[0:v]split=2[color][alpha_in];[alpha_in]alphaextract[alpha];[color][alpha]vstack[v]',
+    '-map', '[v]',
+    '-c:v', 'libx264',
+    '-pix_fmt', 'yuv420p',
+    '-profile:v', 'high',
+    '-crf', '20',
+    '-movflags', '+faststart',
+    '-an',
+    outputStackedMp4
+  ]);
+
+  if (fs.existsSync(outputStackedMp4)) {
+    const sizeMb = (fs.statSync(outputStackedMp4).size / (1024 * 1024)).toFixed(2);
+    console.log(`✅ Created public/loading-stacked.mp4 (${sizeMb} MB)`);
+  }
+
+  // 3. Generate Apple MOV container
+  console.log('\n✨ Step 3: Generating Apple MOV container...');
   try {
     await runFfmpeg([
       '-y',
+      '-c:v', 'libvpx-vp9',
       '-i', inputPath,
       '-c:v', 'prores_ks',
       '-pix_fmt', 'yuva444p10le',
@@ -88,5 +114,6 @@ main().catch((err) => {
   console.error('❌ Error during conversion:', err);
   process.exit(1);
 });
+
 
 

@@ -1,22 +1,22 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 /**
- * Universal Transparent Preloader
+ * Universal Transparent Preloader for Apple (iPad / iPhone / Safari) & All Browsers
  * 
- * Apple Safari / iOS / iPadOS cannot decode VP9 alpha in WebM video,
- * causing transparent pixels to turn black.
- *
- * We provide:
- * 1. High-fidelity transparent Animated WebP (native alpha support in iOS 14+, iPadOS, Safari, Chrome, Edge, Firefox)
- * 2. Multi-source video fallbacks (WebM / MOV)
- * This guarantees 100% transparent backgrounds on iPhone, iPad, Mac, Android, and PC.
+ * Uses a Dual-Engine approach:
+ * 1. WebGL GPU Engine: Plays H.264 stacked RGB+Alpha MP4 for 60fps hardware-accelerated transparency on iOS/iPadOS/Safari.
+ * 2. Instant Lightweight WebP Engine: 442KB animated WebP fallback for instant zero-delay display.
  */
 
 export default function Preloader() {
   const [loading, setLoading] = useState(true);
+  const videoRef = useRef(null);
+  const canvasRef = useRef(null);
+  const rafRef = useRef(null);
+  const [videoPlaying, setVideoPlaying] = useState(false);
 
   useEffect(() => {
     // Lock scroll while preloader is active
@@ -30,6 +30,127 @@ export default function Preloader() {
     return () => {
       document.body.style.overflow = '';
       clearTimeout(dismissTimer);
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, []);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    const canvas = canvasRef.current;
+    if (!video || !canvas) return;
+
+    // Initialize WebGL for alpha compositing
+    let gl = null;
+    try {
+      gl = canvas.getContext('webgl', { alpha: true, premultipliedAlpha: false });
+    } catch {
+      gl = null;
+    }
+
+    if (!gl) {
+      // Fallback: WebGL not supported, animated WebP is displayed automatically
+      return;
+    }
+
+    const vsSource = `
+      attribute vec2 a_position;
+      attribute vec2 a_texCoord;
+      varying vec2 v_texCoord;
+      void main() {
+        gl_Position = vec4(a_position, 0.0, 1.0);
+        v_texCoord = a_texCoord;
+      }
+    `;
+
+    const fsSource = `
+      precision mediump float;
+      uniform sampler2D u_image;
+      varying vec2 v_texCoord;
+      void main() {
+        vec2 colorCoord = vec2(v_texCoord.x, v_texCoord.y * 0.5);
+        vec2 alphaCoord = vec2(v_texCoord.x, 0.5 + v_texCoord.y * 0.5);
+        vec4 color = texture2D(u_image, colorCoord);
+        float alpha = texture2D(u_image, alphaCoord).r;
+        gl_FragColor = vec4(color.rgb, alpha);
+      }
+    `;
+
+    function createShader(type, source) {
+      const shader = gl.createShader(type);
+      gl.shaderSource(shader, source);
+      gl.compileShader(shader);
+      return shader;
+    }
+
+    const program = gl.createProgram();
+    const vs = createShader(gl.VERTEX_SHADER, vsSource);
+    const fs = createShader(gl.FRAGMENT_SHADER, fsSource);
+    gl.attachShader(program, vs);
+    gl.attachShader(program, fs);
+    gl.linkProgram(program);
+    gl.useProgram(program);
+
+    const buffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+    gl.bufferData(
+      gl.ARRAY_BUFFER,
+      new Float32Array([
+        -1, -1, 0, 1,
+         1, -1, 1, 1,
+        -1,  1, 0, 0,
+        -1,  1, 0, 0,
+         1, -1, 1, 1,
+         1,  1, 1, 0,
+      ]),
+      gl.STATIC_DRAW
+    );
+
+    const a_position = gl.getAttribLocation(program, 'a_position');
+    const a_texCoord = gl.getAttribLocation(program, 'a_texCoord');
+    gl.enableVertexAttribArray(a_position);
+    gl.vertexAttribPointer(a_position, 2, gl.FLOAT, false, 16, 0);
+    gl.enableVertexAttribArray(a_texCoord);
+    gl.vertexAttribPointer(a_texCoord, 2, gl.FLOAT, false, 16, 8);
+
+    const texture = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+
+    gl.clearColor(0, 0, 0, 0);
+
+    function renderLoop() {
+      if (video.readyState >= 2) {
+        if (canvas.width !== 1280 || canvas.height !== 720) {
+          canvas.width = 1280;
+          canvas.height = 720;
+          gl.viewport(0, 0, 1280, 720);
+        }
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, video);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
+        setVideoPlaying(true);
+      }
+      rafRef.current = requestAnimationFrame(renderLoop);
+    }
+
+    const startPlay = () => {
+      video.play().catch(() => {});
+      rafRef.current = requestAnimationFrame(renderLoop);
+    };
+
+    if (video.readyState >= 2) {
+      startPlay();
+    } else {
+      video.addEventListener('canplay', startPlay, { once: true });
+    }
+
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      video.removeEventListener('canplay', startPlay);
     };
   }, []);
 
@@ -45,23 +166,50 @@ export default function Preloader() {
           className="fixed inset-0 z-[999999] w-screen h-screen flex items-center justify-center select-none pointer-events-auto"
         >
           <div className="relative flex items-center justify-center w-[min(540px,min(92vw,82vh))] h-[min(540px,min(92vw,82vh))]">
-            {/* Transparent Animated WebP for Apple (iPhone/iPad/Safari) & all modern browsers */}
-            <picture className="w-full h-full flex items-center justify-center">
-              <source srcSet="/loading.webp" type="image/webp" />
-              <img
-                src="/loading.webp"
-                alt="Letters Loading Animation"
-                className="w-full h-full object-contain pointer-events-none select-none bg-transparent"
-                style={{
-                  WebkitTransform: 'translateZ(0)',
-                  transform: 'translateZ(0)',
-                }}
-              />
-            </picture>
+            {/* Hidden driving video for WebGL alpha extraction */}
+            <video
+              ref={videoRef}
+              src="/loading-stacked.mp4"
+              autoPlay
+              muted
+              loop
+              playsInline
+              webkit-playsinline="true"
+              x-webkit-airplay="deny"
+              preload="auto"
+              className="hidden"
+            />
+
+            {/* High-speed WebGL GPU Alpha Canvas */}
+            <canvas
+              ref={canvasRef}
+              className={`w-full h-full object-contain pointer-events-none ${
+                videoPlaying ? 'opacity-100' : 'opacity-0 absolute inset-0'
+              }`}
+              style={{
+                background: 'transparent',
+                WebkitTransform: 'translateZ(0)',
+                transform: 'translateZ(0)',
+              }}
+            />
+
+            {/* Instant Lightweight WebP Layer (Displays until WebGL starts / Always active fallback) */}
+            <img
+              src="/loading.webp"
+              alt="Letters Loading Animation"
+              className={`w-full h-full object-contain pointer-events-none select-none bg-transparent ${
+                videoPlaying ? 'hidden' : 'block'
+              }`}
+              style={{
+                WebkitTransform: 'translateZ(0)',
+                transform: 'translateZ(0)',
+              }}
+            />
           </div>
         </motion.div>
       )}
     </AnimatePresence>
   );
 }
+
 
