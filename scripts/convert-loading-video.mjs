@@ -43,17 +43,16 @@ async function main() {
     process.exit(1);
   }
 
-  // 1. Generate Lightweight Optimized Animated WebP (<800KB, perfect for fast mobile decoding on iPad/iPhone)
-  console.log('\n✨ Step 1: Generating optimized transparent Animated WebP...');
+  // 1. Generate Clean Lossless Animated WebP (Zero edge artifacts, crystal-clear gold foil rendering)
+  console.log('\n✨ Step 1: Generating clean lossless Animated WebP...');
   await runFfmpeg([
     '-y',
     '-c:v', 'libvpx-vp9',
     '-i', inputPath,
     '-vf', 'scale=480:-1',
     '-vcodec', 'libwebp',
-    '-pix_fmt', 'yuva420p',
-    '-preset', 'default',
-    '-q:v', '70',
+    '-lossless', '1',
+    '-q:v', '100',
     '-loop', '0',
     '-an',
     outputWebp
