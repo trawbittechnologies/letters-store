@@ -8,6 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "convert:video": "node scripts/convert-loading-video.mjs",
     "db:seed": "node scripts/seed-neon.js"
   },
   "dependencies": {
