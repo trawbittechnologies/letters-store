@@ -60,8 +60,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <link rel="preload" href="/loading-poster.webp" as="image" type="image/webp" />
-        <link rel="preload" href="/hupng-mp4-to-lottie-1787214446255.json" as="fetch" crossOrigin="anonymous" />
+        <link rel="preload" href="/loading.webp" as="image" type="image/webp" />
       </head>
       <body className="min-h-screen transition-colors duration-300">
         <ThemeInitializer />
