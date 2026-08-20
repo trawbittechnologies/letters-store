@@ -147,8 +147,10 @@ export default function ProductDetailPage({ params }) {
       customDetails += `\n• Add-ons: ${selectedAddons.map((a) => a.name).join(', ')}`;
     }
 
+    const addonsTotal = selectedAddons.reduce((sum, a) => sum + (Number(a.price) || 0), 0);
+    const totalWithAddons = ((Number(product.price) || 0) * quantity) + addonsTotal;
     const priceDisplay = product.showPrice === false ? 'Price on Request' : `₹${product.price}`;
-    const totalDisplay = product.showPrice === false ? 'On Request / Custom Quote' : `₹${totalWithAddons}`;
+    const totalDisplay = product.showPrice === false ? 'On Request / Custom Quote' : `₹${totalWithAddons.toLocaleString()}`;
 
     const message = `*${settings.orderMessagePrefix || 'New Order — LETTERS'}*
 

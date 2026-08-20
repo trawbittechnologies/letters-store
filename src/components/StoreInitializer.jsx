@@ -24,9 +24,9 @@ export default function StoreInitializer({
   festivals = [],
   showcaseFestival = null,
 }) {
-  const initialized = useRef(false);
+  const initialized = useRef(null);
 
-  if (!initialized.current) {
+  if (initialized.current == null) {
     initialized.current = true;
 
     // Hydrate category store

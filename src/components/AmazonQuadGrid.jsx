@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowRight, faBolt, faWandMagicSparkles, faGift, faPercent } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRight, faBolt, faWandMagicSparkles } from '@fortawesome/free-solid-svg-icons';
 import { useProductStore } from '../store/productStore';
 import { useCategoryStore } from '../store/categoryStore';
 

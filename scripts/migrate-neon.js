@@ -1,6 +1,6 @@
 /**
  * Neon PostgreSQL Migration Script
- * Run with: node scripts/migrate-neon.js
+ * Run with: node --env-file=.env.local scripts/migrate-neon.js
  *
  * This script:
  * 1. Creates the products table if it doesn't exist

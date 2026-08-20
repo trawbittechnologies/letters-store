@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBolt, faClock, faArrowRight, faBagShopping, faCheck } from '@fortawesome/free-solid-svg-icons';
+import { faBolt, faClock, faBagShopping, faCheck } from '@fortawesome/free-solid-svg-icons';
 import { useProductStore } from '../store/productStore';
 import { useCartStore } from '../store/cartStore';
 

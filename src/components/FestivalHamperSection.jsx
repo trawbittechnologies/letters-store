@@ -1,12 +1,10 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faArrowRight,
   faArrowDown,
   faCheck,
   faBagShopping,
@@ -23,14 +21,14 @@ import { faWhatsapp } from '@fortawesome/free-brands-svg-icons';
 import { useCartStore } from '../store/cartStore';
 import { useSettingsStore } from '../store/settingsStore';
 import { useFestivalStore, getFestivalStatus } from '../store/festivalStore';
-import { DoodleSparkle, DoodleOliveBranch, DoodleStarburst, DoodleSwirl } from './Doodles';
+import { DoodleSparkle, DoodleOliveBranch, DoodleStarburst } from './Doodles';
 
 export default function FestivalHamperSection() {
   const addToCart = useCartStore((state) => state.addToCart);
   const { getWhatsAppUrl } = useSettingsStore();
-  // festivals and showcaseFestival are server-side hydrated by StoreInitializer.
+  // showcaseFestival is server-side hydrated by StoreInitializer.
   // No client-side fetch needed here.
-  const { festivals, showcaseFestival, isLoaded } = useFestivalStore();
+  const { showcaseFestival, isLoaded } = useFestivalStore();
 
   const [addedIds, setAddedIds] = useState({});
   const [inspectItem, setInspectItem] = useState(null);

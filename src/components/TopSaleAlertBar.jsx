@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClock, faArrowRight, faBolt } from '@fortawesome/free-solid-svg-icons';
 import { useSaleBannerStore } from '../store/saleBannerStore';
-import { DoodleSparkle } from './Doodles';
 
 export default function TopSaleAlertBar() {
   // saleBanner is server-side hydrated by StoreInitializer in layout.jsx.
