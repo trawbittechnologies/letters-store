@@ -43,8 +43,8 @@ export default function TopSaleAlertBar() {
     return () => clearInterval(timer);
   }, [saleBanner?.endDate]);
 
-  // If sale banner is disabled or top bar is disabled, don't show
-  if (isLoaded && (!saleBanner.enabled || !saleBanner.showTopBar)) {
+  // Never display on refresh/initial render until loaded and explicitly enabled by admin
+  if (!isLoaded || !saleBanner?.enabled || !saleBanner?.showTopBar) {
     return null;
   }
 
