@@ -7,7 +7,14 @@ export async function GET() {
     if (sql) {
       try {
         const rows = await sql`SELECT * FROM categories ORDER BY created_at DESC;`;
-        return NextResponse.json({ success: true, categories: rows });
+        const mappedCategories = rows.map(row => ({
+          ...row,
+          group: row.group_name,
+          itemCount: row.item_count,
+          createdAt: row.created_at,
+          updatedAt: row.updated_at
+        }));
+        return NextResponse.json({ success: true, categories: mappedCategories });
       } catch (err) {
         console.warn('Neon DB categories GET error:', err.message);
       }
@@ -33,13 +40,16 @@ export async function POST(request) {
           id: body.id || `cat-${Date.now()}`,
           name: body.name,
           slug: body.slug || body.name.toLowerCase().replace(/[^\w ]+/g, '').replace(/ +/g, '-'),
+          group: body.group || 'Hampers',
+          description: body.description || '',
+          image: body.image || '',
           enabled: body.enabled ?? true,
           itemCount: body.itemCount || 0
         };
         
         await sql`
-          INSERT INTO categories (id, name, slug, enabled, item_count)
-          VALUES (${newCat.id}, ${newCat.name}, ${newCat.slug}, ${newCat.enabled}, ${newCat.itemCount})
+          INSERT INTO categories (id, name, slug, group_name, description, image, enabled, item_count)
+          VALUES (${newCat.id}, ${newCat.name}, ${newCat.slug}, ${newCat.group}, ${newCat.description}, ${newCat.image}, ${newCat.enabled}, ${newCat.itemCount})
         `;
         
         return NextResponse.json({ success: true, category: newCat }, { status: 201 });

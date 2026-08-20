@@ -19,7 +19,17 @@ export async function PUT(request, { params }) {
           RETURNING *;
         `;
         if (rows.length > 0) {
-          return NextResponse.json({ success: true, category: rows[0] });
+          const row = rows[0];
+          return NextResponse.json({ 
+            success: true, 
+            category: { 
+              ...row, 
+              group: row.group_name, 
+              itemCount: row.item_count, 
+              createdAt: row.created_at, 
+              updatedAt: row.updated_at 
+            } 
+          });
         }
       } catch (err) {
         console.warn('Neon DB categories PUT error:', err.message);
