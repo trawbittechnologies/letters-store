@@ -79,7 +79,7 @@ export default function Hero() {
 
           {/* Body */}
           <p className="text-[#5C6B56] text-[14.5px] leading-[1.8] mb-9 max-w-[340px]">
-            Made to order in Kerala, delivered across India. Bespoke hampers from ₹999 — handwritten notes, artisan chocolates & botanical treats.
+            Made to order in Kerala, delivered across India. Bespoke hampers, handwritten keepsake notes, artisan chocolates &amp; botanical treats.
           </p>
 
           {/* CTAs */}

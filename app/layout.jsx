@@ -5,6 +5,7 @@ config.autoAddCss = false;
 import Navbar from '@/src/components/Navbar';
 import Footer from '@/src/components/Footer';
 import FloatingWhatsApp from '@/src/components/FloatingWhatsApp';
+import FestiveBottomCutout from '@/src/components/FestiveBottomCutout';
 import ThemeInitializer from '@/components/ThemeInitializer';
 
 export const metadata = {
@@ -65,6 +66,7 @@ export default function RootLayout({ children }) {
         </main>
         <Footer />
         <FloatingWhatsApp />
+        <FestiveBottomCutout />
       </body>
     </html>
   );
