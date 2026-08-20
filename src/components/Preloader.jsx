@@ -40,21 +40,25 @@ export default function Preloader() {
           style={{ background: '#FAF7F0' }}
           className="fixed inset-0 z-[999999] w-screen h-screen flex flex-col items-center justify-center select-none pointer-events-auto"
         >
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="text-4xl md:text-5xl font-light tracking-[0.3em] text-[#2c2c2c]"
-            style={{ fontFamily: 'Georgia, serif' }}
-          >
-            LETTERS
-          </motion.div>
-          <motion.div 
-            initial={{ scaleX: 0 }}
-            animate={{ scaleX: 1 }}
-            transition={{ duration: 1.5, ease: "easeInOut" }}
-            className="w-16 h-[1px] bg-[#2c2c2c] mt-6 origin-center"
-          />
+          <div className="relative">
+            {/* Faint background text */}
+            <div
+              className="text-[60px] md:text-[80px] font-normal text-[var(--text-muted)] opacity-20"
+              style={{ fontFamily: "'Alex Brush', 'Pinyon Script', 'Great Vibes', cursive" }}
+            >
+              Letters
+            </div>
+            {/* Writing animation layer */}
+            <motion.div
+              initial={{ clipPath: "inset(0 100% 0 0)" }}
+              animate={{ clipPath: "inset(0 0% 0 0)" }}
+              transition={{ duration: 1.5, ease: "easeInOut" }}
+              className="absolute inset-0 text-[60px] md:text-[80px] font-normal text-[var(--text)] whitespace-nowrap"
+              style={{ fontFamily: "'Alex Brush', 'Pinyon Script', 'Great Vibes', cursive" }}
+            >
+              Letters
+            </motion.div>
+          </div>
         </motion.div>
       )}
     </AnimatePresence>
