@@ -129,8 +129,8 @@ export default function AdminLayout({ children }) {
             {mobileSidebarOpen ? <FontAwesomeIcon icon={faXmark} className="text-sm" /> : <FontAwesomeIcon icon={faBars} className="text-sm" />}
           </button>
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 flex items-center justify-center flex-shrink-0">
-              <img src="/logo.png" alt="Letters" className="w-full h-full object-contain" />
+            <div className="w-9 h-9 flex items-center justify-center flex-shrink-0 -ml-1">
+              <img src="/logo.png" alt="Letters" className="w-full h-full object-contain scale-110 drop-shadow-sm" />
             </div>
             <span className="font-bold text-sm text-[var(--text)] tracking-tight">
               {settings.brandName || 'Letters'}
@@ -185,8 +185,8 @@ export default function AdminLayout({ children }) {
           {/* Brand Header */}
           <div className="p-5 border-b border-[var(--border)] flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-[var(--bg)] border border-[var(--border)] p-1.5 flex items-center justify-center shadow-xs">
-                <img src="/logo.png" alt="Letters" className="w-full h-full object-contain" />
+              <div className="w-14 h-14 flex items-center justify-center flex-shrink-0 -ml-2">
+                <img src="/logo.png" alt="Letters" className="w-full h-full object-contain scale-110 drop-shadow-md" />
               </div>
               <div>
                 <h2 className="font-bold text-sm text-[var(--text)] tracking-tight leading-none">
@@ -315,8 +315,8 @@ export default function AdminLayout({ children }) {
         <header className="hidden md:flex items-center justify-between px-8 py-3 bg-[var(--card)] border-b border-[var(--border)] sticky top-0 z-30 shadow-xs">
           <div className="flex items-center gap-3">
             <Link href="/admin" className="flex items-center gap-2.5 hover:opacity-90 transition-opacity">
-              <div className="w-8 h-8 rounded-lg bg-[var(--bg)] border border-[var(--border)] p-1 flex items-center justify-center shadow-xs">
-                <img src="/logo.png" alt="Letters Logo" className="w-full h-full object-contain" />
+              <div className="w-10 h-10 flex items-center justify-center -ml-1">
+                <img src="/logo.png" alt="Letters Logo" className="w-full h-full object-contain scale-110 drop-shadow-sm" />
               </div>
               <span className="font-bold text-xs text-[var(--text)] tracking-tight">
                 {settings.brandName || 'Letters'}
