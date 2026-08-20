@@ -107,34 +107,55 @@ export default function AdminDashboardPage() {
     };
   }, [orders, products]);
 
-  // Dynamic 7-day timeline trend data for chart
+  // Dynamic 7-day timeline trend data from 100% REAL orders
   const weeklySalesData = useMemo(() => {
-    const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    const todayIndex = (new Date().getDay() + 6) % 7; // 0 for Mon, 6 for Sun
+    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const now = new Date();
 
     const list = [];
     for (let i = 6; i >= 0; i--) {
-      const idx = (todayIndex - i + 7) % 7;
-      const dayLabel = days[idx];
-      
-      // Calculate or approximate day's share
-      const weight = [0.11, 0.13, 0.16, 0.14, 0.18, 0.15, 0.13][idx];
-      const baseRev = metrics.revenue > 0 ? Math.round(metrics.revenue * weight) : (1800 + idx * 450);
-      const baseOrders = metrics.total > 0 ? Math.max(1, Math.round(metrics.total * weight)) : (1 + (idx % 3));
+      const d = new Date(now);
+      d.setDate(d.getDate() - i);
+      const dateStr = d.toISOString().split('T')[0]; // YYYY-MM-DD
+      const dayLabel = dayNames[d.getDay()];
+
+      // Match orders placed strictly on this calendar date
+      const matchingOrders = orders.filter((o) => {
+        if (!o.createdAt || o.status === 'Cancelled') return false;
+        try {
+          const orderDate = new Date(o.createdAt).toISOString().split('T')[0];
+          return orderDate === dateStr;
+        } catch {
+          return false;
+        }
+      });
+
+      const dayRevenue = matchingOrders.reduce((sum, o) => sum + (Number(o.total) || 0), 0);
+      const dayOrders = matchingOrders.length;
 
       list.push({
+        dateStr,
         day: dayLabel,
-        revenue: baseRev,
-        orders: baseOrders,
+        revenue: dayRevenue,
+        orders: dayOrders,
         isToday: i === 0,
       });
     }
 
-    const maxRevenue = Math.max(...list.map((d) => d.revenue), 1000);
+    const totalPeriodRev = list.reduce((sum, d) => sum + d.revenue, 0);
+    const totalPeriodOrders = list.reduce((sum, d) => sum + d.orders, 0);
+    const maxRevenue = Math.max(...list.map((d) => d.revenue), 100);
     const maxOrders = Math.max(...list.map((d) => d.orders), 1);
+    const hasRealSales = totalPeriodRev > 0 || totalPeriodOrders > 0;
 
-    return { list, maxRevenue, maxOrders };
-  }, [metrics.revenue, metrics.total]);
+    let peakDay = 'Awaiting new orders';
+    const sorted = [...list].sort((a, b) => b.revenue - a.revenue);
+    if (sorted[0] && sorted[0].revenue > 0) {
+      peakDay = `${sorted[0].day} (₹${sorted[0].revenue.toLocaleString()})`;
+    }
+
+    return { list, maxRevenue, maxOrders, hasRealSales, peakDay, totalPeriodRev, totalPeriodOrders };
+  }, [orders]);
 
   // Filtered recent orders
   const filteredOrders = useMemo(() => {
@@ -412,9 +433,12 @@ export default function AdminDashboardPage() {
           <div className="pt-2">
             <div className="h-52 w-full flex items-end justify-between gap-2 sm:gap-4 px-2">
               {weeklySalesData.list.map((item, idx) => {
-                const heightPct = chartViewMode === 'revenue'
-                  ? Math.max(12, Math.round((item.revenue / weeklySalesData.maxRevenue) * 100))
-                  : Math.max(12, Math.round((item.orders / weeklySalesData.maxOrders) * 100));
+                const isZero = chartViewMode === 'revenue' ? item.revenue === 0 : item.orders === 0;
+                const heightPct = isZero
+                  ? 4
+                  : chartViewMode === 'revenue'
+                  ? Math.max(8, Math.round((item.revenue / weeklySalesData.maxRevenue) * 100))
+                  : Math.max(8, Math.round((item.orders / weeklySalesData.maxOrders) * 100));
 
                 const isHovered = activeHoverBar === idx;
 
@@ -437,7 +461,9 @@ export default function AdminDashboardPage() {
                       <div
                         style={{ height: `${heightPct}%` }}
                         className={`w-full rounded-t-lg transition-all duration-300 ${
-                          isHovered
+                          isZero
+                            ? 'bg-[var(--border)] opacity-40'
+                            : isHovered
                             ? 'bg-[var(--olive-hover)] shadow-xs'
                             : item.isToday
                             ? 'bg-[var(--olive)]'
@@ -457,10 +483,10 @@ export default function AdminDashboardPage() {
               })}
             </div>
 
-            {/* Chart Footer Highlights */}
+            {/* Chart Footer Real Highlights */}
             <div className="flex items-center justify-between text-[11px] pt-3 border-t border-[var(--border)]/60 text-[var(--text-muted)]">
-              <span>Peak Day: <strong className="text-[var(--text)] font-bold">Saturday (Festive Drop)</strong></span>
-              <span>Conversion Rate: <strong className="text-emerald-600 dark:text-emerald-400 font-bold">8.4%</strong></span>
+              <span>Peak Day: <strong className="text-[var(--text)] font-bold">{weeklySalesData.peakDay}</strong></span>
+              <span>7-Day Sales: <strong className="text-[var(--text)] font-bold">{weeklySalesData.totalPeriodOrders} Orders (₹{weeklySalesData.totalPeriodRev.toLocaleString()})</strong></span>
             </div>
           </div>
         </div>
@@ -484,13 +510,13 @@ export default function AdminDashboardPage() {
               <div className="flex items-center justify-between text-xs font-semibold">
                 <span className="text-[var(--text)]">Delivered &amp; Fulfilled</span>
                 <span className="font-bold text-emerald-600 dark:text-emerald-400">
-                  {metrics.delivered} ({metrics.fulfillmentRate}%)
+                  {metrics.delivered} ({metrics.total > 0 ? metrics.fulfillmentRate : 0}%)
                 </span>
               </div>
               <div className="w-full h-2 rounded-full bg-[var(--bg)] overflow-hidden border border-[var(--border)]/50">
                 <div
                   className="h-full bg-emerald-500 rounded-full transition-all duration-500"
-                  style={{ width: `${Math.max(4, metrics.fulfillmentRate)}%` }}
+                  style={{ width: `${metrics.total > 0 ? Math.max(2, metrics.fulfillmentRate) : 0}%` }}
                 />
               </div>
             </div>
@@ -506,7 +532,7 @@ export default function AdminDashboardPage() {
               <div className="w-full h-2 rounded-full bg-[var(--bg)] overflow-hidden border border-[var(--border)]/50">
                 <div
                   className="h-full bg-sky-500 rounded-full transition-all duration-500"
-                  style={{ width: `${metrics.total > 0 ? Math.max(4, Math.round((metrics.inProgress / metrics.total) * 100)) : 10}%` }}
+                  style={{ width: `${metrics.total > 0 ? Math.max(2, Math.round((metrics.inProgress / metrics.total) * 100)) : 0}%` }}
                 />
               </div>
             </div>
@@ -522,7 +548,7 @@ export default function AdminDashboardPage() {
               <div className="w-full h-2 rounded-full bg-[var(--bg)] overflow-hidden border border-[var(--border)]/50">
                 <div
                   className="h-full bg-amber-500 rounded-full transition-all duration-500"
-                  style={{ width: `${metrics.total > 0 ? Math.max(4, Math.round((metrics.pending / metrics.total) * 100)) : 5}%` }}
+                  style={{ width: `${metrics.total > 0 ? Math.max(2, Math.round((metrics.pending / metrics.total) * 100)) : 0}%` }}
                 />
               </div>
             </div>
