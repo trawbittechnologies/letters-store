@@ -9,7 +9,7 @@
     "start": "next start",
     "lint": "next lint",
     "db:seed": "node scripts/seed-neon.js",
-    "db:migrate": "node scripts/migrate-neon.js"
+    "db:migrate": "node --env-file=.env.local scripts/migrate-neon.js"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^7.3.1",
