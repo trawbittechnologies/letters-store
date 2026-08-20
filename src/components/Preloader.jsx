@@ -1,22 +1,28 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useSyncExternalStore } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+
+function subscribe() {
+  return () => {};
+}
+
+function getAppleSafariSnapshot() {
+  if (typeof window === 'undefined') return false;
+  const ua = navigator.userAgent;
+  const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const isSafari = /^((?!chrome|android).)*safari/i.test(ua);
+  return isIOS || isSafari;
+}
+
+function getServerSnapshot() {
+  return false;
+}
 
 export default function Preloader() {
   const [loading, setLoading] = useState(true);
-  const [isAppleSafari, setIsAppleSafari] = useState(false);
+  const isAppleSafari = useSyncExternalStore(subscribe, getAppleSafariSnapshot, getServerSnapshot);
   const videoRef = useRef(null);
-
-  useEffect(() => {
-    // Detect Apple iOS & Safari (which lack WebM Alpha transparency support)
-    if (typeof window !== 'undefined') {
-      const ua = navigator.userAgent;
-      const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-      const isSafari = /^((?!chrome|android).)*safari/i.test(ua);
-      setIsAppleSafari(isIOS || isSafari);
-    }
-  }, []);
 
   // Lock body scroll while preloader is active
   useEffect(() => {
