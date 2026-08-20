@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { sql } from '@/lib/neon';
 
 export async function POST(request) {
   try {
@@ -8,7 +9,18 @@ export async function POST(request) {
     let expectedPass = 'letters@2020';
     let currentEmail = 'admin@letters.com';
 
-    if (customCredsCookie) {
+    // 1. Check Neon DB password first if connected
+    if (sql) {
+      try {
+        const rows = await sql`
+          SELECT password, email FROM admins WHERE username = 'admin' LIMIT 1;
+        `;
+        if (rows && rows.length > 0) {
+          expectedPass = rows[0].password;
+          currentEmail = rows[0].email;
+        }
+      } catch (e) {}
+    } else if (customCredsCookie) {
       try {
         const parsed = JSON.parse(Buffer.from(customCredsCookie, 'base64').toString('utf-8'));
         if (parsed.pass) expectedPass = parsed.pass;
@@ -17,7 +29,7 @@ export async function POST(request) {
     }
 
     // Verify current password
-    if (currentPassword !== expectedPass && currentPassword !== 'letters@2020' && currentPassword !== 'admin123') {
+    if (currentPassword !== expectedPass && currentPassword !== 'letters@2020') {
       return NextResponse.json(
         { success: false, message: 'Incorrect current password. Please enter your valid current password.' },
         { status: 400 }
@@ -26,6 +38,19 @@ export async function POST(request) {
 
     const updatedEmail = (newEmail && newEmail.trim()) ? newEmail.trim().toLowerCase() : currentEmail;
     const updatedPass = (newPassword && newPassword.trim()) ? newPassword.trim() : expectedPass;
+
+    // Update in Neon PostgreSQL DB
+    if (sql) {
+      try {
+        await sql`
+          UPDATE admins 
+          SET email = ${updatedEmail}, password = ${updatedPass}, updated_at = CURRENT_TIMESTAMP
+          WHERE username = 'admin';
+        `;
+      } catch (e) {
+        console.warn('Could not update admin in Neon DB:', e.message);
+      }
+    }
 
     const credsData = {
       username: 'admin',
@@ -59,13 +84,13 @@ export async function POST(request) {
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
       path: '/',
-      maxAge: 60 * 60 * 24 * 30, // 30 days
+      maxAge: 60 * 60 * 24 * 7, // 7 days
     });
 
     return response;
   } catch (error) {
     return NextResponse.json(
-      { success: false, message: error.message || 'Failed to update credentials' },
+      { success: false, message: error.message },
       { status: 500 }
     );
   }
