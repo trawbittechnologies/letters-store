@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { useCategoryStore } from '../store/categoryStore';
@@ -55,11 +56,12 @@ export default function FeaturedCategories() {
               className="group flex flex-col card-minimal overflow-hidden"
             >
               <div className="relative aspect-[4/3] overflow-hidden bg-[var(--bg-subtle)]">
-                <img
-                  src={cat.image}
+                <Image
+                  src={cat.image || 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=800&q=80'}
                   alt={cat.name}
-                  loading="lazy"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-600 ease-out"
+                  fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                  className="object-cover group-hover:scale-105 transition-transform duration-600 ease-out"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400" />
               </div>

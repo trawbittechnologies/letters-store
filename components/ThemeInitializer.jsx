@@ -21,9 +21,8 @@ export default function ThemeInitializer() {
     initCart();
     fetchSettings();
     fetchProducts();
-    fetchCategories();
     initAuth();
-  }, [initTheme, initCart, fetchSettings, fetchProducts, fetchCategories, initAuth]);
+  }, [initTheme, initCart, fetchSettings, fetchProducts, initAuth]);
 
   return null;
 }

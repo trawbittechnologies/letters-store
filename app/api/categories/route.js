@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { revalidateTag } from 'next/cache';
 import { getCategories, createCategory } from '@/lib/db';
 import { sql } from '@/lib/neon';
 
@@ -52,6 +53,7 @@ export async function POST(request) {
           VALUES (${newCat.id}, ${newCat.name}, ${newCat.slug}, ${newCat.group}, ${newCat.description}, ${newCat.image}, ${newCat.enabled}, ${newCat.itemCount})
         `;
         
+        revalidateTag('categories');
         return NextResponse.json({ success: true, category: newCat }, { status: 201 });
       } catch (err) {
         console.warn('Neon DB categories POST error:', err.message);
@@ -59,6 +61,7 @@ export async function POST(request) {
     }
 
     const newCategory = createCategory(body);
+    revalidateTag('categories');
     return NextResponse.json({ success: true, category: newCategory }, { status: 201 });
   } catch (error) {
     return NextResponse.json({ success: false, message: error.message }, { status: 500 });

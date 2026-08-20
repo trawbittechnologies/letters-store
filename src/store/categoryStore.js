@@ -4,15 +4,7 @@ import { defaultCategories } from '@/src/data/initialData';
 export const initialCategories = defaultCategories;
 
 const saveToLocalStorage = (categories) => {
-  if (typeof window !== 'undefined') {
-    try {
-      // Strip out the Base64 image string to avoid QuotaExceededError in localStorage
-      const sanitized = categories.map(c => ({ ...c, image: undefined }));
-      localStorage.setItem('letters_categories', JSON.stringify(sanitized));
-    } catch (e) {
-      console.warn('Failed to save to localStorage:', e);
-    }
-  }
+  // Removed localStorage usage as hydration is handled server-side now
 };
 
 export const useCategoryStore = create((set, get) => ({
@@ -21,29 +13,16 @@ export const useCategoryStore = create((set, get) => ({
 
   fetchCategories: async () => {
     set({ isLoading: true });
-
-    // Eagerly load from localStorage to prevent 1-2 second delay on refresh
-    if (typeof window !== 'undefined') {
-      try {
-        const saved = localStorage.getItem('letters_categories');
-        if (saved) {
-          set({ categories: JSON.parse(saved) });
-        }
-      } catch (e) {}
-    }
-
     try {
       const res = await fetch('/api/categories');
       const data = await res.json();
       if (data.success && Array.isArray(data.categories)) {
         set({ categories: data.categories, isLoading: false });
-        saveToLocalStorage(data.categories);
         return;
       }
     } catch (e) {
-      console.warn('API fetch failed, falling back to local categories', e);
+      console.warn('API fetch failed', e);
     }
-
     set({ isLoading: false });
   },
 
@@ -123,9 +102,6 @@ export const useCategoryStore = create((set, get) => ({
   },
 
   resetCategories: async () => {
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('letters_categories');
-    }
     set({ categories: defaultCategories });
   },
 }));

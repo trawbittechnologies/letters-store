@@ -8,6 +8,8 @@ import FloatingWhatsApp from '@/src/components/FloatingWhatsApp';
 import FestiveBottomCutout from '@/src/components/FestiveBottomCutout';
 import Preloader from '@/src/components/Preloader';
 import ThemeInitializer from '@/components/ThemeInitializer';
+import StoreInitializer from '@/src/components/StoreInitializer';
+import { getCachedCategories } from '@/lib/dataFetching';
 
 export const metadata = {
   metadataBase: new URL('https://letters-store.vercel.app'),
@@ -56,10 +58,13 @@ export const metadata = {
   },
 };
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+  const initialCategories = await getCachedCategories();
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="min-h-screen transition-colors duration-300">
+        <StoreInitializer categories={initialCategories} />
         <ThemeInitializer />
         <Preloader />
         <Navbar />

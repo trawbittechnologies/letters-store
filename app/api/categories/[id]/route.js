@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { revalidateTag } from 'next/cache';
 import { updateCategory, deleteCategory } from '@/lib/db';
 import { sql } from '@/lib/neon';
 
@@ -20,6 +21,7 @@ export async function PUT(request, { params }) {
         `;
         if (rows.length > 0) {
           const row = rows[0];
+          revalidateTag('categories');
           return NextResponse.json({ 
             success: true, 
             category: { 
@@ -42,6 +44,7 @@ export async function PUT(request, { params }) {
       return NextResponse.json({ success: false, message: 'Category not found' }, { status: 404 });
     }
 
+    revalidateTag('categories');
     return NextResponse.json({ success: true, category: updated });
   } catch (error) {
     return NextResponse.json({ success: false, message: error.message }, { status: 500 });
@@ -60,6 +63,7 @@ export async function DELETE(request, { params }) {
           RETURNING id;
         `;
         if (rows.length > 0) {
+          revalidateTag('categories');
           return NextResponse.json({ success: true, message: 'Category deleted successfully' });
         }
       } catch (err) {
@@ -73,6 +77,7 @@ export async function DELETE(request, { params }) {
       return NextResponse.json({ success: false, message: 'Category not found' }, { status: 404 });
     }
 
+    revalidateTag('categories');
     return NextResponse.json({ success: true, message: 'Category deleted successfully' });
   } catch (error) {
     return NextResponse.json({ success: false, message: error.message }, { status: 500 });
