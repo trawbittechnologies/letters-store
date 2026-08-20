@@ -14,10 +14,10 @@ export default function Preloader() {
   useEffect(() => {
     document.body.style.overflow = 'hidden';
 
-    // Perfectly timed duration for the ink flow and pause before exit
+    // Fast dismissal for optimized loading (800ms instead of 2.5s)
     const dismissTimer = setTimeout(() => {
       setLoading(false);
-    }, 2500);
+    }, 800);
 
     return () => {
       document.body.style.overflow = '';
@@ -49,7 +49,7 @@ export default function Preloader() {
               <motion.div
                 initial={{ backgroundPosition: "200% 0" }}
                 animate={{ backgroundPosition: "0% 0" }}
-                transition={{ duration: 1.8, ease: [0.25, 1, 0.5, 1] }}
+                transition={{ duration: 0.6, ease: [0.25, 1, 0.5, 1] }}
                 className="text-[65px] md:text-[90px] font-normal text-[#1A2417] leading-none tracking-tight pb-2"
                 style={{ 
                   fontFamily: "'Alex Brush', 'Pinyon Script', 'Great Vibes', cursive",
@@ -68,14 +68,14 @@ export default function Preloader() {
                 <motion.div
                   initial={{ scaleX: 0, originX: 0 }}
                   animate={{ scaleX: 1 }}
-                  transition={{ duration: 2.2, ease: [0.76, 0, 0.24, 1] }}
+                  transition={{ duration: 0.7, ease: [0.76, 0, 0.24, 1] }}
                   className="absolute inset-0 bg-[#CD8632] h-full"
                 />
               </div>
               <motion.div 
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 0.5, duration: 1 }}
+                transition={{ delay: 0.2, duration: 0.4 }}
                 className="text-[9px] uppercase tracking-[0.4em] font-bold text-[#8A7A66]"
               >
                 Atelier
