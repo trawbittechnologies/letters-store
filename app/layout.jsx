@@ -59,9 +59,6 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <link rel="preload" href="/loading.webp" as="image" type="image/webp" />
-      </head>
       <body className="min-h-screen transition-colors duration-300">
         <ThemeInitializer />
         <Preloader />
