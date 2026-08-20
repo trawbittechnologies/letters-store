@@ -3,6 +3,18 @@ import { defaultCategories } from '@/src/data/initialData';
 
 export const initialCategories = defaultCategories;
 
+const saveToLocalStorage = (categories) => {
+  if (typeof window !== 'undefined') {
+    try {
+      // Strip out the Base64 image string to avoid QuotaExceededError in localStorage
+      const sanitized = categories.map(c => ({ ...c, image: undefined }));
+      localStorage.setItem('letters_categories', JSON.stringify(sanitized));
+    } catch (e) {
+      console.warn('Failed to save to localStorage:', e);
+    }
+  }
+};
+
 export const useCategoryStore = create((set, get) => ({
   categories: defaultCategories,
   isLoading: false,
@@ -25,11 +37,7 @@ export const useCategoryStore = create((set, get) => ({
       const data = await res.json();
       if (data.success && Array.isArray(data.categories)) {
         set({ categories: data.categories, isLoading: false });
-        if (typeof window !== 'undefined') {
-          try {
-            localStorage.setItem('letters_categories', JSON.stringify(data.categories));
-          } catch (e) {}
-        }
+        saveToLocalStorage(data.categories);
         return;
       }
     } catch (e) {
@@ -50,9 +58,7 @@ export const useCategoryStore = create((set, get) => ({
 
     set((state) => {
       const updated = [...state.categories, newCat];
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('letters_categories', JSON.stringify(updated));
-      }
+      saveToLocalStorage(updated);
       return { categories: updated };
     });
 
@@ -79,9 +85,7 @@ export const useCategoryStore = create((set, get) => ({
         }
         return c;
       });
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('letters_categories', JSON.stringify(updated));
-      }
+      saveToLocalStorage(updated);
       return { categories: updated };
     });
 
@@ -101,9 +105,7 @@ export const useCategoryStore = create((set, get) => ({
   deleteCategory: async (id) => {
     set((state) => {
       const updated = state.categories.filter((c) => c.id !== id && c.slug !== id);
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('letters_categories', JSON.stringify(updated));
-      }
+      saveToLocalStorage(updated);
       return { categories: updated };
     });
 
