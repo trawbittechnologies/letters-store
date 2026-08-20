@@ -6,6 +6,7 @@ import Navbar from '@/src/components/Navbar';
 import Footer from '@/src/components/Footer';
 import FloatingWhatsApp from '@/src/components/FloatingWhatsApp';
 import FestiveBottomCutout from '@/src/components/FestiveBottomCutout';
+import Preloader from '@/src/components/Preloader';
 import ThemeInitializer from '@/components/ThemeInitializer';
 
 export const metadata = {
@@ -60,6 +61,7 @@ export default function RootLayout({ children }) {
     <html lang="en" suppressHydrationWarning>
       <body className="min-h-screen transition-colors duration-300">
         <ThemeInitializer />
+        <Preloader />
         <Navbar />
         <main className="min-h-screen">
           {children}
