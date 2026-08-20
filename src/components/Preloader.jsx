@@ -6,9 +6,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 /**
  * Universal Transparent Preloader for Apple (iPad / iPhone / Safari) & All Browsers
  * 
- * Uses a Dual-Engine approach:
- * 1. WebGL GPU Engine: Plays H.264 stacked RGB+Alpha MP4 for 60fps hardware-accelerated transparency on iOS/iPadOS/Safari.
- * 2. Instant Lightweight WebP Engine: 442KB animated WebP fallback for instant zero-delay display.
+ * Uses a Seamless Dual-Engine:
+ * 1. Instant 442KB Animated WebP (starts immediately with zero delay and 100% transparency).
+ * 2. Hardware-Accelerated WebGL Engine (smoothly transitions in with premultiplied alpha and 0 black flash).
  */
 
 export default function Preloader() {
@@ -16,7 +16,7 @@ export default function Preloader() {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const rafRef = useRef(null);
-  const [videoPlaying, setVideoPlaying] = useState(false);
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
     // Lock scroll while preloader is active
@@ -39,18 +39,26 @@ export default function Preloader() {
     const canvas = canvasRef.current;
     if (!video || !canvas) return;
 
-    // Initialize WebGL for alpha compositing
+    // Set canvas internal resolution immediately
+    canvas.width = 1280;
+    canvas.height = 720;
+
     let gl = null;
     try {
-      gl = canvas.getContext('webgl', { alpha: true, premultipliedAlpha: false });
+      gl = canvas.getContext('webgl', {
+        alpha: true,
+        premultipliedAlpha: true,
+        antialias: false,
+      });
     } catch {
       gl = null;
     }
 
-    if (!gl) {
-      // Fallback: WebGL not supported, animated WebP is displayed automatically
-      return;
-    }
+    if (!gl) return;
+
+    gl.viewport(0, 0, 1280, 720);
+    gl.clearColor(0, 0, 0, 0);
+    gl.clear(gl.COLOR_BUFFER_BIT);
 
     const vsSource = `
       attribute vec2 a_position;
@@ -71,7 +79,8 @@ export default function Preloader() {
         vec2 alphaCoord = vec2(v_texCoord.x, 0.5 + v_texCoord.y * 0.5);
         vec4 color = texture2D(u_image, colorCoord);
         float alpha = texture2D(u_image, alphaCoord).r;
-        gl_FragColor = vec4(color.rgb, alpha);
+        // Premultiplied alpha blending: eliminates black background halo/blink
+        gl_FragColor = vec4(color.rgb * alpha, alpha);
       }
     `;
 
@@ -119,20 +128,18 @@ export default function Preloader() {
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
 
-    gl.clearColor(0, 0, 0, 0);
+    let frameCount = 0;
 
     function renderLoop() {
-      if (video.readyState >= 2) {
-        if (canvas.width !== 1280 || canvas.height !== 720) {
-          canvas.width = 1280;
-          canvas.height = 720;
-          gl.viewport(0, 0, 1280, 720);
-        }
+      if (video.readyState >= 2 && video.currentTime > 0.02) {
         gl.bindTexture(gl.TEXTURE_2D, texture);
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, video);
         gl.clear(gl.COLOR_BUFFER_BIT);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
-        setVideoPlaying(true);
+        frameCount++;
+        if (frameCount >= 2) {
+          setIsReady(true);
+        }
       }
       rafRef.current = requestAnimationFrame(renderLoop);
     }
@@ -166,7 +173,7 @@ export default function Preloader() {
           className="fixed inset-0 z-[999999] w-screen h-screen flex items-center justify-center select-none pointer-events-auto"
         >
           <div className="relative flex items-center justify-center w-[min(540px,min(92vw,82vh))] h-[min(540px,min(92vw,82vh))]">
-            {/* Hidden driving video for WebGL alpha extraction */}
+            {/* Offscreen driving video for WebGL alpha extraction */}
             <video
               ref={videoRef}
               src="/loading-stacked.mp4"
@@ -177,14 +184,22 @@ export default function Preloader() {
               webkit-playsinline="true"
               x-webkit-airplay="deny"
               preload="auto"
-              className="hidden"
+              style={{
+                position: 'fixed',
+                top: '-9999px',
+                left: '-9999px',
+                width: '1px',
+                height: '1px',
+                opacity: 0.01,
+                pointerEvents: 'none',
+              }}
             />
 
-            {/* High-speed WebGL GPU Alpha Canvas */}
+            {/* Hardware-Accelerated WebGL Canvas with smooth fade-in once frames are valid */}
             <canvas
               ref={canvasRef}
-              className={`w-full h-full object-contain pointer-events-none ${
-                videoPlaying ? 'opacity-100' : 'opacity-0 absolute inset-0'
+              className={`w-full h-full object-contain pointer-events-none transition-opacity duration-300 ${
+                isReady ? 'opacity-100' : 'opacity-0'
               }`}
               style={{
                 background: 'transparent',
@@ -193,12 +208,12 @@ export default function Preloader() {
               }}
             />
 
-            {/* Instant Lightweight WebP Layer (Displays until WebGL starts / Always active fallback) */}
+            {/* Instant Transparent Animated WebP Layer (Guarantees zero-blink start) */}
             <img
               src="/loading.webp"
               alt="Letters Loading Animation"
-              className={`w-full h-full object-contain pointer-events-none select-none bg-transparent ${
-                videoPlaying ? 'hidden' : 'block'
+              className={`w-full h-full object-contain pointer-events-none select-none bg-transparent absolute inset-0 transition-opacity duration-300 ${
+                isReady ? 'opacity-0 pointer-events-none' : 'opacity-100'
               }`}
               style={{
                 WebkitTransform: 'translateZ(0)',
