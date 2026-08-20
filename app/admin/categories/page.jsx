@@ -368,7 +368,7 @@ export default function AdminCategoriesPage() {
                   <input
                     type="text"
                     required
-                    placeholder="e.g. Islamic Hamper"
+                    placeholder="e.g. Wedding Hamper"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     className="w-full px-3.5 py-2 rounded-lg bg-[var(--bg)] border border-[var(--border)] text-xs text-[var(--text)] focus:outline-none focus:border-[var(--olive)]"

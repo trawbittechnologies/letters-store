@@ -30,9 +30,12 @@ function loadEnv() {
 
 loadEnv();
 
-const DATABASE_URL = process.env.DATABASE_URL || 'postgresql://neondb_owner:npg_L1lHQxBaGCP4@ep-fragrant-sunset-azuxd04n-pooler.c-3.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require';
+const DATABASE_URL = process.env.DATABASE_URL || process.env.POSTGRES_URL;
 
-console.log('Connecting to Neon PostgreSQL at:', DATABASE_URL.split('@')[1] || 'database');
+if (!DATABASE_URL) {
+  console.error('ERROR: DATABASE_URL environment variable is missing. Please set DATABASE_URL in .env.local');
+  process.exit(1);
+}
 
 const sql = neon(DATABASE_URL);
 

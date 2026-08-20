@@ -34,7 +34,7 @@ export default function AdminProductsPage() {
   // Form State for Add / Edit
   const [formData, setFormData] = useState({
     name: '',
-    category: categories[0]?.name || 'Chocolate Hamper',
+    category: categories[0]?.name || 'Wedding Hamper',
     price: '',
     originalPrice: '',
     description: '',
