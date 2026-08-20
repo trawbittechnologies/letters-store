@@ -12,24 +12,8 @@ import { useRouter } from 'next/navigation';
 import { useCartStore } from '@/src/store/cartStore';
 import { useSettingsStore } from '@/src/store/settingsStore';
 
-const hamperBases = [
-  { id: 'box-1', name: 'Handcrafted Wooden Trunk', price: 599, desc: 'Polished pinewood box with brass latch', image: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=600&q=80' },
-  { id: 'box-2', name: 'Royal Velvet Keepsake Box', price: 699, desc: 'Luxe emerald & gold embossed keepsake box', image: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=600&q=80' },
-  { id: 'box-3', name: 'Classic Ivory Hamper Basket', price: 399, desc: 'Eco-friendly handwoven willow basket', image: 'https://images.unsplash.com/photo-1512909006721-3d6018887383?auto=format&fit=crop&w=600&q=80' },
-];
-
-const availableItems = [
-  { id: 'item-1', name: 'Belgian Truffles & Chocolates (Box of 8)', price: 450, category: 'Chocolates' },
-  { id: 'item-2', name: 'Ferrero Rocher Cluster (6 Pcs)', price: 320, category: 'Chocolates' },
-  { id: 'item-3', name: 'Preserved Mini Rose Floral Stem', price: 299, category: 'Flowers' },
-  { id: 'item-4', name: 'Fresh Seasonal Flower Bouquet Mini', price: 499, category: 'Flowers' },
-  { id: 'item-5', name: 'California Roasted Almonds Jar (150g)', price: 380, category: 'Dry Fruits' },
-  { id: 'item-6', name: 'Organic Iranian Pistachios Jar (150g)', price: 420, category: 'Dry Fruits' },
-  { id: 'item-7', name: 'Minimalist Brass Photo Frame (with Print)', price: 450, category: 'Keepsakes' },
-  { id: 'item-8', name: 'Soy Wax Botanical Candle (Vanilla & Rose)', price: 350, category: 'Lifestyle' },
-  { id: 'item-9', name: 'Concentrated Non-Alcoholic Oud Attar', price: 400, category: 'Spiritual' },
-  { id: 'item-10', name: 'Crystal Tasbeeh Prayer Beads', price: 350, category: 'Spiritual' },
-];
+const hamperBases = [];
+const availableItems = [];
 
 function StepNumber({ n }) {
   return (
@@ -44,8 +28,8 @@ export default function CustomGiftPage() {
   const addToCart = useCartStore((state) => state.addToCart);
   const { settings, getWhatsAppUrl } = useSettingsStore();
 
-  const [selectedBase, setSelectedBase] = useState(hamperBases[0]);
-  const [selectedItems, setSelectedItems] = useState([availableItems[0], availableItems[2]]);
+  const [selectedBase, setSelectedBase] = useState(null);
+  const [selectedItems, setSelectedItems] = useState([]);
   const [recipientName, setRecipientName] = useState('');
   const [occasion, setOccasion] = useState('Birthday');
   const [messageCard, setMessageCard] = useState('');
@@ -127,11 +111,21 @@ Please review my custom configuration and confirm delivery timeline.`;
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
-          
-          {/* Configurator Steps */}
-          <div className="lg:col-span-8 space-y-6">
-            
-            {/* Step 1: Base */}
+          {hamperBases.length === 0 ? (
+            <div className="lg:col-span-12 text-center py-20 bg-[var(--card)] rounded-3xl border border-[var(--border)] shadow-sm">
+              <FontAwesomeIcon icon={faWandMagicSparkles} className="text-4xl text-[var(--chandanam)] mb-4" />
+              <h3 className="font-heading text-2xl font-bold text-[var(--text)] mb-2">Our Custom Studio is Being Upgraded</h3>
+              <p className="text-sm text-[var(--text-muted)] max-w-md mx-auto mb-6">We are currently adding new bespoke options. Please check back soon or contact us on WhatsApp to curate a personalized gift.</p>
+              <button onClick={() => window.open(getWhatsAppUrl('Hello LETTERS, I want to create a custom hamper!'), '_blank')} className="gold-btn px-6 py-3 rounded-full text-xs font-bold uppercase tracking-wider">
+                Contact on WhatsApp
+              </button>
+            </div>
+          ) : (
+            <>
+              {/* Configurator Steps */}
+              <div className="lg:col-span-8 space-y-6">
+                
+                {/* Step 1: Base */}
             <div className="bg-[var(--card)] rounded-2xl border border-[var(--border)] p-7">
               <div className="flex items-center gap-3 mb-6">
                 <StepNumber n={1} />
@@ -331,6 +325,8 @@ Please review my custom configuration and confirm delivery timeline.`;
 
             </div>
           </div>
+          </>
+        )}
 
         </div>
 
