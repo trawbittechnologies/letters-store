@@ -312,11 +312,18 @@ export default function AdminLayout({ children }) {
       <div className="flex-1 flex flex-col min-w-0">
         
         {/* Desktop Top Bar */}
-        <header className="hidden md:flex items-center justify-between px-8 py-4 bg-[var(--card)] border-b border-[var(--border)] sticky top-0 z-30 shadow-xs">
-          <div className="flex items-center gap-2 text-xs text-[var(--text-muted)]">
-            <Link href="/admin" className="hover:text-[var(--text)] transition-colors font-medium">Admin</Link>
-            <FontAwesomeIcon icon={faChevronRight} className="text-[9px] opacity-60" />
-            <span className="font-bold text-[var(--text)]">{getCurrentPageTitle()}</span>
+        <header className="hidden md:flex items-center justify-between px-8 py-3 bg-[var(--card)] border-b border-[var(--border)] sticky top-0 z-30 shadow-xs">
+          <div className="flex items-center gap-3">
+            <Link href="/admin" className="flex items-center gap-2.5 hover:opacity-90 transition-opacity">
+              <div className="w-8 h-8 rounded-lg bg-[var(--bg)] border border-[var(--border)] p-1 flex items-center justify-center shadow-xs">
+                <img src="/logo.png" alt="Letters Logo" className="w-full h-full object-contain" />
+              </div>
+              <span className="font-bold text-xs text-[var(--text)] tracking-tight">
+                {settings.brandName || 'Letters'}
+              </span>
+            </Link>
+            <FontAwesomeIcon icon={faChevronRight} className="text-[9px] text-[var(--text-muted)] opacity-60" />
+            <span className="font-bold text-xs text-[var(--text)]">{getCurrentPageTitle()}</span>
           </div>
 
           <div className="flex items-center gap-3">
