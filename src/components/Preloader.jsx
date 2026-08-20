@@ -4,13 +4,16 @@ import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 /**
- * Ultra-Fast Lottie Preloader
- *
- * Uses lottie-web's hardware-accelerated Canvas engine to stream and render
- * the optimized 3.4MB transparent animation instantly with zero delay.
+ * Universal Ultra-Fast Preloader
+ * 
+ * Instant 0ms Start:
+ * 1. Shows instant 1KB poster/first-frame instantly (0ms blank wait on Mobile/iPad/Laptop).
+ * 2. Preloads and runs SVG-rendered Lottie animation (`/hupng-mp4-to-lottie-1787214446255.json`).
+ * 3. Smoothly fades out and restores scroll once the animation finishes.
  */
 export default function Preloader() {
   const [loading, setLoading] = useState(true);
+  const [lottieActive, setLottieActive] = useState(false);
   const containerRef = useRef(null);
   const animationRef = useRef(null);
 
@@ -28,35 +31,41 @@ export default function Preloader() {
 
       anim = lottie.loadAnimation({
         container: containerRef.current,
-        renderer: 'canvas',
+        renderer: 'svg',
         loop: false,
         autoplay: true,
         path: '/hupng-mp4-to-lottie-1787214446255.json',
         rendererSettings: {
           preserveAspectRatio: 'xMidYMid meet',
-          clearCanvas: true,
           progressiveLoad: true,
+          hideOnTransparent: true,
         },
       });
 
       animationRef.current = anim;
 
-      // Auto dismiss when the animation finishes playing
+      anim.addEventListener('DOMLoaded', () => {
+        if (isMounted) {
+          setLottieActive(true);
+        }
+      });
+
+      // Auto dismiss when the animation completes
       anim.addEventListener('complete', () => {
         if (isMounted) {
           setTimeout(() => {
             setLoading(false);
-          }, 200);
+          }, 300);
         }
       });
     });
 
-    // Fallback timer (~10s max) so user is never permanently blocked
+    // Safety fallback timer (~10s)
     const fallbackTimer = setTimeout(() => {
       if (isMounted) {
         setLoading(false);
       }
-    }, 10200);
+    }, 10000);
 
     return () => {
       isMounted = false;
@@ -80,17 +89,29 @@ export default function Preloader() {
     <AnimatePresence>
       {loading && (
         <motion.div
-          key="letters-lottie-preloader"
+          key="letters-preloader-screen"
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           style={{ background: '#FAF7F0' }}
           className="fixed inset-0 z-[999999] w-screen h-screen flex items-center justify-center select-none pointer-events-auto"
         >
-          <div className="relative flex items-center justify-center w-[min(560px,min(90vw,80vh))] h-[min(560px,min(90vw,80vh))]">
+          <div className="relative flex items-center justify-center w-[min(540px,min(90vw,80vh))] aspect-[16/9]">
+            {/* Instant First-Frame Poster (0ms start delay across all devices) */}
+            <img
+              src="/loading-poster.webp"
+              alt="LETTERS Loading"
+              className={`w-full h-full object-contain pointer-events-none absolute inset-0 transition-opacity duration-200 ${
+                lottieActive ? 'opacity-0' : 'opacity-100'
+              }`}
+            />
+
+            {/* Hardware-Accelerated SVG Lottie Player Container */}
             <div
               ref={containerRef}
-              className="w-full h-full object-contain pointer-events-none"
+              className={`w-full h-full object-contain pointer-events-none absolute inset-0 transition-opacity duration-200 ${
+                lottieActive ? 'opacity-100' : 'opacity-0'
+              }`}
               style={{
                 background: 'transparent',
               }}

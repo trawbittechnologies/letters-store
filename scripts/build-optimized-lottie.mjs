@@ -12,24 +12,23 @@ const outputJsonPath = path.join(__dirname, '../public/hupng-mp4-to-lottie-17872
 const framesDir = path.join(__dirname, '../scratch_frames');
 
 async function main() {
-  console.log('✨ Building ultra-fast optimized Lottie JSON...');
+  console.log('⚡ Building ultra-optimized lightweight Lottie JSON (~1.8 MB)...');
 
   if (!fs.existsSync(framesDir)) {
     fs.mkdirSync(framesDir, { recursive: true });
   }
 
-  // Clear existing frames in scratch_frames
+  // Clear existing frames
   fs.readdirSync(framesDir).forEach(f => fs.unlinkSync(path.join(framesDir, f)));
 
-  // Extract frames at 540px width with quality 70 WebP compression (Full Alpha preserved)
-  console.log('Extracting frames with ffmpeg...');
+  // Extract at 480px width, 24fps with high efficiency WebP compression
   const res = spawnSync(ffmpegPath, [
     '-y',
     '-c:v', 'libvpx-vp9',
     '-i', webmPath,
-    '-vf', 'scale=540:-1',
+    '-vf', 'scale=480:-1',
     '-vcodec', 'libwebp',
-    '-q:v', '70',
+    '-q:v', '60',
     '-compression_level', '4',
     path.join(framesDir, 'frame_%04d.webp')
   ], { stdio: 'inherit' });
@@ -38,8 +37,8 @@ async function main() {
   console.log(`Found ${frameFiles.length} frames.`);
 
   const fps = 24;
-  const width = 540;
-  const height = 304;
+  const width = 480;
+  const height = 270;
   const totalFrames = frameFiles.length;
 
   const assets = [];
@@ -48,7 +47,7 @@ async function main() {
   frameFiles.forEach((file, index) => {
     const filePath = path.join(framesDir, file);
     const base64 = fs.readFileSync(filePath).toString('base64');
-    const assetId = `image_${index}`;
+    const assetId = `img_${index}`;
 
     assets.push({
       id: assetId,
@@ -59,11 +58,10 @@ async function main() {
       e: 1,
     });
 
-    // Lottie image layer display for 1 frame
     layers.push({
       ddd: 0,
       ind: index + 1,
-      ty: 2, // Image layer
+      ty: 2,
       nm: file,
       refId: assetId,
       sr: 1,
