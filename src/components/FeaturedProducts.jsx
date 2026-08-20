@@ -14,6 +14,11 @@ export default function FeaturedProducts() {
 
   const filterTabs = ['All', 'Signature Hampers', 'Bouquets & Florals', 'Bespoke Keepsakes'];
 
+  const activeProducts = products.filter((p) => p.active);
+  if (activeProducts.length === 0) {
+    return null;
+  }
+
   const filteredProducts = products
     .filter((p) => {
       if (!p.active) return false;

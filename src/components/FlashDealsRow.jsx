@@ -41,6 +41,10 @@ export default function FlashDealsRow() {
       return { ...p, originalPrice: orig, discount, claimed };
     });
 
+  if (dealItems.length === 0) {
+    return null;
+  }
+
   const handleAdd = (e, item) => {
     e.preventDefault();
     e.stopPropagation();

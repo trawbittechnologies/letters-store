@@ -14,6 +14,10 @@ export default function AmazonQuadGrid() {
   const budgetProducts = products.filter((p) => p.active && p.price <= 1500).slice(0, 4);
   const showcaseCategories = categories.filter((c) => c.enabled).slice(0, 4);
 
+  if (dealProducts.length === 0 && budgetProducts.length === 0 && showcaseCategories.length === 0) {
+    return null;
+  }
+
   return (
     <section className="py-8 px-4 sm:px-6 lg:px-12 bg-[var(--bg)]">
       <div className="max-w-7xl mx-auto">

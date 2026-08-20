@@ -10,6 +10,10 @@ export default function FeaturedCategories() {
   const { categories } = useCategoryStore();
   const enabledCategories = categories.filter((c) => c.enabled);
 
+  if (enabledCategories.length === 0) {
+    return null;
+  }
+
   return (
     <section id="categories" className="py-20 lg:py-28 px-4 sm:px-6 lg:px-12 bg-[var(--bg)] transition-colors duration-300 relative overflow-hidden">
 
