@@ -13,6 +13,7 @@ import {
 import { faHeart as faHeartRegular } from '@fortawesome/free-regular-svg-icons';
 import { faWhatsapp } from '@fortawesome/free-brands-svg-icons';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useCartStore } from '../store/cartStore';
 import { useSettingsStore } from '../store/settingsStore';
 
@@ -59,12 +60,13 @@ export default function ProductCard({ product, index = 0 }) {
     <article className="card-minimal flex flex-col justify-between h-full group bg-[var(--card)] rounded-2xl border border-[var(--border)] overflow-hidden transition-all duration-300 hover:shadow-md hover:border-[var(--olive)]/30">
       {/* Product Image Container */}
       <div className="relative aspect-square overflow-hidden bg-[var(--bg-subtle)]">
-        <Link href={`/product/${product.slug}`} className="block w-full h-full">
-          <img
-            src={product.images?.[0] || product.image}
+        <Link href={`/product/${product.slug}`} className="block w-full h-full relative">
+          <Image
+            src={product.images?.[0] || product.image || 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=800&q=80'}
             alt={product.name}
-            loading="lazy"
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+            className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
           />
         </Link>
 

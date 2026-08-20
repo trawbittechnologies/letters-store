@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -149,13 +150,12 @@ export default function FestivalHamperSection() {
         
         {/* Full Bleed Background Image with Fallback */}
         <div className="absolute inset-0 z-0">
-          <img
+          <Image
             src={currentFestival.banner || 'https://images.unsplash.com/photo-1607344645866-009c320b5ab8?auto=format&fit=crop&w=1920&q=85'}
             alt={currentFestival.title || currentFestival.name}
-            onError={(e) => {
-              e.currentTarget.src = 'https://images.unsplash.com/photo-1607344645866-009c320b5ab8?auto=format&fit=crop&w=1920&q=85';
-            }}
-            className="w-full h-full object-cover object-center transform scale-105 transition-transform duration-1000 ease-out"
+            fill
+            sizes="100vw"
+            className="object-cover object-center transform scale-105 transition-transform duration-1000 ease-out"
           />
           {/* Multi-layered cinematic gradient for superior legibility and luxury depth */}
           <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/80 to-black/40 sm:to-black/30" />
@@ -297,11 +297,12 @@ export default function FestivalHamperSection() {
                   >
                     {/* Visual Frame */}
                     <div className="relative aspect-square overflow-hidden bg-[var(--bg-subtle)]">
-                      <img
+                      <Image
                         src={item.image || (item.images && item.images[0]) || 'https://images.unsplash.com/photo-1607344645866-009c320b5ab8?auto=format&fit=crop&w=800&q=80'}
                         alt={item.title || item.name}
-                        loading="lazy"
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                        fill
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                        className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
                       />
 
                       {/* Badges */}
@@ -521,11 +522,13 @@ export default function FestivalHamperSection() {
               <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
                 {/* Visual Preview */}
                 <div className="md:col-span-5">
-                  <div className="aspect-square rounded-2xl overflow-hidden bg-[var(--bg-subtle)] mb-3 border border-[var(--border)]">
-                    <img
-                      src={inspectItem.image || (inspectItem.images && inspectItem.images[0])}
+                  <div className="relative aspect-square rounded-2xl overflow-hidden bg-[var(--bg-subtle)] mb-3 border border-[var(--border)]">
+                    <Image
+                      src={inspectItem.image || (inspectItem.images && inspectItem.images[0]) || 'https://images.unsplash.com/photo-1607344645866-009c320b5ab8?auto=format&fit=crop&w=800&q=80'}
                       alt={inspectItem.title || inspectItem.name}
-                      className="w-full h-full object-cover"
+                      fill
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                      className="object-cover"
                     />
                   </div>
                   <div className="p-3 rounded-xl bg-[var(--bg-subtle)] border border-[var(--border)]/60 text-xs">

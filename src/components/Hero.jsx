@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { faWhatsapp } from '@fortawesome/free-brands-svg-icons';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useSettingsStore } from '../store/settingsStore';
 import { motion } from 'framer-motion';
 import { DoodleSparkle, DoodleOliveBranch, DoodleSwirl, DoodleWavyUnderline } from './Doodles';
@@ -32,10 +33,13 @@ export default function Hero() {
 
       {/* Full-bleed right image */}
       <div className="absolute right-0 top-0 bottom-0 w-full lg:w-[60%] pointer-events-none">
-        <img
+        <Image
           src="/hero-bg.png"
           alt="LETTERS luxury gift hamper"
-          className="w-full h-full object-cover object-[center_20%] lg:object-right select-none"
+          fill
+          priority
+          sizes="(max-width: 1024px) 100vw, 60vw"
+          className="object-cover object-[center_20%] lg:object-right select-none"
           style={{ filter: 'saturate(1.45) contrast(1.05)' }}
         />
         <div className="absolute inset-0 bg-gradient-to-r from-[#FAF6EE] via-[#FAF6EE]/80 lg:via-[#FAF6EE]/50 lg:to-[#FAF6EE]/10 to-transparent" />
