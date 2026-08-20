@@ -11,7 +11,6 @@ import {
   faEye,
   faCheck,
   faSliders,
-  faCircleCheck,
   faUpload,
   faBox,
   faSearch,
@@ -19,6 +18,7 @@ import {
   faMinus,
   faLayerGroup,
   faFire,
+  faImage,
 } from '@fortawesome/free-solid-svg-icons';
 import { useSaleBannerStore } from '@/src/store/saleBannerStore';
 import { useProductStore } from '@/src/store/productStore';
@@ -52,15 +52,26 @@ export default function AdminSaleBannerPage() {
   };
 
   // Toggle a single product in or out of the sale
-  const handleToggleProductInSale = (productId) => {
+  const handleToggleProductInSale = async (product) => {
+    const isAdding = !(formData.selectedProductIds || []).includes(product.id);
+
     setFormData((prev) => {
       const currentIds = prev.selectedProductIds || [];
-      const exists = currentIds.includes(productId);
+      const exists = currentIds.includes(product.id);
       const updated = exists
-        ? currentIds.filter((id) => id !== productId)
-        : [...currentIds, productId];
+        ? currentIds.filter((id) => id !== product.id)
+        : [...currentIds, product.id];
       return { ...prev, selectedProductIds: updated };
     });
+
+    // If adding and product has no originalPrice, set default 20% discount
+    if (isAdding && (!product.originalPrice || product.originalPrice <= product.price)) {
+      const orig = Math.round(product.price * 1.25);
+      await updateProduct(product.id, {
+        originalPrice: orig,
+        price: product.price,
+      });
+    }
   };
 
   // Select all / Deselect all
@@ -75,8 +86,9 @@ export default function AdminSaleBannerPage() {
 
   // Apply a quick discount % to a specific product
   const handleApplyProductDiscount = async (product, percent) => {
-    const orig = product.originalPrice || Math.round(product.price * 1.3);
-    const newPrice = Math.round(orig * (1 - percent / 100));
+    const pVal = Math.max(0, Math.min(95, Number(percent) || 0));
+    const orig = product.originalPrice || (pVal > 0 ? Math.round(product.price * 1.25) : product.price);
+    const newPrice = pVal > 0 ? Math.round(orig * (1 - pVal / 100)) : orig;
     await updateProduct(product.id, {
       originalPrice: orig,
       price: newPrice,
@@ -101,7 +113,7 @@ export default function AdminSaleBannerPage() {
   };
 
   const handleSave = async (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     setSaving(true);
     try {
       await updateSaleBanner(formData);
@@ -131,7 +143,7 @@ export default function AdminSaleBannerPage() {
       if (selectedCategoryTab !== 'All' && p.category !== selectedCategoryTab) return false;
       if (productSearch.trim()) {
         const q = productSearch.toLowerCase();
-        return p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q);
+        return p.name.toLowerCase().includes(q) || (p.category || '').toLowerCase().includes(q);
       }
       return true;
     });
@@ -142,53 +154,60 @@ export default function AdminSaleBannerPage() {
     return ['All', ...Array.from(set)];
   }, [products]);
 
-  const selectedCount = (formData.selectedProductIds || []).length;
+  const selectedCount = (formData?.selectedProductIds || []).length;
+
+  if (!formData) {
+    return (
+      <div className="p-8 text-center text-xs text-[var(--text-muted)]">
+        Loading Sale Banner Configuration...
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-8 max-w-7xl pb-20">
+    <div className="space-y-6 max-w-7xl pb-16 font-sans">
       
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-[var(--border)]">
+      {/* ========================================================================= */}
+      {/* 1. MINIMAL HEADER */}
+      {/* ========================================================================= */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2 border-b border-[var(--border)]">
         <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[var(--maroon)] text-white text-xs">
-              <FontAwesomeIcon icon={faPercent} />
-            </span>
-            <span className="text-xs font-bold uppercase tracking-wider text-[var(--accent-secondary)]">
-              Marketing &amp; Promotions
+          <div className="flex items-center gap-2.5">
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-[var(--text)]">
+              Sale &amp; Banners Manager
+            </h1>
+            <span
+              className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${
+                formData.enabled
+                  ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20'
+                  : 'bg-stone-500/10 text-stone-600 dark:text-stone-400 border-stone-500/20'
+              }`}
+            >
+              {formData.enabled ? `${selectedCount} Items in Active Sale` : 'Sale Standby'}
             </span>
           </div>
-          <h1 className="font-heading text-2xl sm:text-3xl font-bold text-[var(--text)] tracking-tight">
-            Mega Sale &amp; Discounted Items Manager
-          </h1>
-          <p className="text-xs sm:text-[13px] text-[var(--text-muted)] mt-1">
-            Control the billboard banner, countdown timer, and <strong>select specific products to include in the sale</strong> with custom discounts.
+          <p className="text-xs text-[var(--text-muted)] mt-1">
+            Configure homepage billboard campaigns, countdown timers, and discount percentages.
           </p>
         </div>
 
-        {/* Global Sale Status Badge & Save Button */}
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 bg-[var(--card)] px-4 py-2 rounded-full border border-[var(--border)] shadow-2xs">
-            <span className={`w-2.5 h-2.5 rounded-full ${formData.enabled ? 'bg-emerald-500 animate-pulse' : 'bg-rose-500'}`} />
-            <span className="text-xs font-bold">
-              {formData.enabled ? `${selectedCount} Items in Active Sale` : 'Sale Section Hidden'}
-            </span>
-          </div>
-
+        {/* Action Button */}
+        <div className="flex items-center gap-2">
           <button
+            type="button"
             onClick={handleSave}
             disabled={saving}
-            className="gold-btn px-6 py-2.5 text-xs font-bold tracking-wider uppercase inline-flex items-center gap-2 shadow-sm cursor-pointer disabled:opacity-50"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--olive)] text-white text-xs font-bold hover:bg-[var(--olive-hover)] shadow-xs transition-colors cursor-pointer disabled:opacity-50"
           >
             {saving ? (
               <>
-                <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
                 <span>Saving...</span>
               </>
             ) : saveSuccess ? (
               <>
                 <FontAwesomeIcon icon={faCheck} className="text-xs" />
-                <span>Saved!</span>
+                <span>Saved &amp; Published!</span>
               </>
             ) : (
               <>
@@ -201,140 +220,151 @@ export default function AdminSaleBannerPage() {
       </div>
 
       {saveSuccess && (
-        <div className="bg-emerald-500/10 border border-emerald-500/30 text-emerald-800 dark:text-emerald-300 p-4 rounded-xl flex items-center gap-3 text-xs font-semibold animate-fadeIn">
-          <FontAwesomeIcon icon={faCircleCheck} className="text-base text-emerald-500" />
-          <span>Mega Sale Banner &amp; selected sale products updated successfully! Public storefront is live with updated items.</span>
+        <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-300 px-4 py-3 rounded-xl flex items-center gap-2.5 text-xs font-semibold animate-fadeIn">
+          <FontAwesomeIcon icon={faCheck} className="text-emerald-600" />
+          <span>Mega Sale Banner and product selection updated successfully.</span>
         </div>
       )}
 
-      {/* Main Form & Live Preview Grid */}
-      <form onSubmit={handleSave} className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      {/* ========================================================================= */}
+      {/* 2. FORM & LIVE PREVIEW GRID */}
+      {/* ========================================================================= */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         
         {/* Left Form Controls (7 cols) */}
         <div className="lg:col-span-7 space-y-6">
           
-          {/* Section Visibility Switches Card */}
-          <div className="bg-[var(--card)] rounded-2xl border border-[var(--border)] p-5 sm:p-6 shadow-2xs space-y-5">
-            <h3 className="text-sm font-bold uppercase tracking-wider text-[var(--text)] flex items-center gap-2">
-              <FontAwesomeIcon icon={faSliders} className="text-[var(--accent)]" />
+          {/* Section Visibility Switches */}
+          <div className="bg-[var(--card)] rounded-2xl border border-[var(--border)] p-5 shadow-xs space-y-4">
+            <h2 className="text-xs font-bold uppercase tracking-wider text-[var(--text)] flex items-center gap-2">
+              <FontAwesomeIcon icon={faSliders} className="text-[var(--olive)]" />
               <span>Section Visibility &amp; Toggles</span>
-            </h3>
+            </h2>
 
             {/* Main Sale Section Toggle */}
-            <div className="flex items-center justify-between p-3.5 rounded-xl bg-[var(--bg-subtle)] border border-[var(--border)]">
+            <div className="flex items-center justify-between p-3.5 rounded-xl bg-[var(--bg)]/70 border border-[var(--border)]">
               <div>
-                <h4 className="text-xs font-bold text-[var(--text)]">Enable Mega Sale Section</h4>
+                <h3 className="text-xs font-bold text-[var(--text)]">Enable Mega Sale Showcase</h3>
                 <p className="text-[11px] text-[var(--text-muted)] mt-0.5">
-                  Show or hide the Seasonal Discount Studio showcase on the home page.
+                  Display the promotional billboard on the storefront homepage.
                 </p>
               </div>
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={formData.enabled || false}
-                  onChange={(e) => handleChange('enabled', e.target.checked)}
-                  className="sr-only peer"
+              <button
+                type="button"
+                role="switch"
+                aria-checked={formData.enabled || false}
+                onClick={() => handleChange('enabled', !formData.enabled)}
+                className={`relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                  formData.enabled ? 'bg-[var(--olive)]' : 'bg-stone-300 dark:bg-stone-700'
+                }`}
+              >
+                <span
+                  aria-hidden="true"
+                  className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow-xs transition duration-200 ease-in-out ${
+                    formData.enabled ? 'translate-x-4' : 'translate-x-0'
+                  }`}
                 />
-                <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[var(--olive)]"></div>
-              </label>
+              </button>
             </div>
 
             {/* Top Navbar Alert Bar Toggle */}
-            <div className="flex items-center justify-between p-3.5 rounded-xl bg-[var(--bg-subtle)] border border-[var(--border)]">
+            <div className="flex items-center justify-between p-3.5 rounded-xl bg-[var(--bg)]/70 border border-[var(--border)]">
               <div>
-                <h4 className="text-xs font-bold text-[var(--text)]">Show Top Sale Alert Bar (Under Navbar)</h4>
+                <h3 className="text-xs font-bold text-[var(--text)]">Show Top Announcement Bar</h3>
                 <p className="text-[11px] text-[var(--text-muted)] mt-0.5">
-                  Display the countdown ticker ticker right at the top under the navbar.
+                  Display the countdown ticker at the top under the navigation bar.
                 </p>
               </div>
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={formData.showTopBar || false}
-                  onChange={(e) => handleChange('showTopBar', e.target.checked)}
-                  className="sr-only peer"
+              <button
+                type="button"
+                role="switch"
+                aria-checked={formData.showTopBar || false}
+                onClick={() => handleChange('showTopBar', !formData.showTopBar)}
+                className={`relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                  formData.showTopBar ? 'bg-[var(--olive)]' : 'bg-stone-300 dark:bg-stone-700'
+                }`}
+              >
+                <span
+                  aria-hidden="true"
+                  className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow-xs transition duration-200 ease-in-out ${
+                    formData.showTopBar ? 'translate-x-4' : 'translate-x-0'
+                  }`}
                 />
-                <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[var(--olive)]"></div>
-              </label>
+              </button>
             </div>
           </div>
 
-          {/* Banner Details & End Timer */}
-          <div className="bg-[var(--card)] rounded-2xl border border-[var(--border)] p-5 sm:p-6 shadow-2xs space-y-4">
-            <h3 className="text-sm font-bold uppercase tracking-wider text-[var(--text)] flex items-center gap-2">
-              <FontAwesomeIcon icon={faTag} className="text-[var(--accent)]" />
+          {/* Banner Content & Countdown */}
+          <div className="bg-[var(--card)] rounded-2xl border border-[var(--border)] p-5 shadow-xs space-y-4">
+            <h2 className="text-xs font-bold uppercase tracking-wider text-[var(--text)] flex items-center gap-2">
+              <FontAwesomeIcon icon={faTag} className="text-[var(--olive)]" />
               <span>Banner Content &amp; Countdown Timer</span>
-            </h3>
+            </h2>
 
             {/* Title & Calligraphy */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
               <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-[var(--text-muted)] mb-1.5">
-                  Banner Title
+                <label className="block font-bold text-[var(--text)] uppercase text-[10px] mb-1">
+                  Banner Title *
                 </label>
                 <input
                   type="text"
                   value={formData.title || ''}
                   onChange={(e) => handleChange('title', e.target.value)}
-                  placeholder="e.g. Grand Gifting & Hamper Mega Sale"
-                  className="input-warm"
+                  placeholder="e.g. Grand Gifting Mega Sale"
+                  className="w-full px-3.5 py-2 rounded-lg bg-[var(--bg)] border border-[var(--border)] text-xs text-[var(--text)] focus:outline-none focus:border-[var(--olive)]"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-[var(--text-muted)] mb-1.5">
-                  Calligraphy Tagline / Subtitle
+                <label className="block font-bold text-[var(--text)] uppercase text-[10px] mb-1">
+                  Tagline / Subtitle
                 </label>
                 <input
                   type="text"
                   value={formData.calligraphy || ''}
                   onChange={(e) => handleChange('calligraphy', e.target.value)}
                   placeholder="e.g. Exclusive Flash Drop"
-                  className="input-warm"
+                  className="w-full px-3.5 py-2 rounded-lg bg-[var(--bg)] border border-[var(--border)] text-xs text-[var(--text)] focus:outline-none focus:border-[var(--olive)]"
                 />
               </div>
             </div>
 
             {/* Event Tag & Offer Badge */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
               <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-[var(--text-muted)] mb-1.5">
+                <label className="block font-bold text-[var(--text)] uppercase text-[10px] mb-1">
                   Top Event Pill Tag
                 </label>
                 <input
                   type="text"
                   value={formData.tag || ''}
                   onChange={(e) => handleChange('tag', e.target.value)}
-                  placeholder="e.g. BIG BILLION SAVINGS • MEGA SALE LIVE"
-                  className="input-warm"
+                  placeholder="e.g. FESTIVE DROPS"
+                  className="w-full px-3.5 py-2 rounded-lg bg-[var(--bg)] border border-[var(--border)] text-xs text-[var(--text)] focus:outline-none focus:border-[var(--olive)]"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-[var(--text-muted)] mb-1.5">
-                  Discount Offer Text
+                <label className="block font-bold text-[var(--text)] uppercase text-[10px] mb-1">
+                  Discount Highlight Badge
                 </label>
                 <input
                   type="text"
                   value={formData.discountOffer || ''}
                   onChange={(e) => handleChange('discountOffer', e.target.value)}
-                  placeholder="e.g. UP TO 40% OFF"
-                  className="input-warm"
+                  placeholder="e.g. FLAT 30% OFF"
+                  className="w-full px-3.5 py-2 rounded-lg bg-[var(--bg)] border border-[var(--border)] text-xs text-[var(--text)] focus:outline-none focus:border-[var(--olive)]"
                 />
               </div>
             </div>
 
-            {/* End Timer Date & Time Picker */}
+            {/* Timer End Date */}
             <div>
-              <div className="flex items-center justify-between mb-1.5">
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-[var(--text-muted)]">
-                  Sale End Date &amp; Time (Countdown Target)
-                </label>
-                <span className="text-[11px] font-semibold text-[var(--maroon)]">
-                  ⏱ {calculateRemaining()}
-                </span>
-              </div>
+              <label className="block font-bold text-[var(--text)] uppercase text-[10px] mb-1">
+                Sale End Date &amp; Time (Countdown) *
+              </label>
               <input
                 type="datetime-local"
                 value={formData.endDate ? formData.endDate.substring(0, 16) : ''}
@@ -342,63 +372,87 @@ export default function AdminSaleBannerPage() {
                   const d = new Date(e.target.value);
                   handleChange('endDate', d.toISOString());
                 }}
-                className="input-warm"
+                className="w-full px-3.5 py-2 rounded-lg bg-[var(--bg)] border border-[var(--border)] text-xs text-[var(--text)] focus:outline-none focus:border-[var(--olive)]"
                 required
               />
             </div>
 
             {/* Description */}
             <div>
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-[var(--text-muted)] mb-1.5">
+              <label className="block font-bold text-[var(--text)] uppercase text-[10px] mb-1">
                 Banner Description
               </label>
               <textarea
-                rows={3}
+                rows={2}
                 value={formData.description || ''}
                 onChange={(e) => handleChange('description', e.target.value)}
                 placeholder="Describe the promo discounts, special packages or gifts included..."
-                className="input-warm resize-none"
+                className="w-full px-3.5 py-2 rounded-lg bg-[var(--bg)] border border-[var(--border)] text-xs text-[var(--text)] focus:outline-none focus:border-[var(--olive)] resize-none"
               />
             </div>
 
-            {/* Image URL & File Upload Input */}
-            <div className="space-y-2">
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-[var(--text-muted)]">
-                Banner Image (URL or Upload)
+            {/* Banner Image Upload Box */}
+            <div>
+              <label className="block font-bold text-[var(--text)] uppercase text-[10px] mb-1.5">
+                Banner Artwork Image *
               </label>
-              
-              <div className="flex flex-col sm:flex-row items-center gap-2">
-                <input
-                  type="url"
-                  value={formData.image || ''}
-                  onChange={(e) => handleChange('image', e.target.value)}
-                  placeholder="https://images.unsplash.com/..."
-                  className="input-warm flex-grow"
-                />
 
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/*"
-                  onChange={handleFileUpload}
-                  className="hidden"
-                />
-                
-                <button
-                  type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  className="w-full sm:w-auto px-4 py-2.5 rounded-xl border border-[var(--border)] bg-[var(--bg-subtle)] text-xs font-semibold text-[var(--text)] hover:bg-[var(--card)] hover:border-[var(--chandanam)] transition-all flex items-center justify-center gap-1.5 cursor-pointer shrink-0"
-                >
-                  <FontAwesomeIcon icon={faUpload} className="text-xs text-[var(--chandanam)]" />
-                  <span>Upload File</span>
-                </button>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleFileUpload}
+                className="hidden"
+              />
+
+              <div className="flex flex-col sm:flex-row items-center gap-3.5 p-3.5 rounded-xl border border-dashed border-[var(--border)] bg-[var(--bg)]/60">
+                {/* Thumbnail Preview */}
+                <div className="w-28 h-16 rounded-lg border border-[var(--border)] bg-[var(--card)] overflow-hidden flex items-center justify-center flex-shrink-0 shadow-xs">
+                  {formData.image ? (
+                    <img
+                      src={formData.image}
+                      alt="Banner artwork"
+                      className="w-full h-full object-cover"
+                      onError={(e) => { e.target.src = '/logo.png'; }}
+                    />
+                  ) : (
+                    <FontAwesomeIcon icon={faImage} className="text-2xl text-[var(--text-muted)] opacity-40" />
+                  )}
+                </div>
+
+                {/* Upload Actions */}
+                <div className="flex-1 text-center sm:text-left space-y-1.5">
+                  <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-[var(--olive)] text-white text-xs font-semibold hover:bg-[var(--olive-hover)] shadow-xs transition-colors cursor-pointer"
+                    >
+                      <FontAwesomeIcon icon={faUpload} className="text-[10px]" />
+                      <span>{formData.image ? 'Change Artwork' : 'Upload Artwork'}</span>
+                    </button>
+
+                    {formData.image && (
+                      <button
+                        type="button"
+                        onClick={() => handleChange('image', '')}
+                        className="px-2.5 py-1.5 rounded-lg border border-[var(--border)] bg-[var(--card)] hover:bg-rose-50 text-rose-600 text-xs font-semibold cursor-pointer transition-colors"
+                      >
+                        Remove
+                      </button>
+                    )}
+                  </div>
+                  <p className="text-[10.5px] text-[var(--text-muted)]">
+                    Direct local file upload for desktop &amp; mobile banners (Max 5MB).
+                  </p>
+                </div>
               </div>
             </div>
 
             {/* CTA Button Text & Link */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
               <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-[var(--text-muted)] mb-1.5">
+                <label className="block font-bold text-[var(--text)] uppercase text-[10px] mb-1">
                   CTA Button Text
                 </label>
                 <input
@@ -406,20 +460,20 @@ export default function AdminSaleBannerPage() {
                   value={formData.ctaText || ''}
                   onChange={(e) => handleChange('ctaText', e.target.value)}
                   placeholder="e.g. Explore Deals"
-                  className="input-warm"
+                  className="w-full px-3.5 py-2 rounded-lg bg-[var(--bg)] border border-[var(--border)] text-xs text-[var(--text)] focus:outline-none focus:border-[var(--olive)]"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-[var(--text-muted)] mb-1.5">
-                  CTA Button Destination Page
+                <label className="block font-bold text-[var(--text)] uppercase text-[10px] mb-1">
+                  CTA Button Destination
                 </label>
                 <input
                   type="text"
                   value={formData.ctaLink || '/deals'}
                   onChange={(e) => handleChange('ctaLink', e.target.value)}
                   placeholder="/deals"
-                  className="input-warm"
+                  className="w-full px-3.5 py-2 rounded-lg bg-[var(--bg)] border border-[var(--border)] text-xs text-[var(--text)] focus:outline-none focus:border-[var(--olive)]"
                 />
               </div>
             </div>
@@ -427,16 +481,16 @@ export default function AdminSaleBannerPage() {
           </div>
 
           {/* ========================================================================= */}
-          {/* SALE PRODUCTS SELECTOR & DISCOUNT CUSTOMIZER */}
+          {/* 3. SALE PRODUCTS SELECTOR & DISCOUNT % CUSTOMIZER */}
           {/* ========================================================================= */}
-          <div className="bg-[var(--card)] rounded-2xl border border-[var(--border)] p-5 sm:p-6 shadow-2xs space-y-4">
+          <div className="bg-[var(--card)] rounded-2xl border border-[var(--border)] p-5 shadow-xs space-y-4">
             
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[var(--border)]">
               <div>
-                <h3 className="text-sm font-bold uppercase tracking-wider text-[var(--text)] flex items-center gap-2">
-                  <FontAwesomeIcon icon={faBox} className="text-[var(--maroon)]" />
-                  <span>Select Products to Include in Sale</span>
-                </h3>
+                <h2 className="text-xs font-bold uppercase tracking-wider text-[var(--text)] flex items-center gap-2">
+                  <FontAwesomeIcon icon={faBox} className="text-[var(--olive)]" />
+                  <span>Select Products Included in Sale</span>
+                </h2>
                 <p className="text-xs text-[var(--text-muted)] mt-0.5">
                   Only the items checked below will appear in the Mega Sale and Deals page.
                 </p>
@@ -444,7 +498,7 @@ export default function AdminSaleBannerPage() {
 
               {/* Selection Summary and Shortcuts */}
               <div className="flex items-center gap-2">
-                <span className="text-xs font-bold text-[var(--maroon)] bg-[var(--maroon-light)] px-3 py-1 rounded-full">
+                <span className="text-xs font-bold text-[var(--olive)] bg-[var(--olive)]/10 px-2.5 py-0.5 rounded-full border border-[var(--olive)]/20">
                   {selectedCount} Selected
                 </span>
                 <button
@@ -454,7 +508,7 @@ export default function AdminSaleBannerPage() {
                 >
                   Select All
                 </button>
-                <span className="text-gray-300">•</span>
+                <span className="text-stone-300">•</span>
                 <button
                   type="button"
                   onClick={handleDeselectAll}
@@ -474,7 +528,7 @@ export default function AdminSaleBannerPage() {
                   placeholder="Search products to add to sale..."
                   value={productSearch}
                   onChange={(e) => setProductSearch(e.target.value)}
-                  className="input-warm pl-9 text-xs py-2"
+                  className="w-full pl-9 pr-3.5 py-2 rounded-lg bg-[var(--bg)] border border-[var(--border)] text-xs text-[var(--text)] focus:outline-none focus:border-[var(--olive)]"
                 />
               </div>
 
@@ -486,8 +540,8 @@ export default function AdminSaleBannerPage() {
                     onClick={() => setSelectedCategoryTab(cat)}
                     className={`text-[11px] font-semibold px-2.5 py-1 rounded-lg transition-all cursor-pointer ${
                       selectedCategoryTab === cat
-                        ? 'bg-[var(--text)] text-[var(--bg)]'
-                        : 'bg-[var(--bg-subtle)] text-[var(--text-muted)] hover:text-[var(--text)]'
+                        ? 'bg-[var(--olive)] text-white shadow-xs font-bold'
+                        : 'bg-[var(--bg)] text-[var(--text-muted)] hover:text-[var(--text)] border border-[var(--border)]'
                     }`}
                   >
                     {cat}
@@ -496,90 +550,127 @@ export default function AdminSaleBannerPage() {
               </div>
             </div>
 
-            {/* Products List with 1-Click Sale Switch & Quick Discount Presets */}
-            <div className="space-y-2.5 max-h-96 overflow-y-auto pr-1">
-              {filteredProducts.map((p) => {
-                const isSelected = (formData.selectedProductIds || []).includes(p.id);
-                const discountPercent = p.originalPrice
-                  ? Math.round(((p.originalPrice - p.price) / p.originalPrice) * 100)
-                  : 0;
+            {/* Products Table with 1-Click Sale Switch and Discount % Manager */}
+            <div className="border border-[var(--border)] rounded-xl overflow-hidden shadow-xs max-h-[420px] overflow-y-auto">
+              {filteredProducts.length > 0 ? (
+                <table className="w-full text-left text-xs">
+                  <thead>
+                    <tr className="bg-[var(--bg)]/70 border-b border-[var(--border)] text-[var(--text-muted)] uppercase tracking-wider text-[10px] sticky top-0 z-10 backdrop-blur-xs">
+                      <th className="py-2.5 px-3.5 font-bold">Product</th>
+                      <th className="py-2.5 px-3 font-bold hidden sm:table-cell">Category</th>
+                      <th className="py-2.5 px-3 font-bold">Price (₹)</th>
+                      <th className="py-2.5 px-3 font-bold">Sale Discount %</th>
+                      <th className="py-2.5 px-3.5 font-bold text-right">In Sale</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-[var(--border)]/70">
+                    {filteredProducts.map((p) => {
+                      const isSelected = (formData.selectedProductIds || []).includes(p.id);
+                      const discountPercent = p.originalPrice && p.originalPrice > p.price
+                        ? Math.round(((p.originalPrice - p.price) / p.originalPrice) * 100)
+                        : 0;
 
-                return (
-                  <div
-                    key={p.id}
-                    className={`p-3 rounded-xl border transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
-                      isSelected
-                        ? 'bg-[var(--card)] border-[var(--chandanam)] shadow-xs ring-1 ring-[var(--chandanam)]/30'
-                        : 'bg-[var(--bg-subtle)] border-[var(--border)] opacity-70 hover:opacity-100'
-                    }`}
-                  >
-                    {/* Left: Thumbnail & Info */}
-                    <div className="flex items-center gap-3">
-                      <img
-                        src={p.images?.[0] || p.image}
-                        alt={p.name}
-                        className="w-11 h-11 rounded-lg object-cover border border-[var(--border)] shrink-0"
-                      />
-                      <div className="overflow-hidden">
-                        <div className="flex items-center gap-2">
-                          <h4 className="text-xs font-bold text-[var(--text)] truncate max-w-xs">{p.name}</h4>
-                          <span className="text-[9.5px] font-semibold text-[var(--accent-secondary)]">{p.category}</span>
-                        </div>
-                        <div className="flex items-center gap-2 mt-0.5">
-                          <span className="text-xs font-bold text-[var(--text)]">₹{p.price.toLocaleString()}</span>
-                          {p.originalPrice && p.originalPrice > p.price && (
-                            <span className="text-[10.5px] text-[var(--text-muted)] line-through">
-                              ₹{p.originalPrice.toLocaleString()}
-                            </span>
-                          )}
-                          {discountPercent > 0 && (
-                            <span className="text-[9.5px] font-bold text-[#5A7249] bg-[#5A7249]/10 px-1.5 py-0.2 rounded">
-                              {discountPercent}% OFF
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    </div>
+                      return (
+                        <tr
+                          key={p.id}
+                          className={`hover:bg-[var(--bg)]/40 transition-colors ${
+                            isSelected ? 'bg-[var(--olive)]/5' : ''
+                          }`}
+                        >
+                          {/* Product */}
+                          <td className="py-2.5 px-3.5">
+                            <div className="flex items-center gap-2.5">
+                              <img
+                                src={p.images?.[0] || p.image || '/logo.png'}
+                                alt={p.name}
+                                className="w-9 h-9 rounded-lg object-cover border border-[var(--border)] flex-shrink-0 bg-[var(--bg)]"
+                                onError={(e) => { e.target.src = '/logo.png'; }}
+                              />
+                              <div className="overflow-hidden">
+                                <p className="font-bold text-[var(--text)] text-xs truncate max-w-[160px]">{p.name}</p>
+                                <span className="text-[10px] text-[var(--text-muted)] sm:hidden">{p.category}</span>
+                              </div>
+                            </div>
+                          </td>
 
-                    {/* Right: Quick Discount Presets & Sale Toggle Button */}
-                    <div className="flex items-center justify-between sm:justify-end gap-2 shrink-0">
-                      {isSelected && (
-                        <div className="flex items-center gap-1">
-                          <span className="text-[10px] font-bold text-[var(--text-muted)] hidden md:inline">Discount:</span>
-                          {[15, 25, 35, 40].map((pct) => (
+                          {/* Category */}
+                          <td className="py-2.5 px-3 whitespace-nowrap hidden sm:table-cell">
+                            <span className="text-[10px] font-semibold text-[var(--text-muted)]">{p.category}</span>
+                          </td>
+
+                          {/* Price */}
+                          <td className="py-2.5 px-3 whitespace-nowrap">
+                            <div className="flex flex-col">
+                              <span className="font-bold text-xs text-[var(--text)]">₹{p.price.toLocaleString()}</span>
+                              {p.originalPrice && p.originalPrice > p.price && (
+                                <span className="text-[10px] text-[var(--text-muted)] line-through">
+                                  MRP ₹{p.originalPrice.toLocaleString()}
+                                </span>
+                              )}
+                            </div>
+                          </td>
+
+                          {/* Discount % Control */}
+                          <td className="py-2.5 px-3 whitespace-nowrap">
+                            <div className="flex items-center gap-1.5">
+                              <div className="relative w-16">
+                                <input
+                                  type="number"
+                                  min="0"
+                                  max="90"
+                                  value={discountPercent || ''}
+                                  placeholder="0"
+                                  onChange={(e) => handleApplyProductDiscount(p, e.target.value)}
+                                  className="w-full px-2 py-1 pr-5 rounded-md border border-[var(--border)] bg-[var(--card)] text-xs font-bold text-[var(--olive)] text-right focus:outline-none focus:border-[var(--olive)]"
+                                  title="Enter discount percentage"
+                                />
+                                <span className="absolute right-1.5 top-1/2 -translate-y-1/2 text-[10px] font-bold text-[var(--text-muted)] pointer-events-none">
+                                  %
+                                </span>
+                              </div>
+
+                              {/* Quick Presets */}
+                              <div className="hidden md:flex items-center gap-1">
+                                {[15, 25, 40].map((pct) => (
+                                  <button
+                                    key={pct}
+                                    type="button"
+                                    onClick={() => handleApplyProductDiscount(p, pct)}
+                                    className={`text-[9.5px] font-bold px-1.5 py-0.5 rounded border transition-colors cursor-pointer ${
+                                      discountPercent === pct
+                                        ? 'bg-[var(--olive)] text-white border-[var(--olive)]'
+                                        : 'bg-[var(--bg)] text-[var(--text-muted)] border-[var(--border)] hover:text-[var(--text)]'
+                                    }`}
+                                  >
+                                    {pct}%
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          </td>
+
+                          {/* Toggle Action */}
+                          <td className="py-2.5 px-3.5 text-right whitespace-nowrap">
                             <button
-                              key={pct}
                               type="button"
-                              onClick={() => handleApplyProductDiscount(p, pct)}
-                              className="text-[10px] font-bold px-2 py-0.5 rounded bg-[var(--bg)] border border-[var(--border)] hover:border-[var(--maroon)] hover:text-[var(--maroon)] transition-colors cursor-pointer"
-                              title={`Apply ${pct}% discount`}
+                              onClick={() => handleToggleProductInSale(p)}
+                              className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer inline-flex items-center gap-1.5 ${
+                                isSelected
+                                  ? 'bg-[var(--olive)] text-white shadow-xs'
+                                  : 'bg-[var(--card)] border border-[var(--border)] text-[var(--text)] hover:border-[var(--text)]'
+                              }`}
                             >
-                              {pct}%
+                              <FontAwesomeIcon icon={isSelected ? faCheck : faPlus} className="text-[9px]" />
+                              <span>{isSelected ? 'In Sale' : 'Add to Sale'}</span>
                             </button>
-                          ))}
-                        </div>
-                      )}
-
-                      <button
-                        type="button"
-                        onClick={() => handleToggleProductInSale(p.id)}
-                        className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
-                          isSelected
-                            ? 'bg-[var(--maroon)] text-white shadow-xs'
-                            : 'bg-[var(--card)] border border-[var(--border)] text-[var(--text)] hover:border-[var(--text)]'
-                        }`}
-                      >
-                        <FontAwesomeIcon icon={isSelected ? faCheck : faPlus} className="text-[9px]" />
-                        <span>{isSelected ? 'In Sale' : 'Add to Sale'}</span>
-                      </button>
-                    </div>
-
-                  </div>
-                );
-              })}
-
-              {filteredProducts.length === 0 && (
-                <div className="p-8 text-center text-xs text-[var(--text-muted)] bg-[var(--bg-subtle)] rounded-xl">
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              ) : (
+                <div className="p-8 text-center text-xs text-[var(--text-muted)] bg-[var(--bg)]">
                   No products matched your search.
                 </div>
               )}
@@ -587,74 +678,52 @@ export default function AdminSaleBannerPage() {
 
           </div>
 
-          {/* Submit button bar */}
-          <div className="flex items-center justify-end gap-3 pt-4">
-            <button
-              type="submit"
-              disabled={saving}
-              className="gold-btn px-8 py-3.5 text-xs font-bold tracking-wider uppercase inline-flex items-center gap-2 shadow-md cursor-pointer disabled:opacity-50"
-            >
-              <FontAwesomeIcon icon={faSave} />
-              <span>{saving ? 'Saving Changes...' : 'Save & Publish Sale Banner'}</span>
-            </button>
-          </div>
-
         </div>
 
         {/* Right Live Interactive Preview (5 cols) */}
         <div className="lg:col-span-5 space-y-6">
-          <div className="sticky top-24 space-y-6">
+          <div className="sticky top-20 space-y-6">
             
-            <div className="bg-[var(--card)] rounded-2xl border border-[var(--border)] p-5 shadow-2xs">
-              <div className="flex items-center justify-between mb-3 pb-2 border-b border-[var(--border)]">
+            <div className="bg-[var(--card)] rounded-2xl border border-[var(--border)] p-5 shadow-xs space-y-4">
+              <div className="flex items-center justify-between pb-2 border-b border-[var(--border)]">
                 <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--text)] flex items-center gap-2">
-                  <FontAwesomeIcon icon={faEye} className="text-[var(--accent)]" />
-                  <span>Live Storefront Preview</span>
+                  <FontAwesomeIcon icon={faEye} className="text-[var(--olive)]" />
+                  <span>Live Storefront Billboard Preview</span>
                 </h3>
-                <span className="text-[10px] font-semibold text-[var(--chandanam-dark)] bg-[var(--chandanam-soft)] px-2 py-0.5 rounded">
+                <span className="text-[10px] font-semibold text-[var(--olive)] bg-[var(--olive)]/10 px-2 py-0.5 rounded-full border border-[var(--olive)]/20">
                   Real-time
                 </span>
               </div>
 
-              {/* Selected Products Count Pill */}
-              <div className="mb-4 p-3 rounded-xl bg-[var(--bg-subtle)] border border-[var(--border)] flex items-center justify-between text-xs">
-                <span className="font-semibold text-[var(--text)]">Active Sale Products:</span>
-                <span className="font-bold text-[var(--maroon)] bg-white dark:bg-black/40 px-2.5 py-0.5 rounded-full border border-[var(--border)]">
-                  {selectedCount} Products
+              {/* Status Pill Summary */}
+              <div className="p-3 rounded-xl bg-[var(--bg)]/70 border border-[var(--border)] flex items-center justify-between text-xs">
+                <span className="font-semibold text-[var(--text-muted)]">Countdown Status:</span>
+                <span className="font-bold text-[var(--text)]">
+                  {calculateRemaining()}
                 </span>
               </div>
 
               {/* Poster Preview Card */}
               <div className="space-y-2">
-                <span className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider block">
-                  Storefront Billboard Card Preview:
-                </span>
-                
-                <div className="relative rounded-2xl overflow-hidden shadow-md border border-[var(--border)] aspect-[16/10] bg-[var(--bg-subtle)]">
+                <div className="relative rounded-xl overflow-hidden shadow-xs border border-[var(--border)] aspect-[16/10] bg-[var(--bg)]">
                   <img
                     src={formData.image || 'https://images.unsplash.com/photo-1549007994-cb92caebd54b?auto=format&fit=crop&w=800&q=80'}
                     alt="Preview"
                     className="w-full h-full object-cover"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent" />
 
                   <div className="absolute top-3 left-3 flex items-center gap-2">
-                    <span className="bg-white/90 backdrop-blur-sm text-[var(--text)] text-[9.5px] font-bold px-2 py-0.5 rounded-full shadow-xs">
+                    <span className="bg-white/90 backdrop-blur-sm text-stone-900 text-[9.5px] font-bold px-2 py-0.5 rounded-full shadow-xs">
                       {formData.tag || 'SEASONAL SPECIAL'}
                     </span>
-                    <span className="bg-[var(--maroon)] text-white text-[9.5px] font-black px-2 py-0.5 rounded-full shadow-xs">
+                    <span className="bg-[var(--olive)] text-white text-[9.5px] font-bold px-2 py-0.5 rounded-full shadow-xs">
                       {formData.discountOffer || 'SALE'}
                     </span>
                   </div>
 
                   <div className="absolute bottom-3 left-3 right-3 text-white space-y-1">
-                    <span
-                      className="text-[#F3B868] block"
-                      style={{ fontFamily: "'Great Vibes', cursive", fontSize: '18px' }}
-                    >
-                      {formData.calligraphy || 'Exclusive Drop'}
-                    </span>
-                    <h4 className="font-heading text-sm font-bold leading-tight line-clamp-1">
+                    <h4 className="text-sm font-bold leading-tight line-clamp-1">
                       {formData.title || 'Sale Title'}
                     </h4>
                     <p className="text-white/80 text-[10px] line-clamp-1">
@@ -664,12 +733,23 @@ export default function AdminSaleBannerPage() {
                 </div>
               </div>
 
+              {/* Quick Save button in preview */}
+              <button
+                type="button"
+                onClick={handleSave}
+                disabled={saving}
+                className="w-full py-2.5 rounded-lg bg-[var(--olive)] text-white text-xs font-bold hover:bg-[var(--olive-hover)] shadow-xs transition-colors cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
+              >
+                <FontAwesomeIcon icon={faSave} />
+                <span>{saving ? 'Publishing...' : 'Save & Publish Live'}</span>
+              </button>
+
             </div>
 
           </div>
         </div>
 
-      </form>
+      </div>
     </div>
   );
 }

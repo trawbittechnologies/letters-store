@@ -17,6 +17,41 @@ export async function POST(request) {
     }
 
     const trimmed = usernameOrEmail.trim().toLowerCase();
+
+    // Check custom credentials cookie if set
+    const customCredsCookie = request.cookies.get('letters_custom_creds')?.value;
+    if (customCredsCookie) {
+      try {
+        const parsed = JSON.parse(Buffer.from(customCredsCookie, 'base64').toString('utf-8'));
+        if (
+          (trimmed === parsed.username?.toLowerCase() || trimmed === parsed.email?.toLowerCase() || trimmed === 'admin') &&
+          password === parsed.pass
+        ) {
+          const user = {
+            username: parsed.username || 'admin',
+            email: parsed.email || 'admin@letters.com',
+            role: 'Store Owner',
+          };
+
+          const response = NextResponse.json({
+            success: true,
+            user,
+            message: 'Logged in successfully',
+          });
+
+          response.cookies.set('letters_admin_token', Buffer.from(JSON.stringify(user)).toString('base64'), {
+            httpOnly: false,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
+            path: '/',
+            maxAge: 60 * 60 * 24 * 7,
+          });
+
+          return response;
+        }
+      } catch (e) {}
+    }
+
     const matched = validUsers.find(
       (u) => (u.username === trimmed || u.email === trimmed) && u.pass === password
     );

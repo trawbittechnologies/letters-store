@@ -111,7 +111,11 @@ export default function FestivalHamperSection() {
       ? `\n📌 *Order Type:* Pre-Booking (Festival Starts: ${currentFestival.startDate})`
       : '';
 
-    const msg = `*${isPreBooking ? 'Festival Pre-Booking Inquiry' : 'Festival Hamper Inquiry'} — LETTERS Atelier*\n\n🌟 *Hamper:* ${product.title || product.name}\n💎 *Price:* ₹${product.price?.toLocaleString()} ${product.originalPrice ? `(Original: ₹${product.originalPrice?.toLocaleString()})` : ''}\n🎉 *Festival:* ${currentFestival.name}\n📍 *Craft/Origin:* ${product.origin || 'Kerala Atelier'}${preBookingTag}${noteText}\n\nHello LETTERS team! I would like to ${isPreBooking ? 'pre-book' : 'order'} this artisanal Festival Hamper. Please share delivery timeframes and packaging details.`;
+    const priceText = product.showPrice === false
+      ? 'Price on Request'
+      : `₹${product.price?.toLocaleString()} ${product.originalPrice ? `(Original: ₹${product.originalPrice?.toLocaleString()})` : ''}`;
+
+    const msg = `*${isPreBooking ? 'Festival Pre-Booking Inquiry' : 'Festival Hamper Inquiry'} — LETTERS Atelier*\n\n🌟 *Hamper:* ${product.title || product.name}\n💎 *Price:* ${priceText}\n🎉 *Festival:* ${currentFestival.name}\n📍 *Craft/Origin:* ${product.origin || 'Kerala Atelier'}${preBookingTag}${noteText}\n\nHello LETTERS team! I would like to ${isPreBooking ? 'pre-book' : 'order'} this artisanal Festival Hamper. Please share custom quote, delivery timeframes, and packaging details.`;
     window.open(getWhatsAppUrl(msg), '_blank');
   };
 
@@ -169,131 +173,77 @@ export default function FestivalHamperSection() {
         </div>
 
         {/* Overlaid Banner Content Container */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-14 py-14 sm:py-20 lg:py-24 relative z-10 w-full flex flex-col justify-between">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-14 py-12 sm:py-16 lg:py-20 relative z-10 w-full flex flex-col justify-between">
           
-          {/* Top Status & Date Badges */}
-          <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
-            <div className="flex flex-wrap items-center gap-2.5">
-              {isPreBooking ? (
-                <span className="text-[10.5px] font-black uppercase tracking-wider px-3.5 py-1 rounded-full bg-amber-600 text-white shadow-md flex items-center gap-1.5">
-                  <FontAwesomeIcon icon={faClock} className="text-[9.5px]" />
-                  PRE-BOOKING OPEN
-                </span>
-              ) : (
-                <span className="text-[10.5px] font-extrabold uppercase tracking-wider px-3.5 py-1 rounded-full bg-[#721C28] text-white shadow-md border border-white/20">
-                  {currentFestival.badge || 'KERALA FESTIVE DROP'}
-                </span>
-              )}
-
-              <span className="text-[11px] font-semibold text-[#F3B868] bg-black/50 backdrop-blur-md px-3.5 py-1 rounded-full border border-white/20 flex items-center gap-1.5 shadow-sm">
-                <FontAwesomeIcon icon={faCalendarDays} className="text-[10px]" />
-                <span>{currentFestival.name} ({formattedDates})</span>
+          {/* Top Status & Date Badge (Single Minimal Pill) */}
+          <div className="flex items-center gap-2.5 mb-6">
+            <span className="text-[11px] font-semibold text-[#FAF6EE] bg-black/40 backdrop-blur-md px-3.5 py-1 rounded-full border border-white/20 inline-flex items-center gap-2 shadow-xs">
+              <FontAwesomeIcon icon={faCalendarDays} className="text-[10px] text-[#F3B868]" />
+              <span>{currentFestival.name} Collection ({formattedDates})</span>
+            </span>
+            {isPreBooking && (
+              <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-amber-600 text-white shadow-xs">
+                Pre-Booking Active
               </span>
-            </div>
-
-            {/* Right Quick Badges */}
-            <div className="hidden sm:flex items-center gap-2">
-              <span className="bg-black/50 backdrop-blur-md px-3.5 py-1 rounded-full text-xs text-[#FAF6EE] font-medium border border-white/20 flex items-center gap-1.5 shadow-sm">
-                <span className={`w-2 h-2 rounded-full ${isPreBooking ? 'bg-amber-500 animate-pulse' : 'bg-emerald-400 animate-pulse'}`} />
-                <span>{isPreBooking ? 'Pre-Order Allocation Open' : 'Handcrafted in Kerala Atelier'}</span>
-              </span>
-              <span className="bg-white/90 text-neutral-900 px-3 py-1 rounded-full font-bold text-[11px] shadow-sm">
-                Live Photo Preview Included
-              </span>
-            </div>
+            )}
           </div>
 
-          {/* Main Overlay Narrative */}
-          <div className="max-w-3xl">
+          {/* Main Minimal Overlay Narrative */}
+          <div className="max-w-2xl">
             {/* Calligraphy Eyebrow */}
-            <div className="flex items-center gap-2.5 mb-2">
-              <DoodleSwirl className="w-8 h-4 text-[#F3B868]" />
-              <span
-                className="text-[#F3B868] drop-shadow-sm font-normal"
-                style={{ fontFamily: "'Great Vibes', cursive", fontSize: 'clamp(28px, 4vw, 38px)', letterSpacing: '0.03em' }}
-              >
-                {currentFestival.calligraphy || 'Tradition & Prosperity'}
-              </span>
-            </div>
-
-            {/* Headline Title */}
-            <h1 className="font-heading text-3xl sm:text-5xl lg:text-6xl font-bold text-[#FFFDF8] leading-[1.08] tracking-tight mb-4 drop-shadow-lg">
-              {currentFestival.title || `${currentFestival.name} Grand Festive Atelier`}
-            </h1>
-
-            {/* Tagline */}
-            {currentFestival.tagline && (
-              <p className="text-[#F3B868] font-semibold text-sm sm:text-base lg:text-[17px] mb-3 leading-relaxed drop-shadow-sm max-w-2xl">
-                {currentFestival.tagline}
-              </p>
+            {currentFestival.calligraphy && (
+              <div className="flex items-center gap-2 mb-1.5">
+                <span
+                  className="text-[#F3B868] drop-shadow-sm font-normal"
+                  style={{ fontFamily: "'Great Vibes', cursive", fontSize: 'clamp(26px, 3.5vw, 34px)', letterSpacing: '0.02em' }}
+                >
+                  {currentFestival.calligraphy}
+                </span>
+              </div>
             )}
 
-            {/* Narrative Description */}
-            <p className="text-[#FAF6EE]/90 text-xs sm:text-[14.5px] leading-relaxed mb-6 font-light max-w-2xl drop-shadow-sm">
-              {currentFestival.description ||
-                'Handcrafted to celebrate authentic festive warmth with curated artisanal keepsakes, brassware, and traditional delicacies.'}
+            {/* Headline Title */}
+            <h1 className="font-heading text-3xl sm:text-5xl lg:text-5xl font-bold text-[#FFFDF8] leading-[1.1] tracking-tight mb-3 drop-shadow-md">
+              {currentFestival.title || `${currentFestival.name} Festive Atelier`}
+            </h1>
+
+            {/* Single Concise Luxury Description */}
+            <p className="text-[#FAF6EE]/85 text-xs sm:text-sm leading-relaxed mb-6 font-light max-w-xl">
+              {currentFestival.tagline || currentFestival.description || 'Handcrafted Nilavilakku, Kasavu keepsakes, and traditional festive delicacies prepared fresh to order.'}
             </p>
 
-            {/* Key Highlight Chips */}
-            <div className="flex flex-wrap gap-2 sm:gap-2.5 mb-8">
-              {currentFestival.highlightTag1 && (
-                <span className="text-xs font-medium px-3.5 py-1.5 rounded-full bg-white/15 hover:bg-white/20 backdrop-blur-md text-[#FAF6EE] border border-white/25 inline-flex items-center gap-1.5 shadow-sm transition-colors">
-                  <DoodleSparkle className="w-3 h-3 text-[#F3B868]" />
-                  {currentFestival.highlightTag1}
-                </span>
-              )}
-              {currentFestival.highlightTag2 && (
-                <span className="text-xs font-medium px-3.5 py-1.5 rounded-full bg-white/15 hover:bg-white/20 backdrop-blur-md text-[#FAF6EE] border border-white/25 inline-flex items-center gap-1.5 shadow-sm transition-colors">
-                  <DoodleSparkle className="w-3 h-3 text-[#F3B868]" />
-                  {currentFestival.highlightTag2}
-                </span>
-              )}
-              {currentFestival.highlightTag3 && (
-                <span className="text-xs font-medium px-3.5 py-1.5 rounded-full bg-white/15 hover:bg-white/20 backdrop-blur-md text-[#FAF6EE] border border-white/25 inline-flex items-center gap-1.5 shadow-sm transition-colors">
-                  <DoodleSparkle className="w-3 h-3 text-[#F3B868]" />
-                  {currentFestival.highlightTag3}
-                </span>
-              )}
-            </div>
-
             {/* Action Buttons */}
-            <div className="flex flex-wrap items-center gap-3 sm:gap-4 mb-6">
+            <div className="flex flex-wrap items-center gap-3 sm:gap-3.5 mb-6">
               {activeProducts.length > 0 && (
                 <button
                   onClick={scrollToShowcase}
-                  className="gold-btn px-7 sm:px-8 py-3.5 sm:py-4 text-xs sm:text-[13px] font-bold tracking-wider uppercase shadow-xl inline-flex items-center gap-2.5 active:scale-95 transform transition-transform cursor-pointer"
+                  className="gold-btn px-6 sm:px-7 py-3 sm:py-3.5 text-xs font-bold tracking-wider uppercase shadow-lg inline-flex items-center gap-2 active:scale-95 transform transition-transform cursor-pointer"
                 >
-                  <span>{isPreBooking ? 'Explore Pre-Booking Hampers' : 'Explore Festive Hampers'}</span>
-                  <FontAwesomeIcon icon={faArrowDown} className="text-xs" />
+                  <span>{isPreBooking ? 'Explore Pre-Booking' : 'Explore Hampers'}</span>
+                  <FontAwesomeIcon icon={faArrowDown} className="text-[11px]" />
                 </button>
               )}
 
               <button
                 onClick={handleWhatsAppBannerInquiry}
-                className="inline-flex items-center gap-2.5 px-6 sm:px-7 py-3.5 sm:py-4 rounded-full text-xs sm:text-[13px] font-semibold bg-white/15 hover:bg-white/25 text-[#FAF6EE] backdrop-blur-md border border-white/30 transition-all active:scale-95 cursor-pointer shadow-lg"
+                className="inline-flex items-center gap-2 px-5 sm:px-6 py-3 sm:py-3.5 rounded-full text-xs font-semibold bg-white/10 hover:bg-white/20 text-[#FAF6EE] backdrop-blur-md border border-white/20 transition-all active:scale-95 cursor-pointer shadow-sm"
               >
-                <FontAwesomeIcon icon={faWhatsapp} className="text-[#25D366] text-base" />
+                <FontAwesomeIcon icon={faWhatsapp} className="text-[#25D366] text-sm" />
                 <span>WhatsApp Atelier Concierge</span>
               </button>
             </div>
           </div>
 
-          {/* Bottom Footnote & Announcement Strip */}
-          <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-[#FAF6EE]/80 pt-5 border-t border-white/20">
-            <span className="flex items-center gap-2">
-              <span className="text-[#F3B868]">✨</span>
-              <span>Pan-India Express Delivery</span>
+          {/* Minimal Footnote Strip */}
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-[#FAF6EE]/75 pt-4 border-t border-white/15">
+            <span className="flex items-center gap-1.5">
+              <span>✨ Pan-India Express Delivery</span>
             </span>
-            <span className="flex items-center gap-2">
-              <FontAwesomeIcon icon={faCamera} className="text-[#25D366] text-[11px]" />
-              <span>Live WhatsApp Photo Approval Before Dispatch</span>
+            <span className="flex items-center gap-1.5">
+              <FontAwesomeIcon icon={faCamera} className="text-[#25D366] text-[10px]" />
+              <span>Live Photo Approval Before Dispatch</span>
             </span>
-            {currentFestival.announcement && (
-              <span className="flex items-center gap-2 text-[#F3B868]">
-                <FontAwesomeIcon icon={faFeatherPointed} className="text-[10px]" />
-                <span>{currentFestival.announcement}</span>
-              </span>
-            )}
+            <span>🕯️ Handcrafted in Kerala Atelier</span>
           </div>
 
         </div>
@@ -431,16 +381,24 @@ export default function FestivalHamperSection() {
                         )}
 
                         {/* Price */}
-                        <div className="flex items-baseline gap-2">
-                          <span className="font-heading text-lg font-bold text-[var(--text)]">
-                            ₹{item.price?.toLocaleString()}
-                          </span>
-                          {item.originalPrice && item.originalPrice > item.price && (
-                            <span className="text-[11px] text-[var(--text-muted)] line-through">
-                              ₹{item.originalPrice?.toLocaleString()}
+                        {item.showPrice !== false ? (
+                          <div className="flex items-baseline gap-2">
+                            <span className="font-heading text-lg font-bold text-[var(--text)]">
+                              ₹{item.price?.toLocaleString()}
                             </span>
-                          )}
-                        </div>
+                            {item.originalPrice && item.originalPrice > item.price && (
+                              <span className="text-[11px] text-[var(--text-muted)] line-through">
+                                ₹{item.originalPrice?.toLocaleString()}
+                              </span>
+                            )}
+                          </div>
+                        ) : (
+                          <div className="flex items-baseline gap-1.5">
+                            <span className="text-xs sm:text-sm font-bold text-[var(--olive)]">
+                              Price on Request
+                            </span>
+                          </div>
+                        )}
                       </div>
 
                       {/* Dual Action Buttons */}
@@ -690,19 +648,28 @@ export default function FestivalHamperSection() {
 
                     {/* Price & Action Row */}
                     <div className="flex items-center justify-between gap-4 pt-4 border-t border-[var(--border)]">
-                      <div>
-                        <span className="text-[10px] text-[var(--text-muted)] block">Total Price:</span>
-                        <div className="flex items-baseline gap-2">
-                          <span className="font-heading text-2xl font-bold text-[var(--text)]">
-                            ₹{inspectItem.price?.toLocaleString()}
-                          </span>
-                          {inspectItem.originalPrice && inspectItem.originalPrice > inspectItem.price && (
-                            <span className="text-xs text-[var(--text-muted)] line-through">
-                              ₹{inspectItem.originalPrice?.toLocaleString()}
+                      {inspectItem.showPrice !== false ? (
+                        <div>
+                          <span className="text-[10px] text-[var(--text-muted)] block">Total Price:</span>
+                          <div className="flex items-baseline gap-2">
+                            <span className="font-heading text-2xl font-bold text-[var(--text)]">
+                              ₹{inspectItem.price?.toLocaleString()}
                             </span>
-                          )}
+                            {inspectItem.originalPrice && inspectItem.originalPrice > inspectItem.price && (
+                              <span className="text-xs text-[var(--text-muted)] line-through">
+                                ₹{inspectItem.originalPrice?.toLocaleString()}
+                              </span>
+                            )}
+                          </div>
                         </div>
-                      </div>
+                      ) : (
+                        <div>
+                          <span className="text-[10px] text-[var(--text-muted)] block">Pricing:</span>
+                          <span className="text-lg font-bold text-[var(--olive)]">
+                            Price on Request
+                          </span>
+                        </div>
+                      )}
 
                       <div className="flex items-center gap-2">
                         <button

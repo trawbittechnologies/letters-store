@@ -147,15 +147,16 @@ export default function ProductDetailPage({ params }) {
       customDetails += `\n• Add-ons: ${selectedAddons.map((a) => a.name).join(', ')}`;
     }
 
-    const totalWithAddons = product.price * quantity + selectedAddons.reduce((s, a) => s + a.price, 0);
+    const priceDisplay = product.showPrice === false ? 'Price on Request' : `₹${product.price}`;
+    const totalDisplay = product.showPrice === false ? 'On Request / Custom Quote' : `₹${totalWithAddons}`;
 
     const message = `*${settings.orderMessagePrefix || 'New Order — LETTERS'}*
 
 Item: ${product.name}
 Category: ${product.category}
 Quantity: ${quantity}
-Price: ₹${product.price}
-Total: ₹${totalWithAddons}
+Price: ${priceDisplay}
+Total: ${totalDisplay}
 Product Link: ${origin}/product/${product.slug}${customDetails}
 
 Hello LETTERS Concierge, please confirm availability and guide me to complete this order.`;
@@ -275,22 +276,35 @@ Hello LETTERS Concierge, please confirm availability and guide me to complete th
 
               {/* Pricing */}
               <div className="flex flex-wrap items-baseline gap-3 pb-4 border-b border-[var(--border)]">
-                <span className="font-heading text-3xl font-bold text-[var(--text)]">
-                  ₹{product.price.toLocaleString()}
-                </span>
-                {product.originalPrice && product.originalPrice > product.price && (
-                  <span className="text-base text-[var(--text-muted)] line-through">
-                    ₹{product.originalPrice.toLocaleString()}
-                  </span>
+                {product.showPrice !== false ? (
+                  <>
+                    <span className="font-heading text-3xl font-bold text-[var(--text)]">
+                      ₹{product.price.toLocaleString()}
+                    </span>
+                    {product.originalPrice && product.originalPrice > product.price && (
+                      <span className="text-base text-[var(--text-muted)] line-through">
+                        ₹{product.originalPrice.toLocaleString()}
+                      </span>
+                    )}
+                    {discountPercent > 0 && (
+                      <span className="text-xs font-bold text-[var(--olive)] bg-[var(--olive)]/10 px-2 py-0.5 rounded">
+                        You save ₹{(product.originalPrice - product.price).toLocaleString()} ({discountPercent}%)
+                      </span>
+                    )}
+                    <span className="w-full text-[11px] text-[var(--text-muted)]">
+                      Inclusive of all taxes & complimentary handwritten keepsake card.
+                    </span>
+                  </>
+                ) : (
+                  <div className="w-full space-y-1">
+                    <span className="text-xl sm:text-2xl font-bold text-[var(--olive)]">
+                      Price on Request
+                    </span>
+                    <p className="text-xs text-[var(--text-muted)]">
+                      Contact our concierge directly via WhatsApp for bespoke pricing and customization.
+                    </p>
+                  </div>
                 )}
-                {discountPercent > 0 && (
-                  <span className="text-xs font-bold text-[var(--olive)] bg-[var(--olive)]/10 px-2 py-0.5 rounded">
-                    You save ₹{(product.originalPrice - product.price).toLocaleString()} ({discountPercent}%)
-                  </span>
-                )}
-                <span className="w-full text-[11px] text-[var(--text-muted)]">
-                  Inclusive of all taxes & complimentary handwritten keepsake card.
-                </span>
               </div>
             </div>
 

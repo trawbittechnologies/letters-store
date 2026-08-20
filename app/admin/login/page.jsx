@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faGift,
   faLock,
   faUser,
   faArrowRight,
@@ -41,33 +40,33 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-[var(--bg)] transition-colors duration-300">
-      <div className="w-full max-w-md bg-[var(--card)] border border-[var(--border)] rounded-3xl p-8 sm:p-10 shadow-2xl">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-[var(--bg)] transition-colors duration-200">
+      <div className="w-full max-w-sm bg-[var(--card)] border border-[var(--border)] rounded-2xl p-7 sm:p-8 shadow-sm space-y-6">
         
         {/* Brand Header */}
-        <div className="text-center mb-8">
-          <div className="w-16 h-16 flex items-center justify-center mx-auto mb-4">
+        <div className="text-center">
+          <div className="w-12 h-12 rounded-xl bg-[var(--bg)] border border-[var(--border)] p-2 flex items-center justify-center mx-auto mb-3 shadow-xs">
             <img src="/logo.png" alt="Letters" className="w-full h-full object-contain" />
           </div>
-          <h1 className="font-brand-calligraphy text-4xl font-normal text-[var(--text)] tracking-wide">
-            {settings.brandName && settings.brandName.toUpperCase() === 'LETTERS' ? 'Letters' : (settings.brandName || 'Letters')}
+          <h1 className="text-xl font-bold text-[var(--text)] tracking-tight">
+            {settings.brandName || 'Letters Store'}
           </h1>
-          <p className="text-xs uppercase font-bold tracking-widest text-[var(--accent-secondary)] mt-1">
-            Store Management Portal
+          <p className="text-xs text-[var(--text-muted)] mt-0.5">
+            E-Commerce Admin Portal
           </p>
         </div>
 
         {error && (
-          <div className="mb-6 p-3.5 rounded-xl bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300 text-xs flex items-center gap-2">
+          <div className="p-3 rounded-lg bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300 text-xs flex items-center gap-2">
             <FontAwesomeIcon icon={faCircleExclamation} className="text-sm flex-shrink-0" />
             <span>{error}</span>
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4 text-xs">
           <div>
-            <label className="block text-xs font-bold text-[var(--text)] uppercase mb-1">
-              Username or Admin Email
+            <label className="block font-bold text-[var(--text)] uppercase text-[10px] mb-1">
+              Admin Username
             </label>
             <div className="relative">
               <FontAwesomeIcon icon={faUser} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--text-muted)] text-xs" />
@@ -77,13 +76,13 @@ export default function AdminLoginPage() {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="admin"
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-[var(--bg)] border border-[var(--border)] text-xs text-[var(--text)] focus:outline-none focus:border-[var(--accent)]"
+                className="w-full pl-9 pr-3.5 py-2 rounded-lg bg-[var(--bg)] border border-[var(--border)] text-xs text-[var(--text)] focus:outline-none focus:border-[var(--olive)]"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-[var(--text)] uppercase mb-1">
+            <label className="block font-bold text-[var(--text)] uppercase text-[10px] mb-1">
               Password
             </label>
             <div className="relative">
@@ -94,30 +93,31 @@ export default function AdminLoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-[var(--bg)] border border-[var(--border)] text-xs text-[var(--text)] focus:outline-none focus:border-[var(--accent)]"
+                className="w-full pl-9 pr-3.5 py-2 rounded-lg bg-[var(--bg)] border border-[var(--border)] text-xs text-[var(--text)] focus:outline-none focus:border-[var(--olive)]"
               />
             </div>
           </div>
 
-          <div className="pt-2">
+          <div className="pt-1">
             <button
               type="submit"
               disabled={loading}
-              className="w-full gold-btn py-3.5 px-4 text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2 shadow-md hover:scale-102 transition-all disabled:opacity-50 cursor-pointer"
+              className="w-full inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg bg-[var(--olive)] text-white text-xs font-bold hover:bg-[var(--olive-hover)] shadow-xs transition-colors disabled:opacity-50 cursor-pointer"
             >
-              <span>{loading ? 'Authenticating...' : 'Sign In to Dashboard'}</span>
+              <span>{loading ? 'Verifying credentials...' : 'Sign In to Store Admin'}</span>
               <FontAwesomeIcon icon={faArrowRight} className="text-xs" />
             </button>
           </div>
         </form>
 
-        <div className="mt-8 pt-6 border-t border-[var(--border)] text-center text-xs text-[var(--text-muted)] space-y-2">
+        <div className="pt-4 border-t border-[var(--border)] text-center text-xs text-[var(--text-muted)] space-y-1.5">
           <p className="flex items-center justify-center gap-1.5 text-[11px]">
-            <FontAwesomeIcon icon={faShieldHalved} className="text-[var(--accent)] text-xs" /> Protected store owner access
+            <FontAwesomeIcon icon={faShieldHalved} className="text-[var(--olive)] text-xs" />
+            <span>Secure administrator login</span>
           </p>
           <div>
-            <Link href="/" className="text-[11px] font-semibold text-[var(--accent-secondary)] hover:underline">
-              ← Return to Customer Storefront
+            <Link href="/" className="text-[11px] font-semibold text-[var(--olive)] hover:underline">
+              ← Return to Online Store
             </Link>
           </div>
         </div>

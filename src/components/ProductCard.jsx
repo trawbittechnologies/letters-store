@@ -49,7 +49,8 @@ export default function ProductCard({ product, index = 0 }) {
     e.stopPropagation();
 
     const origin = typeof window !== 'undefined' ? window.location.origin : '';
-    const message = `*New Order Inquiry — LETTERS*\nItem: ${product.name}\nCategory: ${product.category}\nPrice: ₹${product.price}\nProduct Link: ${origin}/product/${product.slug}\n\nHello LETTERS team, I would like to order this item directly via WhatsApp. Please guide me with delivery and payment details.`;
+    const priceDisplay = product.showPrice === false ? 'Price on Request' : `₹${product.price}`;
+    const message = `*New Order Inquiry — LETTERS*\nItem: ${product.name}\nCategory: ${product.category}\nPrice: ${priceDisplay}\nProduct Link: ${origin}/product/${product.slug}\n\nHello LETTERS team, I would like to inquire and order this item directly via WhatsApp. Please guide me with pricing, customization, and delivery details.`;
 
     window.open(getWhatsAppUrl(message), '_blank');
   };
@@ -72,7 +73,7 @@ export default function ProductCard({ product, index = 0 }) {
 
         {/* Top Badges */}
         <div className="absolute top-3 left-3 flex flex-col gap-1.5 pointer-events-none z-10">
-          {discountPercent > 0 && (
+          {product.showPrice !== false && discountPercent > 0 && (
             <span className="text-[10px] font-bold bg-[var(--maroon)] text-white px-2.5 py-0.5 rounded-full shadow-xs tracking-wider">
               {discountPercent}% OFF
             </span>
@@ -148,16 +149,24 @@ export default function ProductCard({ product, index = 0 }) {
 
           {/* Price & Stock Badge */}
           <div className="flex items-center justify-between gap-2 pt-1 border-t border-[var(--border)]/60">
-            <div className="flex items-baseline gap-2">
-              <span className="font-heading text-base sm:text-lg font-bold text-[var(--text)]">
-                ₹{product.price.toLocaleString()}
-              </span>
-              {product.originalPrice && product.originalPrice > product.price && (
-                <span className="text-[11px] text-[var(--text-muted)] line-through">
-                  ₹{product.originalPrice.toLocaleString()}
+            {product.showPrice !== false ? (
+              <div className="flex items-baseline gap-2">
+                <span className="font-heading text-base sm:text-lg font-bold text-[var(--text)]">
+                  ₹{product.price.toLocaleString()}
                 </span>
-              )}
-            </div>
+                {product.originalPrice && product.originalPrice > product.price && (
+                  <span className="text-[11px] text-[var(--text-muted)] line-through">
+                    ₹{product.originalPrice.toLocaleString()}
+                  </span>
+                )}
+              </div>
+            ) : (
+              <div className="flex items-baseline gap-1.5">
+                <span className="text-xs sm:text-sm font-bold text-[var(--olive)]">
+                  Price on Request
+                </span>
+              </div>
+            )}
 
             <span className="text-[9.5px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
               In Stock

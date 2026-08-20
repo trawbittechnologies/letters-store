@@ -8,8 +8,6 @@ import FeaturedCategories from '@/src/components/FeaturedCategories';
 import FeaturedProducts from '@/src/components/FeaturedProducts';
 import FestivalHamperSection from '@/src/components/FestivalHamperSection';
 import CustomGiftCTA from '@/src/components/CustomGiftCTA';
-import About from '@/src/components/About';
-import Stats from '@/src/components/Stats';
 import WhatsAppCTA from '@/src/components/WhatsAppCTA';
 
 export default function HomePage() {
@@ -42,13 +40,7 @@ export default function HomePage() {
       {/* 9. Personalized Hamper Studio */}
       <CustomGiftCTA />
 
-      {/* 10. Brand Philosophy */}
-      <About />
-
-      {/* 11. Atelier Milestones & Achievements */}
-      <Stats />
-
-      {/* 12. Direct Studio Concierge */}
+      {/* 10. Direct Studio Concierge */}
       <WhatsAppCTA />
     </div>
   );

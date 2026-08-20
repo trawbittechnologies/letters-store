@@ -17,7 +17,7 @@ export const useProductStore = create((set, get) => ({
         if (typeof window !== 'undefined') {
           try {
             localStorage.setItem('letters_products', JSON.stringify(data.products));
-          } catch (e) {}
+          } catch (e) { }
         }
         return;
       }
@@ -32,7 +32,7 @@ export const useProductStore = create((set, get) => ({
           set({ products: JSON.parse(saved), isLoading: false });
           return;
         }
-      } catch (e) {}
+      } catch (e) { }
     }
 
     set({ products: defaultProducts, isLoading: false });
@@ -57,7 +57,8 @@ export const useProductStore = create((set, get) => ({
         productData.images && productData.images.length > 0
           ? productData.images
           : ['https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=800&q=80'],
-      stock: Number(productData.stock) || 10,
+      stock: Number(productData.stock) || 100,
+      showPrice: productData.showPrice !== undefined ? !!productData.showPrice : true,
       featured: !!productData.featured,
       customizable: productData.customizable !== undefined ? !!productData.customizable : true,
       active: productData.active !== undefined ? !!productData.active : true,
@@ -99,7 +100,8 @@ export const useProductStore = create((set, get) => ({
             ...productData,
             price: productData.price !== undefined ? Number(productData.price) : p.price,
             originalPrice: productData.originalPrice !== undefined ? Number(productData.originalPrice) : p.originalPrice,
-            stock: productData.stock !== undefined ? Number(productData.stock) : p.stock,
+            stock: productData.stock !== undefined ? Number(productData.stock) : (p.stock || 100),
+            showPrice: productData.showPrice !== undefined ? !!productData.showPrice : (p.showPrice !== false),
             categorySlug: cat.toLowerCase().replace(/[^\w ]+/g, '').replace(/ +/g, '-'),
             updatedAt: new Date().toISOString(),
           };
@@ -124,6 +126,29 @@ export const useProductStore = create((set, get) => ({
     }
 
     return updatedProduct;
+  },
+
+  toggleProductShowPrice: (id) => {
+    set((state) => {
+      const updated = state.products.map((p) => {
+        if (p.id === id) {
+          const newShowPrice = p.showPrice === false ? true : false;
+          const updatedProd = { ...p, showPrice: newShowPrice };
+          // Sync with API
+          fetch(`/api/products/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ showPrice: newShowPrice }),
+          }).catch(console.error);
+          return updatedProd;
+        }
+        return p;
+      });
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('letters_products', JSON.stringify(updated));
+      }
+      return { products: updated };
+    });
   },
 
   deleteProduct: async (id) => {
