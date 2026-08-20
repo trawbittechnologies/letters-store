@@ -33,7 +33,7 @@ import { DoodleSparkle, DoodleOliveBranch, DoodleSwirl, DoodleStarburst } from '
 
 export default function DealsPage() {
   const { products } = useProductStore();
-  const { festivalHampers, fetchFestivalHampers } = useFestivalStore();
+  const { festivals, showcaseFestival, fetchFestivals } = useFestivalStore();
   const { saleBanner, fetchSaleBanner } = useSaleBannerStore();
   const { getWhatsAppUrl } = useSettingsStore();
   const addToCart = useCartStore((state) => state.addToCart);
@@ -45,8 +45,8 @@ export default function DealsPage() {
 
   useEffect(() => {
     fetchSaleBanner();
-    fetchFestivalHampers();
-  }, [fetchSaleBanner, fetchFestivalHampers]);
+    fetchFestivals();
+  }, [fetchSaleBanner, fetchFestivals]);
 
   // Live countdown timer calculated against saleBanner.endDate
   const [timeLeft, setTimeLeft] = useState({
@@ -111,32 +111,38 @@ export default function DealsPage() {
         };
       });
 
-    const activeHampers = (festivalHampers?.items || [])
-      .filter((h) => h.enabled !== false)
-      .map((h) => {
-        const orig = h.originalPrice || Math.round(h.price * 1.25);
-        const discountPct = h.discountPercent || (orig > h.price ? Math.round(((orig - h.price) / orig) * 100) : 20);
-        return {
-          id: h.id,
-          name: h.title,
-          category: h.festivalName || 'Festival Hamper',
-          price: h.price,
-          originalPrice: orig,
-          discountPercent: discountPct,
-          image: h.image,
-          description: h.description,
-          slug: `festival-${h.id}`,
-          isFestival: true,
-          festivalType: h.festivalType,
-          showPrice: h.showPrice !== false,
-          tag: h.badge || h.tag || 'Festival Special',
-          claimedPercent: 88,
-          stockLeft: 3,
-        };
-      });
+    // Extract products from all published festivals or showcase festival
+    const festivalProductList = [];
+    (festivals || []).forEach((fest) => {
+      if (fest.status !== 'draft' && fest.active !== false && Array.isArray(fest.products)) {
+        fest.products
+          .filter((h) => h.active !== false && h.enabled !== false)
+          .forEach((h) => {
+            const orig = h.originalPrice || Math.round(h.price * 1.25);
+            const discountPct = h.discountPercent || (orig > h.price ? Math.round(((orig - h.price) / orig) * 100) : 20);
+            festivalProductList.push({
+              id: h.id,
+              name: h.title || h.name,
+              category: fest.name || 'Festival Hamper',
+              price: h.price,
+              originalPrice: orig,
+              discountPercent: discountPct,
+              image: h.image || (h.images && h.images[0]),
+              description: h.description,
+              slug: (h.title || h.name).toLowerCase().replace(/[^\w ]+/g, '').replace(/ +/g, '-'),
+              isFestival: true,
+              festivalType: fest.id,
+              showPrice: h.showPrice !== false,
+              tag: h.badge || 'Festival Special',
+              claimedPercent: 88,
+              stockLeft: 3,
+            });
+          });
+      }
+    });
 
-    return [...activeHampers, ...prods];
-  }, [products, festivalHampers]);
+    return [...festivalProductList, ...prods];
+  }, [products, festivals, saleBanner]);
 
   // Filtered & Sorted Deals
   const filteredDeals = useMemo(() => {
