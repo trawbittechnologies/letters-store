@@ -36,25 +36,12 @@ export default function Preloader() {
       {loading && (
         <motion.div
           key="letters-perfect-preloader"
-          className="fixed inset-0 z-[999999] w-screen h-screen flex flex-col items-center justify-center select-none pointer-events-auto"
+          exit={{ opacity: 0, transition: { duration: 0.8, ease: "easeInOut" } }}
+          className="fixed inset-0 z-[999999] w-screen h-screen flex flex-col items-center justify-center bg-[#FAF7F0] select-none pointer-events-auto"
         >
-          {/* Top Panel (Slides Up on Exit) */}
-          <motion.div
-            initial={{ y: "0%" }}
-            exit={{ y: "-100%", transition: { duration: 1, ease: [0.76, 0, 0.24, 1] } }}
-            className="absolute top-0 left-0 w-full h-1/2 bg-[#FAF7F0] origin-top"
-          />
-          
-          {/* Bottom Panel (Slides Down on Exit) */}
-          <motion.div
-            initial={{ y: "0%" }}
-            exit={{ y: "100%", transition: { duration: 1, ease: [0.76, 0, 0.24, 1] } }}
-            className="absolute bottom-0 left-0 w-full h-1/2 bg-[#FAF7F0] origin-bottom"
-          />
-
           {/* Central Content Container */}
           <motion.div 
-            exit={{ opacity: 0, scale: 0.95, filter: "blur(10px)", transition: { duration: 0.6, ease: "easeOut" } }}
+            exit={{ opacity: 0, scale: 0.95, filter: "blur(5px)", transition: { duration: 0.6, ease: "easeOut" } }}
             className="relative z-10 flex flex-col items-center justify-center gap-8"
           >
             {/* Flawless Ink-Flow Mask Reveal */}
