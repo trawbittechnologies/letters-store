@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { revalidateTag } from 'next/cache';
 import { getSaleBanner, updateSaleBanner } from '@/lib/db';
 
 export const dynamic = 'force-dynamic';
@@ -20,6 +21,7 @@ export async function PUT(request) {
   try {
     const body = await request.json();
     const updated = updateSaleBanner(body);
+    revalidateTag('sale-banner');
     return NextResponse.json(
       { success: true, saleBanner: updated },
       { headers: { 'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate' } }

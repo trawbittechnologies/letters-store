@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBolt, faClock, faArrowRight, faBagShopping, faCheck } from '@fortawesome/free-solid-svg-icons';
 import { useProductStore } from '../store/productStore';
@@ -84,7 +85,7 @@ export default function FlashDealsRow() {
             </div>
           </div>
 
-          {/* Deals Horizontal Scroll */}
+          {/* Deals Grid */}
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
             {dealItems.map((item) => (
               <div
@@ -93,10 +94,12 @@ export default function FlashDealsRow() {
               >
                 <div>
                   <Link href={`/product/${item.slug}`} className="block relative aspect-square rounded-lg overflow-hidden bg-white mb-2">
-                    <img
-                      src={item.images?.[0] || item.image}
+                    <Image
+                      src={item.images?.[0] || item.image || 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=300&q=75'}
                       alt={item.name}
-                      className="w-full h-full object-cover group-hover:scale-106 transition-transform duration-500"
+                      fill
+                      sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 160px"
+                      className="object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                     <span className="absolute top-1.5 left-1.5 text-[9px] font-bold bg-[var(--maroon)] text-white px-1.5 py-0.5 rounded shadow-2xs">
                       {item.discount}% OFF

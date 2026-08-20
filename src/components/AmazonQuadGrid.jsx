@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRight, faBolt, faWandMagicSparkles, faGift, faPercent } from '@fortawesome/free-solid-svg-icons';
 import { useProductStore } from '../store/productStore';
@@ -44,11 +45,13 @@ export default function AmazonQuadGrid() {
                     href={`/product/${p.slug}`}
                     className="group/item bg-[var(--bg-subtle)] rounded-xl p-2 border border-[var(--border)]/70 hover:border-[var(--olive)] transition-all"
                   >
-                    <div className="aspect-square rounded-lg overflow-hidden mb-1.5 bg-white">
-                      <img
-                        src={p.images?.[0] || p.image}
+                    <div className="aspect-square rounded-lg overflow-hidden mb-1.5 bg-white relative">
+                      <Image
+                        src={p.images?.[0] || p.image || 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=200&q=75'}
                         alt={p.name}
-                        className="w-full h-full object-cover group-hover/item:scale-108 transition-transform"
+                        fill
+                        sizes="80px"
+                        className="object-cover group-hover/item:scale-105 transition-transform"
                       />
                     </div>
                     <p className="text-[10px] font-semibold text-[var(--text)] line-clamp-1 group-hover/item:text-[var(--olive)]">
@@ -88,11 +91,13 @@ export default function AmazonQuadGrid() {
                     href={`/category/${cat.slug}`}
                     className="group/item bg-[var(--bg-subtle)] rounded-xl p-2 border border-[var(--border)]/70 hover:border-[var(--olive)] transition-all"
                   >
-                    <div className="aspect-square rounded-lg overflow-hidden mb-1.5 bg-white">
-                      <img
-                        src={cat.image}
+                    <div className="aspect-square rounded-lg overflow-hidden mb-1.5 bg-white relative">
+                      <Image
+                        src={cat.image || 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=200&q=75'}
                         alt={cat.name}
-                        className="w-full h-full object-cover group-hover/item:scale-108 transition-transform"
+                        fill
+                        sizes="80px"
+                        className="object-cover group-hover/item:scale-105 transition-transform"
                       />
                     </div>
                     <p className="text-[10.5px] font-semibold text-[var(--text)] line-clamp-1 group-hover/item:text-[var(--olive)]">
@@ -130,11 +135,13 @@ export default function AmazonQuadGrid() {
                     href={`/product/${p.slug}`}
                     className="group/item bg-[var(--bg-subtle)] rounded-xl p-2 border border-[var(--border)]/70 hover:border-[var(--olive)] transition-all"
                   >
-                    <div className="aspect-square rounded-lg overflow-hidden mb-1.5 bg-white">
-                      <img
-                        src={p.images?.[0] || p.image}
+                    <div className="aspect-square rounded-lg overflow-hidden mb-1.5 bg-white relative">
+                      <Image
+                        src={p.images?.[0] || p.image || 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=200&q=75'}
                         alt={p.name}
-                        className="w-full h-full object-cover group-hover/item:scale-108 transition-transform"
+                        fill
+                        sizes="80px"
+                        className="object-cover group-hover/item:scale-105 transition-transform"
                       />
                     </div>
                     <p className="text-[10px] font-semibold text-[var(--text)] line-clamp-1 group-hover/item:text-[var(--olive)]">
@@ -168,11 +175,13 @@ export default function AmazonQuadGrid() {
               </h3>
 
               <div className="rounded-xl overflow-hidden bg-[var(--bg-subtle)] border border-[var(--border)]/80 p-2.5 mb-3 space-y-2">
-                <div className="aspect-[16/9] rounded-lg overflow-hidden">
-                  <img
-                    src="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=600&q=80"
+                <div className="aspect-[16/9] rounded-lg overflow-hidden relative">
+                  <Image
+                    src="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=600&q=75"
                     alt="Custom Hamper"
-                    className="w-full h-full object-cover"
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                    className="object-cover"
                   />
                 </div>
                 <div className="space-y-1 text-left">

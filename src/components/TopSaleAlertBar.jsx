@@ -8,11 +8,9 @@ import { useSaleBannerStore } from '../store/saleBannerStore';
 import { DoodleSparkle } from './Doodles';
 
 export default function TopSaleAlertBar() {
-  const { saleBanner, isLoaded, fetchSaleBanner } = useSaleBannerStore();
-
-  useEffect(() => {
-    fetchSaleBanner();
-  }, [fetchSaleBanner]);
+  // saleBanner is server-side hydrated by StoreInitializer in layout.jsx.
+  // No client-side fetch needed here.
+  const { saleBanner, isLoaded } = useSaleBannerStore();
 
   // Live countdown timer calculated against saleBanner.endDate
   const [timeLeft, setTimeLeft] = useState({

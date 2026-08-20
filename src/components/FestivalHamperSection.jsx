@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -28,7 +28,9 @@ import { DoodleSparkle, DoodleOliveBranch, DoodleStarburst, DoodleSwirl } from '
 export default function FestivalHamperSection() {
   const addToCart = useCartStore((state) => state.addToCart);
   const { getWhatsAppUrl } = useSettingsStore();
-  const { festivals, showcaseFestival, isLoaded, fetchFestivals } = useFestivalStore();
+  // festivals and showcaseFestival are server-side hydrated by StoreInitializer.
+  // No client-side fetch needed here.
+  const { festivals, showcaseFestival, isLoaded } = useFestivalStore();
 
   const [addedIds, setAddedIds] = useState({});
   const [inspectItem, setInspectItem] = useState(null);
@@ -37,10 +39,6 @@ export default function FestivalHamperSection() {
   const [recipientName, setRecipientName] = useState('');
   const [letterLanguage, setLetterLanguage] = useState('English');
   const [waxSealColor, setWaxSealColor] = useState('Gold');
-
-  useEffect(() => {
-    fetchFestivals();
-  }, [fetchFestivals]);
 
   // Determine current active/showcase festival and its dynamic status
   const currentFestival = showcaseFestival;

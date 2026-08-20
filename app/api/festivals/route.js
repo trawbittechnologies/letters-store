@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { revalidateTag } from 'next/cache';
 import {
   getFestivals,
   getFestivalById,
@@ -63,6 +64,7 @@ export async function POST(request) {
     const festivals = getFestivals();
     const showcaseFestival = resolveShowcaseFestival(festivals);
 
+    revalidateTag('festivals');
     return NextResponse.json(
       { success: true, festival: newFestival, festivals, showcaseFestival },
       { headers: { 'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate' } }
@@ -102,6 +104,7 @@ export async function PUT(request) {
       const updated = updateFestival(body.id, body.data || body);
       const festivals = getFestivals();
       const showcaseFestival = resolveShowcaseFestival(festivals);
+      revalidateTag('festivals');
       return NextResponse.json(
         { success: true, festival: updated, festivals, showcaseFestival },
         { headers: { 'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate' } }
@@ -136,6 +139,7 @@ export async function DELETE(request) {
       deleteFestival(festivalId);
       const festivals = getFestivals();
       const showcaseFestival = resolveShowcaseFestival(festivals);
+      revalidateTag('festivals');
       return NextResponse.json(
         { success: true, festivals, showcaseFestival },
         { headers: { 'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate' } }
