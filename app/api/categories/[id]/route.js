@@ -1,10 +1,31 @@
 import { NextResponse } from 'next/server';
 import { updateCategory, deleteCategory } from '@/lib/db';
+import { sql } from '@/lib/neon';
 
 export async function PUT(request, { params }) {
   try {
     const { id } = await params;
     const body = await request.json();
+
+    if (sql) {
+      try {
+        const rows = await sql`
+          UPDATE categories
+          SET name = COALESCE(${body.name}, name),
+              slug = COALESCE(${body.slug}, slug),
+              enabled = COALESCE(${body.enabled}, enabled),
+              updated_at = CURRENT_TIMESTAMP
+          WHERE id = ${id} OR slug = ${id}
+          RETURNING *;
+        `;
+        if (rows.length > 0) {
+          return NextResponse.json({ success: true, category: rows[0] });
+        }
+      } catch (err) {
+        console.warn('Neon DB categories PUT error:', err.message);
+      }
+    }
+
     const updated = updateCategory(id, body);
 
     if (!updated) {
@@ -20,6 +41,22 @@ export async function PUT(request, { params }) {
 export async function DELETE(request, { params }) {
   try {
     const { id } = await params;
+
+    if (sql) {
+      try {
+        const rows = await sql`
+          DELETE FROM categories
+          WHERE id = ${id} OR slug = ${id}
+          RETURNING id;
+        `;
+        if (rows.length > 0) {
+          return NextResponse.json({ success: true, message: 'Category deleted successfully' });
+        }
+      } catch (err) {
+        console.warn('Neon DB categories DELETE error:', err.message);
+      }
+    }
+
     const deleted = deleteCategory(id);
 
     if (!deleted) {
