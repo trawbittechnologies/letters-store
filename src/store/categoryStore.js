@@ -9,6 +9,17 @@ export const useCategoryStore = create((set, get) => ({
 
   fetchCategories: async () => {
     set({ isLoading: true });
+
+    // Eagerly load from localStorage to prevent 1-2 second delay on refresh
+    if (typeof window !== 'undefined') {
+      try {
+        const saved = localStorage.getItem('letters_categories');
+        if (saved) {
+          set({ categories: JSON.parse(saved) });
+        }
+      } catch (e) {}
+    }
+
     try {
       const res = await fetch('/api/categories');
       const data = await res.json();
@@ -25,17 +36,7 @@ export const useCategoryStore = create((set, get) => ({
       console.warn('API fetch failed, falling back to local categories', e);
     }
 
-    if (typeof window !== 'undefined') {
-      try {
-        const saved = localStorage.getItem('letters_categories');
-        if (saved) {
-          set({ categories: JSON.parse(saved), isLoading: false });
-          return;
-        }
-      } catch (e) {}
-    }
-
-    set({ categories: defaultCategories, isLoading: false });
+    set({ isLoading: false });
   },
 
   addCategory: async (category) => {
